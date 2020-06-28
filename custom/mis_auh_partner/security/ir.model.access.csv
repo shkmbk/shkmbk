@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mis_bank_branch,mis.bank.branch.group_manager,model_mis_bank_branch,account.group_account_manager,1,1,1,1
+access_mis_bank_accounttype,mis.bank.accounttype.group_manager,model_mis_bank_accounttype,account.group_account_manager,1,1,1,1
+access_mis_bank_branch,mis.bank.branch.group_user,model_mis_bank_branch,account.group_account_user,1,1,1,1
+access_mis_bank_accounttype,mis.bank.accounttype.group_user,model_mis_bank_accounttype,account.group_account_user,1,1,1,1

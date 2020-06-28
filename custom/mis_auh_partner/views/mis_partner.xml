@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mis_auh_parenter_bank_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.partner.bank.form</field>
+            <field name="model">res.partner.bank</field>
+             <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='acc_number']" position="after">
+                    <field name="acc_iban_number"/>
+                </xpath>
+                <xpath expr="//field[@name='acc_type']" position="replace">
+                    <field name="acc_type" invisible="1"/>
+                    <field name="account_type_id" />
+                </xpath>
+                <xpath expr="//field[@name='bank_id']" position="after">
+                    <field name="account_branch_id"/>
+                </xpath>
+                <xpath expr="//field[@name='acc_holder_name']" position="after">
+                    <field name="account_remarks"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="mis_auh_partner1_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                 <field name="category_id" position="after">
+                    <field name="fax" string="Fax" widget="phone"/>
+                 </field>
+            </field>
+        </record>
+
+        <record id="mis_auh_bank_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.bank.form</field>
+            <field name="model">account.journal</field>
+             <field name="inherit_id" ref="account.view_account_bank_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bank_acc_number']" position="after">
+                    <field name="bank_iban_number"  attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
+                 </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
