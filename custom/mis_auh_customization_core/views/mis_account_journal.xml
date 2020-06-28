@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mis_auh_account_journal_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.account.journal.form</field>
+            <field name="model">account.journal</field>
+             <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="analytic_id"/>
+                    <field name="is_analytic_account_required"/>
+                    <field name="sale_sequence" attrs="{'invisible': [ ('type', '!=', 'sale')]}" groups="base.group_no_one"/>
+                    <field name="sale_sequence_id" attrs="{'invisible': [ ('sale_sequence', '!=', True)]}" groups="base.group_no_one"/>
+                    <field name="purchase_sequence" attrs="{'invisible': [ ('type', '!=', 'purchase')]}" groups="base.group_no_one"/>
+                    <field name="purchase_sequence_id" attrs="{'invisible': [ ('purchase_sequence', '!=', True)]}" groups="base.group_no_one"/>
+
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

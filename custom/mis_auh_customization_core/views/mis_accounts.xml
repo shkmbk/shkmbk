@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mis_auh_account_type_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.account.type.form</field>
+            <field name="model">account.account.type</field>
+             <field name="inherit_id" ref="account.view_account_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="account_type_code"/>
+                </xpath>
+
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="internal_group"/>
+                </xpath>
+
+
+            </field>
+        </record>
+        <record id="mis_auh_account_account_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.account.account.form</field>
+            <field name="model">account.account</field>
+             <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='group_id']" position="replace">
+                    <field name="group_id" required="1"/>
+                </xpath>
+                <xpath expr="//field[@name='deprecated']" position="before">
+                    <field name="account_old_type_code"/>
+                    <field name="account_remark"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mis_auh_account_account_list_view" model="ir.ui.view">
+            <field name="name">mis.auh.account.account.list</field>
+            <field name="model">account.account</field>
+
+             <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <field name="user_type_id" position="after">
+                    <field name="group_id"/>
+                    <field name="account_old_type_code"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="mis_auh_account_group_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.account.group.form</field>
+            <field name="model">account.group</field>
+             <field name="inherit_id" ref="account.view_account_group_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="account_type_id"/>
+                </xpath>
+            </field>
+        </record>
+
+      </data>
+</odoo>

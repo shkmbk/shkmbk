@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mis_auh_purchase_order_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.purchase.order.form</field>
+            <field name="model">purchase.order</field>
+             <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="journal_id"  placeholder="Journal" required="1" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"  attrs="{'readonly': [('state', 'in', ('purchase', 'done','cancel'))]}"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="analytic_id"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

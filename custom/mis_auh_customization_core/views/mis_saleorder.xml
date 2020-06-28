@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mis_auh_sale_order_form_view" model="ir.ui.view">
+            <field name="name">mis.auh.sale.order.form</field>
+            <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="journal_id"    required="1" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"  attrs="{'readonly': [('state', 'in', ('sale', 'done','cancel'))]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

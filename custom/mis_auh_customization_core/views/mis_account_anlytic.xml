@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mis_auh_analytic_analytic_tag_form_view_view" model="ir.ui.view">
+            <field name="name">mis.account.analytic.tag.form</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="inherit_id" ref="analytic.account_analytic_tag_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="analytic_tag_group" required="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mis_analytic_tag_group_form_view" model="ir.ui.view">
+            <field name="name">mis.analytic.tag.group.form</field>
+            <field name="model">mis.analytic.tag.group</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Tag Group">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="mis_account_analytic_tag_tree_view" model="ir.ui.view">
+            <field name="name">mis.account.analytic.tag.tree</field>
+            <field name="model">account.analytic.tag</field>
+             <field name="inherit_id" ref="analytic.account_analytic_tag_tree_view"/>
+            <field name="arch" type="xml">
+                <tree string="Analytic Tags">
+
+                        <field name="analytic_tag_group"/>
+
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>
