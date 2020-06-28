@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_asset_category_form2" model="ir.ui.view">
+             <field name="name">document.type.form</field>
+             <field name="model">document.type</field>
+             <field name="arch" type="xml">
+                 <form string="Asset Tags">
+                     <sheet>
+                         <group>
+                             <field name="name"/>
+                         </group>
+                     </sheet>
+                 </form>
+             </field>
+         </record>
+
+    <record model='ir.ui.view' id='asset_document_tree_view'>
+        <field name="name">document.type.tree</field>
+        <field name="model">document.type</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="asset_document_type_action" model="ir.actions.act_window">
+        <field name="name">Asset Document Types</field>
+        <field name="res_model">document.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="document_types_menuitem"
+              name="Asset Document Types"
+              parent="account.account_account_menu"
+              sequence="13"
+              action="mis_auh_asset_document_expiry.asset_document_type_action"
+              />
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.cron" id="asset_data_reminder">
+        <field name="name">Asset Document Expiration</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="mis_auh_asset_document_expiry.model_account_asset_document"/>
+        <field name="state">code</field>
+        <field name="code">model.mail_reminder()</field>
+    </record>
+
+    <record model="ir.ui.view" id="asset_asset_document_inherit_form_view">
+        <field name="name">account.asset.form.view</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                        <button class="oe_stat_button" name="document_view" type="object" icon="fa-list-ol">
+                        <field string="Documents" name="document_count" widget="statinfo"/>
+                    </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='asset_asset_document_form_view'>
+        <field name="name">account.asset.document.form</field>
+        <field name="model">account.asset.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="asset_ref" string="Asset"/>
+                            <field name="document_type"/>
+                            <field name="doc_attachment_ids" widget="many2many_binary" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name='expiry_reminder_user_id'/>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="notification_type"/>
+                            <field name="before_days" attrs="{'invisible' : [('notification_type', '=', 'single')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='asset_asset_documents_tree_view'>
+        <field name="name">account.asset.document.tree</field>
+        <field name="model">account.asset.document</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="asset_ref" string="Asset"/>
+                <field name="document_type"/>
+                <field name="expiry_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="search_asset_asset_documents" model="ir.ui.view">
+            <field name="name">account.asset.document.search</field>
+            <field name="model">account.asset.document</field>
+            <field name="arch" type="xml">
+                <search string="Asset Documents">
+                    <group expand="0" string="Group By">
+                        <filter name="Asset" string="Asset" domain="[]" context="{'group_by':'asset_ref'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <record id="asset_asset_document_action" model="ir.actions.act_window">
+        <field name="name">Asset Documents</field>
+        <field name="res_model">account.asset.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="asset_asset_documents_tree_view"/>
+    </record>
+
+    <menuitem id="asset_assset_document_menuitem"
+              name="Documents"
+              parent="account.account_account_menu"
+              sequence="11"
+              action="mis_auh_asset_document_expiry.asset_asset_document_action"
+              groups="account.group_account_manager" />
+</odoo>
