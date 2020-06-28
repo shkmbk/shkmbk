@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="mis_inv_liquidityreturn_form_view" model="ir.ui.view">
+            <field name="name">mis.inv.liquidityreturn.form</field>
+            <field name="model">mis.inv.liquidityreturn</field>
+            <field name="arch" type="xml">
+                <form string="Liquidity Return">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group></group>
+                </form>
+            </field>
+        </record>
+
+        <record id="mis_inv_liquidityreturn_tree_view" model="ir.ui.view">
+            <field name="name">mis.inv.liquidityreturn.tree</field>
+            <field name="model">mis.inv.liquidityreturn</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree   editable="bottom" create="1" delete="1"   string="Liquidity Return">
+                    <field name="name" required="1"/>
+                    <field name="returnpercentage"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_inv_liquidityreturn_action" model="ir.actions.act_window">
+            <field name="name">Liquidity Return</field>
+            <field name="res_model">mis.inv.liquidityreturn</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Liquidity Return
+                  </p>
+            </field>
+        </record>
+
+     <menuitem
+            id="mis_menu_action_inv_liquidityreturn"
+            action="mis_inv_liquidityreturn_action"
+            parent="mis_inv_configuration_menu"
+            sequence="3"/>
+
+    </data>
+
+</odoo>

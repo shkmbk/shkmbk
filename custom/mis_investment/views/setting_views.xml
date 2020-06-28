@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="mis_inv_classification_tree_setting_view" model="ir.ui.view">
+            <field name="name">mis.inv.classfication.tree</field>
+            <field name="model">mis.inv.classfication</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree  editable="top" create="1" delete="1"   string="Classification">
+
+                    <field name="name" required="1"/>
+                    <field name="clasificationpercentage"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_inv_classification_setting_action" model="ir.actions.act_window">
+            <field name="name">Classification</field>
+            <field name="res_model">mis.inv.classfication</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Classification
+                  </p>
+            </field>
+        </record>
+
+
+         <record id="mis_inv_riskrate_tree_setting_view" model="ir.ui.view">
+            <field name="name">mis.inv.riskrate.tree</field>
+            <field name="model">mis.inv.riskrate</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree  editable="top" create="1" delete="1"  string="Risk">
+                    <field name="name" required="1"/>
+                     <field name="ratepercentage"/>
+                </tree>
+
+            </field>
+        </record>
+
+        <record id="mis_inv_riskrate_setting_action" model="ir.actions.act_window">
+            <field name="name">Risk Rate</field>
+            <field name="res_model">mis.inv.riskrate</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Risk Rate
+                  </p>
+            </field>
+        </record>
+
+        <record id="mis_inv_liquidityreturn_tree_setting_view" model="ir.ui.view">
+            <field name="name">mis.inv.liquidityreturn.tree</field>
+            <field name="model">mis.inv.liquidityreturn</field>
+
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree   editable="top" create="1" delete="1"   string="Liquidity Return">
+                    <field name="name" required="1"/>
+                    <field name="returnpercentage"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_inv_liquidityreturn_setting_action" model="ir.actions.act_window">
+            <field name="name">Liquidity Return</field>
+            <field name="res_model">mis.inv.liquidityreturn</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Liquidity Return
+                  </p>
+            </field>
+        </record>
+
+        <record id="mis_inv_geographic_tree_setting_view" model="ir.ui.view">
+            <field name="name">mis.inv.geographic.setting.tree</field>
+            <field name="model">mis.inv.geographic</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree    editable="top" create="1" delete="1"    string="Geographic">
+                    <field name="name" required="1"/>
+                    <field name="geographicpercentage"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_inv_geographic_setting_action" model="ir.actions.act_window">
+            <field name="name">Geographic</field>
+            <field name="res_model">mis.inv.geographic</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Geographic
+                  </p>
+            </field>
+        </record>
+
+
+
+        <menuitem
+            id="mis_menu_action_inv_setting_classification"
+            action="mis_inv_classification_setting_action"
+            parent="mis_inv_setting_menu"
+            sequence="1"/>
+        <menuitem
+            id="mis_menu_action_inv_setting_riskrate"
+            action="mis_inv_riskrate_setting_action"
+            parent="mis_inv_setting_menu"
+            sequence="2"/>
+
+        <menuitem
+            id="mis_menu_action_inv_setting_liquidityreturn"
+            action="mis_inv_liquidityreturn_setting_action"
+            parent="mis_inv_setting_menu"
+            sequence="3"/>
+
+        <menuitem
+            id="mis_menu_action_inv_setting_geographic"
+            action="mis_inv_geographic_setting_action"
+            parent="mis_inv_setting_menu"
+            sequence="4"/>
+
+    </data>
+
+</odoo>

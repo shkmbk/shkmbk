@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mis_inv_classfication,mis.inv.classfication.group_manager,model_mis_inv_classfication,account.group_account_manager,1,1,1,1
+access_mis_inv_riskrate,mis.inv.riskrate.group_manager,model_mis_inv_riskrate,account.group_account_manager,1,1,1,1
+access_mis_inv_liquidityreturn,mis.inv.liquidityreturn.group_manager,model_mis_inv_liquidityreturn,account.group_account_manager,1,1,1,1
+access_mis_inv_geographic,mis.inv.geographic.group_manager,model_mis_inv_geographic,account.group_account_manager,1,1,1,1

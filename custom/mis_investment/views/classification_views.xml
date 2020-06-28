@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="mis_inv_classification_form_view" model="ir.ui.view">
+            <field name="name">mis.inv.classfication.form</field>
+            <field name="model">mis.inv.classfication</field>
+            <field name="arch" type="xml">
+                <form string="Classification">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group></group>
+                </form>
+            </field>
+        </record>
+
+        <record id="mis_inv_classification_tree_view" model="ir.ui.view">
+            <field name="name">mis.inv.classfication.tree</field>
+            <field name="model">mis.inv.classfication</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                 <tree  editable="bottom" create="1" delete="1"   string="Classification">
+
+                    <field name="name" required="1"/>
+                    <field name="clasificationpercentage"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_inv_classification_action" model="ir.actions.act_window">
+            <field name="name">Classification</field>
+            <field name="res_model">mis.inv.classfication</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Classification
+                  </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="mis_menu_action_inv_classification"
+            action="mis_inv_classification_action"
+            parent="mis_inv_configuration_menu"
+            sequence="1"/>
+
+    </data>
+
+</odoo>

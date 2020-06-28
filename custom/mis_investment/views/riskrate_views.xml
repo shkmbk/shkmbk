@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="mis_inv_riskrate_form_view" model="ir.ui.view">
+            <field name="name">mis.inv.riskrate.form</field>
+            <field name="model">mis.inv.riskrate</field>
+            <field name="arch" type="xml">
+                <form string="Risk Rate">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group></group>
+                </form>
+            </field>
+        </record>
+
+        <record id="mis_inv_riskrate_tree_view" model="ir.ui.view">
+            <field name="name">mis.inv.riskrate.tree</field>
+            <field name="model">mis.inv.riskrate</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree  editable="bottom" create="1" delete="1"  string="Risk">
+                    <field name="name" required="1"/>
+                     <field name="ratepercentage"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_inv_riskrate_action" model="ir.actions.act_window">
+            <field name="name">Risk Rate</field>
+            <field name="res_model">mis.inv.riskrate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Risk Rate
+                  </p>
+            </field>
+        </record>
+
+     <menuitem
+            id="mis_menu_action_inv_riskrate"
+            action="mis_inv_riskrate_action"
+            parent="mis_inv_configuration_menu"
+            sequence="2"/>
+
+    </data>
+
+</odoo>
