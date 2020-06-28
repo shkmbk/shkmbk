@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_purchaseorder_document">
+
+            <template  id="report_header_custom" inherit_id="report.external_layout_header">
+            <t t-if="o and 'company_id' in o">
+                  <t t-set="company" t-value="o.company_id"/>
+             </t>
+              <t t-if="not o or not 'company_id' in o">
+                  <t t-set="company" t-value="res_company"/>
+              </t>
+
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="/mis_auh_report/static/src/img/header.jpg"
+                                         style="margin:auto;width:100%;display:block;"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
+            <xpath expr="//div[@class='footer']" position="replace">
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-11">
+                            <img src="/mis_auh_report/static/src/img/footer.jpg" style="margin:auto;width:100%"/>
+                        </div>
+                        <div  class="col-1 text-right">
+                              <br/>
+                                    Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <t t-call="web.external_layout">
+        <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+
+        <div class="page">
+            <div class="oe_structure"/>
+
+            <table width="100%">
+                <tr>
+                    <td width="100%"  colspan="2" valign="middle" align="center">
+                        <br/><br/>
+
+
+                        <h2 t-if="o.state == 'draft'">Request for Quotation</h2>
+                        <h2 t-if="o.state in ['sent', 'to approve']">Purchase Order</h2>
+                        <h2 t-if="o.state in ['purchase', 'done']">Purchase Order</h2>
+                        <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order</h2>
+
+
+                    </td>
+                </tr>
+                <tr>
+                     <td width="70%"  valign="top" align="left">
+                        <br/><br/>
+                        <t t-if="o.partner_id.name"><span t-field="o.partner_id.name"/><br/></t>
+                        <t t-if="o.partner_id.street"><span t-field="o.partner_id.street"/>&amp;nbsp;</t>
+                        <t t-if="o.partner_id.street2"><span t-field="o.partner_id.street2"/></t>
+                        <t t-if="o.partner_id.street or o.partner_id.street2"><br/></t>
+                        <t t-if="o.partner_id.zip">P.O. Box <span t-field="o.partner_id.zip"/><br/></t>
+                        <t t-if="o.partner_id.state_id"><span t-field="o.partner_id.state_id.name"/>&amp;nbsp;</t>
+                        <t t-if="o.partner_id.country_id.name"><span t-field="o.partner_id.country_id.name"/><br/></t>
+                        <t t-if="o.partner_id.email"><i class="fa envelope-o"/> <span t-field="o.partner_id.email"/><br/></t>
+                        <t t-if="o.partner_id.phone"><i class="fa fa-phone"/> <span t-field="o.partner_id.phone"/><br/></t>
+                        <t t-if="o.partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_id.vat"/><br/></t>
+                  </td>
+                  <td width="30%" valign="top" align="right">
+                                <table width="100%">
+                                    <tr>
+                                        <td align="left"><strong>Order Date</strong></td>
+                                        <td align="left"><strong>:</strong></td>
+                                        <td align="right"><span t-field="o.date_order" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
+                                    </tr>
+                                     <tr>
+                                         <td align="left"><strong>Order No</strong></td>
+                                         <td align="left"><strong>:</strong></td>
+                                         <td align="right"><span t-field="o.name"/></td>
+                                    </tr>
+                                     <tr>
+                                         <td align="left"><strong>TRN</strong></td>
+                                         <td align="left"><strong>:</strong></td>
+                                         <td align="right">100385617400003</td>
+                                    </tr>
+                                    <tr>
+                                         <td align="left"><strong>Currency</strong></td>
+                                        <td align="left"><strong>:</strong></td>
+                                         <td align="right"><span t-esc="o.currency_id.name"/></td>
+                                    </tr>
+                                </table>
+
+                            </td>
+                </tr>
+            </table>
+
+            <table class="table table-sm o_main_table">
+                <thead>
+                    <tr>
+                        <th name="th_description" class="text-left" width="7%"><strong>Sl No</strong></th>
+                        <th name="th_description" class="text-left"  width="43%"><strong>Description</strong></th>
+                        <th class="text-center"  width="7%"><strong>Qty</strong></th>
+                        <th class="text-right"  width="7%"><strong>Rate</strong></th>
+                        <th class="text-right"  width="7%"><strong>Taxable Amount</strong></th>
+                        <th class="text-right"  width="9%"><strong>VAT (%)</strong></th>
+                        <th class="text-right"  width="10%"><strong>VAT Amount</strong></th>
+                        <th class="text-right"  width="10%"><strong>Net Amount</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="current_subtotal" t-value="0"/>
+                    <t t-set="rowno" t-value="1"/>
+                    <t t-foreach="o.order_line" t-as="line">
+                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+
+
+                        <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
+                            <t t-if="not line.display_type">
+
+                                <td name="product">
+                                    <span t-esc="rowno"/>
+                                    <t t-set="rowno" t-value="rowno+1"/>
+                                </td>
+                                    <td name="product">
+
+                                             <span t-field="line.name"/>
+
+                                    </td>
+
+                                <td class="text-right">
+
+                                    <span t-esc="'{0:,.0f}'.format(line.product_qty)"/>
+                                    <span t-field="line.product_uom.name" groups="uom.group_uom"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(line.price_unit)"/>
+                                </td>
+
+                                <td class="text-right">
+                                  <span t-esc="'{0:,.2f}'.format(line.price_subtotal)"/>
+                                </td>
+                                 <td class="text-right">
+                                           <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
+                                 </td>
+                                <td  class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(line.price_tax)"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(line.price_total)"/>
+                                </td>
+                            </t>
+                            <t t-if="line.display_type == 'line_section'">
+                                <td colspan="99" id="section">
+                                    <span t-field="line.name"/>
+                                </td>
+                                <t t-set="current_section" t-value="line"/>
+                                <t t-set="current_subtotal" t-value="0"/>
+                            </t>
+                            <t t-if="line.display_type == 'line_note'">
+                                <td colspan="99" id="note">
+                                    <span t-field="line.name"/>
+                                </td>
+                            </t>
+                        </tr>
+                        <t t-if="current_section and (line_last or o.order_line[line_index+1].display_type == 'line_section')">
+                            <tr class="is-subtotal text-right">
+                                <td colspan="99" id="subtotal">
+                                    <strong class="mr16">Subtotal</strong>
+                                    <span t-esc="'{0:,.2f}'.format(current_subtotal)"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+
+            <div id="total" class="row justify-content-end">
+                <div class="col-4">
+                    <table class="table table-sm">
+                        <tr class="border-black">
+                            <td><strong>Subtotal</strong></td>
+                            <td class="text-right">
+                                <span t-esc="'{0:,.2f}'.format(o.amount_untaxed)"/>
+                            </td>
+                        </tr>
+
+                        <tr class="border-black">
+                            <td><strong>Taxable Amount</strong></td>
+                            <td class="text-right">
+                                <span t-esc="'{0:,.2f}'.format(o.amount_untaxed)"/>
+                            </td>
+                        </tr>
+                        <tr class=''>
+                            <td ><strong>VAT (5%)</strong></td>
+                            <td class="text-right">
+                                <span t-esc="'{0:,.2f}'.format(o.amount_tax)"/>
+                            </td>
+                        </tr>
+                        <tr class="border-black o_total">
+                            <td><strong>Total Amount</strong></td>
+                            <td class="text-right">
+                                <span   style="font-weight: bold;"  t-esc="'{0:,.2f}'.format(o.amount_total)"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+            </div>
+            <p>
+                <strong>Total Amount in words : </strong><span t-esc="o.currency_id.amount_to_text(o.amount_total)"/> only
+            </p>
+
+
+            <p t-field="o.notes"/>
+            <div class="oe_structure"/>
+        </div>
+            <div class="row">
+
+              <div class="col-3" style="right;">
+                  <p class="text-center" style="padding-left:5mm;">
+                      <br/><br/><br/><br/>
+                      <span t-esc="o.user_id.name"/>
+                  </p>
+
+                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+
+                    Prepared by</p>
+              </div>
+
+              <div class="col-6" style="center">
+
+              </div>
+
+              <div class="col-3" style="left">
+                  <p class="text-center" style="padding-left:5mm;">
+                      <br/><br/><br/><br/><br/>
+
+                  </p>
+
+                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+
+                    Approved By
+                </p>
+              </div>
+        </div>
+    </t>
+    </template>
+
+ <template id="purchase.report_purchaseorder">
+    <t t-call="web.html_container">
+         <t t-set="is_header" t-value="1"/>
+        <t t-set="is_quotation" t-value="0"/>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="mis_auh_report.report_purchaseorder_document" t-lang="o.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+
+<template id="purchase.report_purchasequotation">
+    <t t-call="web.html_container">
+         <t t-set="is_header" t-value="1"/>
+        <t t-set="is_quotation" t-value="1"/>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="mis_auh_report.report_purchaseorder_document" t-lang="o.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+
+</odoo>

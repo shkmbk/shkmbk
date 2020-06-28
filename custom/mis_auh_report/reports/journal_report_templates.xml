@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_journal_document">
+        <template  id="report_header_custom" inherit_id="report.external_layout_header">
+            <t t-if="o and 'company_id' in o">
+                  <t t-set="company" t-value="o.company_id"/>
+             </t>
+              <t t-if="not o or not 'company_id' in o">
+                  <t t-set="company" t-value="res_company"/>
+              </t>
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <div class="row">
+                         <div class="col-12">
+
+                              <img src="/mis_auh_report/static/src/img/header.jpg"
+                                     style="margin:auto;width:100%;display:block;"/>
+                          </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
+            <xpath expr="//div[@class='footer']" position="replace">
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-11">
+                            <img src="/mis_auh_report/static/src/img/footer.jpg" style="margin:auto;width:100%"/>
+                        </div>
+                        <div  class="col-1 text-right">
+                          <br/>
+                                Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+
+            <div class="page">
+                <table width="100%">
+                    <tr>
+                        <td colspan="2" width="100%"  valign="middle" align="center">
+                            <h2>
+                                <br/>
+                                <br/>
+                                <span>Joural Entry</span>
+                             </h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%"  valign="top" align="left">
+                            <table width="100%" align="left">
+                                <tr>
+                                    <td align="left"><strong>Date</strong></td>
+                                    <td align="left"><strong>:  </strong></td>
+                                    <td align="left"><span t-field="o.date" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
+                                </tr>
+                                 <tr>
+                                     <td align="left"><strong>Journal Number</strong></td>
+                                     <td align="left"><strong>:  </strong></td>
+                                     <td align="left"><span  t-field="o.name"/></td>
+                                </tr>
+                                 <tr>
+                                     <td align="left"><strong>Reference</strong></td>
+                                     <td align="left" width="15px"><strong>:  </strong></td>
+                                     <td align="left"><span  t-field="o.ref"/></td>
+                                </tr>
+
+                            </table>
+
+                        </td>
+                        <td width="50%" valign="top" align="right">
+                            <table width="100%" align="right">
+                                <tr>
+                                    <td align="left"><strong>Journal</strong></td>
+                                    <td align="left"><strong>:  </strong></td>
+                                    <td align="right"><span t-field="o.journal_id"/></td>
+                                </tr>
+                                 <tr>
+                                     <td align="left"><strong>Company</strong></td>
+                                     <td align="left"><strong>:  </strong></td>
+                                     <td align="right"><span t-if="o.company_id"/></td>
+                                </tr>
+                                 <tr>
+                                     <td align="left"><strong>Analytic Account</strong></td>
+                                     <td align="left"><strong>:  </strong></td>
+                                     <td align="right"><span t-if="o.analytic_id"/></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <br/><br/>
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th name="th_description" class="text-left" width="7%"><strong>Sl No</strong></th>
+                            <th name="th_description" class="text-left"  width="20%"><strong>Account</strong></th>
+                            <th class="text-center"  width="20%"><strong>Partner</strong></th>
+                            <th class="text-right"  width="15%"><strong>Analytic Account</strong></th>
+                            <th class="text-right"  width="14%"><strong>Analytic Tags</strong></th>
+                            <th class="text-right"  width="13%"><strong>Debit</strong></th>
+                            <th class="text-right"  width="12%"><strong>Credit</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody class="invoice_tbody">
+                        <t t-set="current_debit" t-value="0.00"/>
+                        <t t-set="amount_credit" t-value="0.00"/>
+                        <t t-set="rowno" t-value="1"/>
+                        <t t-foreach="o.line_ids" t-as="line">
+                            <tr>
+                                <td name="product">
+                                    <span t-esc="rowno"/>
+                                     <t t-set="rowno" t-value="rowno+1"/>
+                                </td>
+                                <td class="text-left">
+                                    <span t-field="line.account_id"/>
+                                </td>
+                                <td class="text-left">
+                                    <span t-field="line.partner_id"/>
+                                </td>
+                                <td class="text-left">
+                                    <span t-field="line.analytic_account_id"/>
+                                </td>
+                                <td class="text-left">
+                                  <span t-field="line.analytic_tag_ids"/>
+                                </td>
+                                <td  class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(line.debit)"/>
+                                    <t t-set="current_debit" t-value="current_debit+line.debit"/>
+
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(line.credit)"/>
+                                     <t t-set="amount_credit" t-value="amount_credit+line.credit"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <tr>
+                            <td name="product" colspan="5">
+                                <strong>Total</strong>
+                            </td>
+                            <td  class="text-right">
+                                <strong><span t-esc="'{0:,.2f}'.format(current_debit)"/></strong>
+                            </td>
+                            <td class="text-right">
+                                <strong><span t-esc="'{0:,.2f}'.format(amount_credit)"/></strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                  <div class="col-3" style="right;">
+                      <p class="text-center" style="padding-left:5mm;">
+                          <br/><br/><br/><br/>
+                          <span t-esc="o.user_id.name"/>
+                      </p>
+
+                    <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+
+                        Prepared by</p>
+                  </div>
+
+                  <div class="col-6" style="center">
+
+                  </div>
+
+              <div class="col-3" style="left">
+                  <p class="text-center" style="padding-left:5mm;">
+                      <br/><br/><br/><br/><br/>
+
+                  </p>
+
+                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+
+                    Approved By
+                </p>
+              </div>
+        </div>
+       </t>
+    </template>
+
+    <template id="report_account_journal">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="mis_auh_report.report_journal_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payment_receipt_document">
+        <template  id="report_header_custom" inherit_id="report.external_layout_header">
+
+            <t t-if="o and 'company_id' in o">
+                  <t t-set="company" t-value="o.company_id"/>
+             </t>
+              <t t-if="not o or not 'company_id' in o">
+                  <t t-set="company" t-value="res_company"/>
+              </t>
+
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="/mis_auh_report/static/src/img/header.jpg"
+                                         style="margin:auto;width:100%;display:block;"/>
+
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
+            <xpath expr="//div[@class='footer']" position="replace">
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-11">
+                            <img src="/mis_auh_report/static/src/img/footer.jpg" style="margin:auto;width:100%"/>
+                        </div>
+                        <div  class="col-1 text-right">
+                          <br/>
+                                Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <div class="page">
+                <table width="100%">
+                    <tr>
+                        <td colspan="2" width="100%"  valign="middle" align="center">
+                            <h2>
+                                <br/><br/>
+                                <span>Payment Voucher</span>
+                            </h2><br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%"  valign="top" align="left">
+                            <table width="100%" align="left">
+                                <tr>
+                                    <td align="left"><strong>Date</strong></td>
+                                    <td align="left"><strong>:  </strong></td>
+                                    <td align="left"><span t-field="o.payment_date" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
+                                </tr>
+                                 <tr>
+                                     <td align="left"><strong>Payment Number</strong></td>
+                                     <td align="left"><strong>:  </strong></td>
+                                     <td align="left"><span  t-field="o.name"/></td>
+                                </tr>
+                                 <tr>
+                                     <td align="left"><strong>
+                                        <t t-if="o.partner_type == 'customer'">
+                                            Customer
+                                        </t>
+                                         <t t-if="o.partner_type == 'supplier'">
+                                            Vendor
+                                         </t>
+                                     </strong></td>
+                                     <td align="left" width="15px"><strong>:  </strong></td>
+                                     <td align="left">
+                                         <span t-field="o.partner_id"/>
+                                     </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="50%" valign="top" align="right">
+                            <table width="100%" align="right">
+                                <tr>
+                                    <td align="left"><strong>Payment Method</strong></td>
+                                    <td align="left"><strong>:  </strong></td>
+                                    <td align="right"><span t-field="o.payment_method_id"/></td>
+                                </tr>
+                                 <tr>
+                                     <td align="left"><strong>Payment Amount</strong></td>
+                                     <td align="left"><strong>:  </strong></td>
+                                     <td align="right"><span t-if="o.amount"  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                </tr>
+                                 <tr>
+                                     <td align="left"><strong>Memo</strong></td>
+                                     <td align="left"><strong>:  </strong></td>
+                                     <td align="right"><span t-if="o.communication"/></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <t t-if="len(o.reconciled_invoice_ids)">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th><span>Invoice Date</span></th>
+                                <th><span>Invoice Number</span></th>
+                                <th class="text-right"><span>Original Amount</span></th>
+                                <th class="text-right"><span>Amount Paid</span></th>
+                                <th class="text-right"><span>Balance</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.reconciled_invoice_ids" t-as="inv">
+                                <td><span t-field="inv.invoice_date"/></td>
+                                <td><span t-field="inv.name"/></td>
+                                <td class="text-right"><span t-field="inv.amount_total"/></td>
+                                <td class="text-right"><span t-esc="o._get_invoice_payment_amount(inv)" t-options="{'widget': 'monetary', 'display_currency': inv.currency_id}"/></td>
+                                <td class="text-right"><span t-field="inv.amount_residual"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+            <div class="row">
+              <div class="col-3" style="right;">
+                  <p class="text-center" style="padding-left:5mm;">
+                      <br/><br/><br/><br/>
+                      <span t-esc="o.write_uid.name"/>
+                  </p>
+                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+
+                    Prepared by</p>
+              </div>
+
+              <div class="col-6" style="center">
+
+              </div>
+
+              <div class="col-3" style="left">
+                  <p class="text-center" style="padding-left:5mm;">
+                      <br/><br/><br/><br/><br/>
+
+                  </p>
+
+                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+
+                    Approved By
+                </p>
+              </div>
+        </div>
+        </t>
+    </template>
+
+    <template id="account.report_payment_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="mis_auh_report.report_payment_receipt_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>

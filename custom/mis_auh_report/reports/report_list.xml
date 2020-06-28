@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <report
+
+            id="account.account_invoices"
+            model="account.move"
+
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="mis_auh_report.report_invoice"
+            file="mis_auh_report.report_invoice"
+            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+            groups="account.group_account_invoice"
+
+        />
+       <report
+            id="account.account_invoices_without_payment"
+            model="account.move"
+            string="Invoices without payment"
+            report_type="qweb-pdf"
+            name="mis_auh_report.report_invoice_with_payments"
+            file="mis_auh_report.report_invoice_with_payments"
+            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+            groups="account.group_account_invoice"
+        />
+    <report
+            id="action_account_invoices_no_header"
+            model="account.move"
+            string="Invoices (No Header)"
+            report_type="qweb-pdf"
+            name="mis_auh_report.report_accountinvoices_no_header"
+            file="mis_auh_report.report_accountinvoices_no_header"
+            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+            groups="account.group_account_invoice"
+        />
+
+        <report
+            id="action_account_journal_print"
+            model="account.move"
+            string="Journal Print"
+            report_type="qweb-pdf"
+            name="mis_auh_report.report_account_journal"
+            file="mis_auh_report.report_account_journal"
+          />
+
+ </odoo>
