@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mis_account_asset_form_view" model="ir.ui.view">
+        <field name="name">mis.account.asset.form</field>
+        <field name="model">account.asset</field>
+         <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button class="oe_stat_button" name="action_custom_exapense_show" type="object" icon="fa-pencil-square-o">
+
+                     <div class="o_form_field o_stat_info">
+                         <span class="o_stat_value">
+                                <field name="sum_asset_expense" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                         </span>
+                         <span class="o_stat_text">Expenses</span>
+                     </div>
+
+
+                </button>
+            </xpath>
+            <xpath expr="//div[@class='oe_title']" position="after">
+                <div class="oe_title">
+                    <label for="asset_code" name="model_code_label" string="Asset Code" class="oe_edit_only" attrs="{'invisible': ['|', ('state', '!=', 'model'), ('asset_type', 'in', ('expense', 'sale'))]}"/>
+                    <h3>
+                        <field name="asset_code"  placeholder="e.g. Group + Sub Group - XXXXX" attrs="{'invisible': ['|', ('state', '=', 'model'), ('asset_type', 'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
+                    </h3>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='original_value']" position="before">
+                <field name="custom_checkbox"/>
+            </xpath>
+            <xpath expr="//field[@name='account_analytic_id']" position="replace">
+                <field name="account_analytic_id"  required="True"  domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+            </xpath>
+            <xpath expr="//field[@name='first_depreciation_date']" position="before">
+                <field name="asset_group" attrs="{'invisible': [('asset_type',  'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
+                <field name="asset_subgroup"  attrs="{'invisible': [('asset_type',  'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
+                <field name="asset_brand"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
+                <field name="asset_location"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
+                <field name="asset_sublocation"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
+                <field name="asset_custodian"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
+            </xpath>
+        </field>
+    </record>
+     <record id="view_account_asset_tree_inherit" model="ir.ui.view">
+        <field name="name">view.account.tree.inherit</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_purchase_tree"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='name']" position="after">
+                <field name="asset_code"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_account_asset_search_inherit" model="ir.ui.view">
+        <field name="name">view.account.asset.search.inherit</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Asset Code" name="asset_code" context="{'group_by':'asset_code'}"/>
+
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="mis_asset_group_form_view" model="ir.ui.view">
+        <field name="name">mis.asset.group.form</field>
+        <field name="model">mis.asset.group</field>
+        <field name="arch" type="xml">
+            <form string="Asset Group">
+                <group>
+                    <field name="code"/>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mis_asset_subgroup_form_view" model="ir.ui.view">
+        <field name="name">mis.asset.subgroup.form</field>
+        <field name="model">mis.asset.subgroup</field>
+        <field name="arch" type="xml">
+            <form string="Asset Sub Group">
+                <group>
+                    <field name="code"/>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mis_asset_brand_form_view" model="ir.ui.view">
+        <field name="name">mis.asset.brand.form</field>
+        <field name="model">mis.asset.brand</field>
+        <field name="arch" type="xml">
+            <form string="Asset Brand">
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mis_asset_location_form_view" model="ir.ui.view">
+        <field name="name">mis.asset.location.form</field>
+        <field name="model">mis.asset.location</field>
+        <field name="arch" type="xml">
+            <form string="Asset Location">
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mis_asset_sublocation_form_view" model="ir.ui.view">
+        <field name="name">mis.asset.sublocation.form</field>
+        <field name="model">mis.asset.sublocation</field>
+        <field name="arch" type="xml">
+            <form string="Asset Sub Location">
+                <group>
+                    <field name="main_location"/>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mis_asset_custodian_form_view" model="ir.ui.view">
+        <field name="name">mis.asset.custodian.form</field>
+        <field name="model">mis.asset.custodian</field>
+        <field name="arch" type="xml">
+            <form string="Asset Custodian">
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>
