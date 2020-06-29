@@ -1376,13 +1376,14 @@ class DashBoard(models.Model):
         else:
             states_arg = """ parent_state in ('posted', 'draft')"""
 
-        self._cr.execute((''' select account_account.name as name, sum(balance) as balance from account_move_line left join
-                            account_account on account_account.id = account_move_line.account_id join
-                            account_account_type on account_account_type.id = account_account.user_type_id
+        self._cr.execute((''' select * from (select account_account.name as name, COALESCE(aml.balance,0.00) as balance 
+                            from account_account join account_account_type 
+                            on account_account_type.id = account_account.user_type_id
+                            left join (select account_id, sum(balance) as balance from account_move_line 
+                            where %s AND company_id = ''' + str(company_id) + ''' group by account_id) aml
+                            on aml.account_id=account_account.id
                             where account_account_type.name = 'Bank and Cash'
-                            AND %s
-                            AND account_move_line.company_id = ''' + str(company_id) + '''
-                            group by account_account.name
+                            ) bnk order by balance desc,name
                                                    
                             ''') % (states_arg))
 
