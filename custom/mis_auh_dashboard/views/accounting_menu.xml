@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--    Change invoicing menu to Accounting     -->
+        <record model="ir.ui.menu" id="account.menu_finance">
+            <field name="name">Dashboard</field>
+        </record>
+        <!--  Change settings invoicing menu to Accounting     -->
+        <record id="res_config_settings_view_accounting_kit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.kit</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div data-key="account" position="attributes">
+                    <attribute name="data-string">Dashboard</attribute>
+                    <attribute name="string">Dashboard</attribute>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>
