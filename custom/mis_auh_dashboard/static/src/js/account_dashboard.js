@@ -1357,11 +1357,11 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                             }
 
                             if ((-result[1]) > (result[0])) {
-                                net_profit = result[1] - result[0]
+                                net_profit = -result[1] + result[0]
                             } else if ((result[1]) > (result[0])) {
-                                net_profit = -result[1] - result[0]
+                                net_profit = -result[1] + result[0]
                             } else {
-                                net_profit = -result[1] - result[0]
+                                net_profit = -result[1] + result[0]
                             }
                             var profit_this_year = net_profit;
                             if (profit_this_year) {

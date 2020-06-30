@@ -5,19 +5,17 @@
     'category': 'Accounting',
     'summary': """ Dashboard Summary""",
     'description': """
-                    Mis Dashboard
+                    Mis Auh Dashboard
                     """,
     'author': ' Mindinfosys.com',
-    'website': "http://www.mindinfosys.com",
+#    'website': "http://www.mindinfosys.com",
     'company': 'Mindinfosys FZE LLC',
     'maintainer': 'Mindinfosys FZE LLC',
     'depends': ['base', 'account', 'sale', 'account_check_printing'],
     'data': [
-
         'views/assets.xml',
         'views/dashboard_views.xml',
         'views/accounting_menu.xml',
-
     ],
     'qweb': [
         'static/src/xml/template.xml'
