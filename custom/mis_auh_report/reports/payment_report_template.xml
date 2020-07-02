@@ -2,27 +2,23 @@
 <odoo>
     <template id="report_payment_receipt_document">
         <template  id="report_header_custom" inherit_id="report.external_layout_header">
-
             <t t-if="o and 'company_id' in o">
                   <t t-set="company" t-value="o.company_id"/>
              </t>
               <t t-if="not o or not 'company_id' in o">
                   <t t-set="company" t-value="res_company"/>
               </t>
-
             <xpath expr="//div[@class='header']" position="replace">
                 <div class="header">
                     <div class="row">
                         <div class="col-12">
                             <img src="/mis_auh_report/static/src/img/header.jpg"
                                          style="margin:auto;width:100%;display:block;"/>
-
                         </div>
                     </div>
                 </div>
             </xpath>
         </template>
-
         <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
             <xpath expr="//div[@class='footer']" position="replace">
                 <div class="footer">
@@ -38,7 +34,6 @@
                 </div>
             </xpath>
         </template>
-
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
             <div class="page">
@@ -52,12 +47,12 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="50%"  valign="top" align="left">
+                        <td width="60%"  valign="top" align="left">
                             <table width="100%" align="left">
                                 <tr>
-                                    <td align="left"><strong>Date</strong></td>
-                                    <td align="left"><strong>:  </strong></td>
-                                    <td align="left"><span t-field="o.payment_date" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
+                                    <td align="left" width="27%"><strong>Date</strong></td>
+                                    <td align="left" width="3%"><strong>:  </strong></td>
+                                    <td align="left" width="70%"><span t-field="o.payment_date" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
                                 </tr>
                                  <tr>
                                      <td align="left"><strong>Payment Number</strong></td>
@@ -73,41 +68,38 @@
                                             Vendor
                                          </t>
                                      </strong></td>
-                                     <td align="left" width="15px"><strong>:  </strong></td>
+                                     <td align="left"><strong>:</strong></td>
                                      <td align="left">
                                          <span t-field="o.partner_id"/>
                                      </td>
                                 </tr>
                             </table>
                         </td>
-                        <td width="50%" valign="top" align="right">
+
+                        <td width="40%" valign="top" align="right">
                             <table width="100%" align="right">
                                 <tr>
-                                    <td align="left"><strong>Payment Method</strong></td>
-                                    <td align="left"><strong>:  </strong></td>
-                                    <td align="right"><span t-field="o.payment_method_id"/></td>
+                                    <td align="left"  width="40%"><strong>Payment Method</strong></td>
+                                    <td align="left"  width="5%"><strong>:</strong></td>
+                                    <td align="right" width="55%"><span t-field="o.payment_method_id"/></td>
                                 </tr>
                                  <tr>
                                      <td align="left"><strong>Payment Amount</strong></td>
-                                     <td align="left"><strong>:  </strong></td>
-                                     <td align="right"><span t-if="o.amount"  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                </tr>
-                                 <tr>
-                                     <td align="left"><strong>Memo</strong></td>
-                                     <td align="left"><strong>:  </strong></td>
-                                     <td align="right"><span t-if="o.communication"/></td>
+                                     <td align="left"><strong>:</strong></td>
+                                     <td align="right"><span  t-esc="o.amount"  t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
                 </table>
                 <t t-if="len(o.reconciled_invoice_ids)">
+                    <br/><br/>
                     <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th><span>Invoice Date</span></th>
                                 <th><span>Invoice Number</span></th>
-                                <th class="text-right"><span>Original Amount</span></th>
+                                <th class="text-riIght"><span>Original Amount</span></th>
                                 <th class="text-right"><span>Amount Paid</span></th>
                                 <th class="text-right"><span>Balance</span></th>
                             </tr>
@@ -125,28 +117,42 @@
                 </t>
             </div>
             <div class="row">
+                <t t-if="o.communication">
+                    <br/><br/><br/>
+                    <p>Memo : <span t-field="o.communication"/></p>
+                </t>
+            </div>
+
+            <div class="row">
               <div class="col-3" style="right;">
                   <p class="text-center" style="padding-left:5mm;">
                       <br/><br/><br/><br/>
                       <span t-esc="o.write_uid.name"/>
                   </p>
                 <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
-
                     Prepared by</p>
               </div>
 
-              <div class="col-6" style="center">
+              <div class="col-2" style="center">
 
               </div>
-
-              <div class="col-3" style="left">
+              <div class="col-2" style="right;">
                   <p class="text-center" style="padding-left:5mm;">
                       <br/><br/><br/><br/><br/>
 
                   </p>
-
                 <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+                    Verified by</p>
+              </div>
 
+              <div class="col-2" style="center">
+
+              </div>
+              <div class="col-3" style="left">
+                  <p class="text-center" style="padding-left:5mm;">
+                      <br/><br/><br/><br/><br/>
+                  </p>
+                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
                     Approved By
                 </p>
               </div>
