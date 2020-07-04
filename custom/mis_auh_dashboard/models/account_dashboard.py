@@ -1196,7 +1196,8 @@ class DashBoard(models.Model):
         return company_id
 
     def get_current_multi_company_value(self):
-        current_company = request.httprequest.cookies.get('cids')
+        current_company = request.httprequest.cookies.get('cids') or self.env.company
+        #print (current_company, "======================", self.env.company)
         if current_company:
             company_ids = current_company
         else:
