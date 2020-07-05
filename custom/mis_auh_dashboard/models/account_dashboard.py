@@ -773,7 +773,7 @@ class DashBoard(models.Model):
         self._cr.execute(('''select sum(-(amount_total_signed)) as supplier_invoice from account_move where type ='in_invoice'
                             AND  %s                              
                             AND Extract(YEAR FROM account_move.date) = Extract(YEAR FROM DATE(NOW()))     
-                            AND account_move.company_id in (''' + str(company_ids) + '''      
+                            AND account_move.company_id in (''' + str(company_ids) + ''')      
                         ''') % (states_arg))
         record_supplier_current_year = self._cr.dictfetchall()
 
@@ -1186,7 +1186,7 @@ class DashBoard(models.Model):
         return profit
 
     def get_current_company_value(self):
-        current_company = request.httprequest.cookies.get('cids')
+        current_company = request.httprequest.cookies.get('cids') or self.env.company
         if current_company:
             company_id = int(current_company[0])
         else:
@@ -1196,13 +1196,14 @@ class DashBoard(models.Model):
         return company_id
 
     def get_current_multi_company_value(self):
-        current_company = request.httprequest.cookies.get('cids') or self.env.company
-        #print (current_company, "======================", self.env.company)
+        current_company = request.httprequest.cookies.get('cids')
         if current_company:
-            company_ids = current_company
+            company_id = int(current_company[0])
         else:
-            company_ids = self.env.company
-        return company_ids
+            company_id = self.env.company.id
+        if company_id not in self.env.user.company_ids.ids:
+            company_id = self.env.company.id
+        return company_id
 
 
     @api.model
