@@ -773,7 +773,7 @@ class DashBoard(models.Model):
         self._cr.execute(('''select sum(-(amount_total_signed)) as supplier_invoice from account_move where type ='in_invoice'
                             AND  %s                              
                             AND Extract(YEAR FROM account_move.date) = Extract(YEAR FROM DATE(NOW()))     
-                            AND account_move.company_id in (''' + str(company_ids) + ''')      
+                            AND account_move.company_id in (''' + str(company_ids) + '''      
                         ''') % (states_arg))
         record_supplier_current_year = self._cr.dictfetchall()
 
@@ -1159,7 +1159,7 @@ class DashBoard(models.Model):
         else:
             states_arg = """ parent_state = 'posted'"""
 
-        self._cr.execute(('''select sum(debit) - sum(credit) as profit, account_account.internal_group from  account_account, account_move_line where 
+        self._cr.execute(('''select sum(credit)-sum(debit) as profit from  account_account, account_move_line where 
                                   
                                     account_move_line.account_id = account_account.id AND
                                     %s AND
@@ -1167,26 +1167,25 @@ class DashBoard(models.Model):
                                     account_account.internal_group = 'expense' ) 
                                     AND Extract(month FROM account_move_line.date) = Extract(month FROM DATE(NOW())) 
                                     AND Extract(year FROM account_move_line.date) = Extract(year FROM DATE(NOW()))   
-                                    AND account_move_line.company_id in (''' + str(company_ids) + ''')        
-                                    group by internal_group 
+                                    AND account_move_line.company_id in (''' + str(company_ids) + ''')                                   
                                      ''') % (states_arg))
         income = self._cr.dictfetchall()
         profit = [item['profit'] for item in income]
-        internal_group = [item['internal_group'] for item in income]
+        #internal_group = [item['internal_group'] for item in income]
         net_profit = True
         loss = True
-        if profit and profit == 0:
-            if (-profit[1]) > (profit[0]):
-                net_profit = -profit[1] - profit[0]
-            elif (profit[1]) > (profit[0]):
-                net_profit = -profit[1] - profit[0]
-            else:
-                net_profit = -profit[1] - profit[0]
-
+        #if profit and profit == 0:
+            #if (-profit[1]) > (profit[0]):
+                #net_profit = -profit[1] - profit[0]
+            #elif (profit[1]) > (profit[0]):
+                #net_profit = -profit[1] - profit[0]
+            #else:
+                #net_profit = -profit[1] - profit[0]
+        #net_profit = profit[0]
         return profit
 
     def get_current_company_value(self):
-        current_company = request.httprequest.cookies.get('cids') or self.env.company
+        current_company = request.httprequest.cookies.get('cids')
         if current_company:
             company_id = int(current_company[0])
         else:
@@ -1196,14 +1195,13 @@ class DashBoard(models.Model):
         return company_id
 
     def get_current_multi_company_value(self):
-        current_company = request.httprequest.cookies.get('cids')
+        current_company = request.httprequest.cookies.get('cids') or self.env.company
+        #print (current_company, "======================", self.env.company)
         if current_company:
-            company_id = int(current_company[0])
+            company_ids = current_company
         else:
-            company_id = self.env.company.id
-        if company_id not in self.env.user.company_ids.ids:
-            company_id = self.env.company.id
-        return company_id
+            company_ids = self.env.company
+        return company_ids
 
 
     @api.model
@@ -1217,29 +1215,28 @@ class DashBoard(models.Model):
         else:
             states_arg = """ parent_state = 'posted'"""
 
-        self._cr.execute(('''select sum(debit) - sum(credit) as profit, account_account.internal_group from  account_account, account_move_line where 
+        self._cr.execute(('''select sum(credit)-sum(debit) as profit from  account_account, account_move_line where 
 
                                          account_move_line.account_id = account_account.id AND
                                          %s AND
                                         (account_account.internal_group = 'income' or    
                                         account_account.internal_group = 'expense' )                                       
                                         AND Extract(year FROM account_move_line.date) = Extract(year FROM DATE(NOW()))  
-                                        AND account_move_line.company_id in (''' + str(company_ids) + ''')           
-                                        group by internal_group 
+                                        AND account_move_line.company_id in (''' + str(company_ids) + ''')                                        
                                          ''') % (states_arg))
         income = self._cr.dictfetchall()
         profit = [item['profit'] for item in income]
-        internal_group = [item['internal_group'] for item in income]
+        #internal_group = [item['internal_group'] for item in income]
         net_profit = True
         loss = True
 
-        if profit and profit == 0:
-            if (-profit[1]) > (profit[0]):
-                net_profit = -profit[1] - profit[0]
-            elif (profit[1]) > (profit[0]):
-                net_profit = -profit[1] - profit[0]
-            else:
-                net_profit = -profit[1] - profit[0]
+        #if profit and profit == 0:
+            #if (-profit[1]) > (profit[0]):
+                #net_profit = -profit[1] - profit[0]
+            #elif (profit[1]) > (profit[0]):
+                #net_profit = -profit[1] - profit[0]
+            #else:
+                #net_profit = -profit[1] - profit[0]
 
         return profit
 
