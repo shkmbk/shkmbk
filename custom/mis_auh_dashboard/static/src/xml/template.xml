@@ -300,18 +300,13 @@
                         <div class="card" style="height:366px;">
                             <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
                                 <h3 class="custom-h3 card-title">
-                                    <b>TOP 10 CUSTOMERS</b>
+                                    <b>SHARE TRADING PROFIT/LOSS</b>
                                 </h3>
-
-                                <div class="card-tools">
-                                    <select>
-
-                                        <option id="top_10_customer_this_month">This Month</option>
-                                        <div role="separator" class="dropdown-divider" />
-                                        <option id="top_10_customer_last_month">Last Month</option>
-
-                                    </select>
-                                </div>
+                                 <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="totalshareprofit"/></b>
+                                        </h3>
+                                    </div>
                             </div>
 
                             <div class="card-body p-0" style=" height: 287px; overflow-y: auto; " id="top_10_body">
