@@ -626,90 +626,35 @@ class DashBoard(models.Model):
 
     @api.model
     def get_top_10_customers_month(self, *post):
-        record_invoice = {}
-        record_refund = {}
         company_ids = self.get_current_multi_company_value()
-
         states_arg = ""
         if post[0] != 'posted':
             states_arg = """ state in ('posted', 'draft')"""
         else:
             states_arg = """ state = 'posted'"""
-        if post[1] == 'this_month':
-            self._cr.execute((''' select res_partner.name as customers, account_move.commercial_partner_id as parent, 
-                                    sum(account_move.amount_total) as amount from account_move, res_partner
-                                    where account_move.commercial_partner_id = res_partner.id
-                                    AND account_move.company_id in (%s) 
-                                    AND account_move.type = 'out_invoice' 
-                                    AND %s   
-                                    AND Extract(month FROM account_move.invoice_date_due) = Extract(month FROM DATE(NOW()))
-                                    AND Extract(YEAR FROM account_move.invoice_date_due) = Extract(YEAR FROM DATE(NOW()))                      
-                                    group by parent, customers
-                                    order by amount desc 
-                                    limit 10
-                                    ''') % (company_ids, states_arg))
 
-            record_invoice = self._cr.dictfetchall()
+        one_month_ago = (datetime.now() - relativedelta(months=1)).month
+        self._cr.execute((''' SELECT CASE WHEN A.CODE IN('491103','491104') THEN 'Profit/(loss) on sale of Sec. - Listed Stock' ELSE A.name END AS share,'' AS Parent, COALESCE(sum(AML.credit-AML.debit),0.00) as amount from 
+								account_move_line AML inner join account_account A ON A.id=account_id
+								INNER JOIN account_analytic_tag_account_move_line_rel AMLAT ON AML.ID=AMLAT.account_move_line_id
+								INNER JOIN account_analytic_tag AAT ON AAT.ID=AMLAT.account_analytic_tag_id
+								INNER JOIN account_move AM ON AM.ID=AML.move_id
+								WHERE AAT.analytic_tag_group=35 AND AM.company_id in (2) AND A.group_id=75 AND AML.parent_state='posted'
+								GROUP BY CASE WHEN A.CODE IN('491103','491104') THEN 'Profit/(loss) on sale of Sec. - Listed Stock' ELSE A.name END 
+								ORDER BY amount
+    										'''))
+        record_ss = self._cr.dictfetchall()
 
-            self._cr.execute((''' select res_partner.name as customers, account_move.commercial_partner_id as parent, 
-                                    sum(account_move.amount_total) as amount from account_move, res_partner
-                                    where account_move.commercial_partner_id = res_partner.id
-                                    AND account_move.company_id in (%s)
-                                    AND account_move.type = 'out_refund' 
-                                    AND %s      
-                                    AND Extract(month FROM account_move.invoice_date_due) = Extract(month FROM DATE(NOW()))
-                                    AND Extract(YEAR FROM account_move.invoice_date_due) = Extract(YEAR FROM DATE(NOW()))                   
-                                    group by parent, customers
-                                    order by amount desc 
-                                    limit 10
-                                    ''') % (company_ids, states_arg))
-
-            record_refund = self._cr.dictfetchall()
-        else:
-            one_month_ago = (datetime.now() - relativedelta(months=1)).month
-            self._cr.execute((''' select res_partner.name as customers, account_move.commercial_partner_id as parent, 
-                                            sum(account_move.amount_total) as amount from account_move, res_partner
-                                            where account_move.commercial_partner_id = res_partner.id
-                                            AND account_move.company_id in (%s)
-                                            AND account_move.type = 'out_invoice' 
-                                            AND %s            
-                                            AND Extract(month FROM account_move.invoice_date_due) = ''' + str(
-                one_month_ago) + '''
-                                            group by parent, customers
-                                            order by amount desc 
-                                            limit 10
-                                            ''') % (company_id, states_arg))
-
-            record_invoice = self._cr.dictfetchall()
-
-            self._cr.execute((''' select res_partner.name as customers, account_move.commercial_partner_id as parent, 
-                                            sum(account_move.amount_total) as amount from account_move, res_partner
-                                            where account_move.commercial_partner_id = res_partner.id
-                                            AND account_move.company_id in (%s) 
-                                            AND account_move.type = 'out_refund' 
-                                            AND %s       
-                                            AND Extract(month FROM account_move.invoice_date_due) = ''' + str(
-                one_month_ago) + '''                  
-                                            group by parent, customers
-                                            order by amount desc 
-                                            limit 10
-                                            ''') % (company_id, states_arg))
-
-            record_refund = self._cr.dictfetchall()
-
-        summed = []
-        for out_sum in record_invoice:
-            parent = out_sum['parent']
-            su = out_sum['amount'] - \
-                 (list(filter(lambda refund: refund['parent'] == out_sum['parent'], record_refund))[0][
-                      'amount'] if len(
-                     list(filter(lambda refund: refund['parent'] == out_sum['parent'], record_refund))) > 0 else 0.0)
+        #customers = [item['share'] for item in record_ss]
+        #amount = [item['amount'] for item in record_ss]
+        #parent = [item['parent'] for item in record_ss]
+        summed=[]
+        for smm in record_ss:
             summed.append({
-                'customers': out_sum['customers'],
-                'amount': su,
-                'parent': parent
+                'customers': smm['share'],
+                'amount': smm['amount'],
+                'parent': smm['parent']
             })
-
         return summed
 
     # function to get total invoice
@@ -773,7 +718,7 @@ class DashBoard(models.Model):
         self._cr.execute(('''select sum(-(amount_total_signed)) as supplier_invoice from account_move where type ='in_invoice'
                             AND  %s                              
                             AND Extract(YEAR FROM account_move.date) = Extract(YEAR FROM DATE(NOW()))     
-                            AND account_move.company_id in (''' + str(company_ids) + '''      
+                            AND account_move.company_id in (''' + str(company_ids) + ''')    
                         ''') % (states_arg))
         record_supplier_current_year = self._cr.dictfetchall()
 
@@ -1149,6 +1094,27 @@ class DashBoard(models.Model):
         return totalbalance
 
     @api.model
+    def total_share_profit(self, *post):
+
+        company_ids = self.get_current_multi_company_value()  # self.get_current_company_value()
+
+        states_arg = ""
+        if post != ('posted',):
+            states_arg = """ parent_state = 'posted'"""
+        else:
+            states_arg = """ parent_state in ('posted', 'draft')"""
+
+        self._cr.execute((''' SELECT COALESCE(sum(AML.credit-AML.debit),0.00) as amount from 
+								account_move_line AML inner join account_account A ON A.id=account_id
+								INNER JOIN account_analytic_tag_account_move_line_rel AMLAT ON AML.ID=AMLAT.account_move_line_id
+								INNER JOIN account_analytic_tag AAT ON AAT.ID=AMLAT.account_analytic_tag_id
+								INNER JOIN account_move AM ON AM.ID=AML.move_id
+								WHERE AAT.analytic_tag_group=35 AND AM.company_id in (2) AND A.group_id=75 AND AML.parent_state='posted'
+                             '''))
+        totalshareprofit = self._cr.dictfetchall()
+        return totalshareprofit
+
+    @api.model
     def profit_income_this_month(self, *post):
 
         company_ids = self.get_current_multi_company_value()
@@ -1195,12 +1161,13 @@ class DashBoard(models.Model):
         return company_id
 
     def get_current_multi_company_value(self):
-        current_company = request.httprequest.cookies.get('cids') or self.env.company
-        #print (current_company, "======================", self.env.company)
+        current_company = request.httprequest.cookies.get('cids')
         if current_company:
-            company_ids = current_company
+            company_ids= int(current_company[0])
         else:
-            company_ids = self.env.company
+            company_ids = self.env.company.id
+        if company_ids not in self.env.user.company_ids.ids:
+            company_ids = self.env.company.id
         return company_ids
 
 

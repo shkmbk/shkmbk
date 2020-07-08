@@ -97,7 +97,7 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
 
             })
                 .then(function (result) {
-                    $('#top_10_customers').hide();
+                    $('#top_10_customers').show();
                     $('#top_10_customers_last_month').hide();
                     $('#top_10_customers_this_month').show();
                     $('#top_10_customers_this_month').empty();
@@ -1216,6 +1216,21 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                             $('#total_bank_balance').append('<span>' + tot_bank_balance + '</span>')
                             //                            $('#unreconciled_counts_this_year').append('<span style= "color:#455e7b;">' + unreconciled_counts_this_year + ' Item(s)</span><div class="title">This Year</div>')
                         })
+
+                       rpc.query({
+                        model: "account.move",
+                        method: "total_share_profit",
+                        args: [posted],
+                    })
+                        .then(function (result) {
+
+                            var totalshareprofit = result[0].amount;
+                            totalshareprofit = self.format_currency(currency, totalshareprofit);
+
+                            $('#totalshareprofit').append('<span>' + totalshareprofit + '</span>')
+                            //                            $('#unreconciled_counts_this_year').append('<span style= "color:#455e7b;">' + unreconciled_counts_this_year + ' Item(s)</span><div class="title">This Year</div>')
+                        })
+
 
                     rpc.query({
                         model: "account.move",
