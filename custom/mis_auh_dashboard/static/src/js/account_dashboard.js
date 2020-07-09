@@ -1231,6 +1231,38 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                             //                            $('#unreconciled_counts_this_year').append('<span style= "color:#455e7b;">' + unreconciled_counts_this_year + ' Item(s)</span><div class="title">This Year</div>')
                         })
 
+                        rpc.query({
+                        model: "account.move",
+                        method: "total_fixeddeposit_profit",
+                        args: [posted],
+                    })
+                        .then(function (result) {
+
+                            var totalfixeddeposit = result[0].amount;
+                            totalfixeddeposit = self.format_currency(currency, totalfixeddeposit);
+
+                            $('#totalfixeddeposit').append('<span>' + totalfixeddeposit + '</span>')
+                            //                            $('#unreconciled_counts_this_year').append('<span style= "color:#455e7b;">' + unreconciled_counts_this_year + ' Item(s)</span><div class="title">This Year</div>')
+                        })
+
+                        rpc.query({
+                        model: "account.move",
+                        method: "fixed_deposit_list",
+                        args: [posted]
+                    })
+                        .then(function (result) {
+                            var depositname = result['depositname'];
+                            var amount;
+                            var depositamount = result['depositamount'];
+                            for (var k = 0; k < depositname.length; k++) {
+                                amount = self.format_currency(currency, depositamount[k]);
+                                //                                $('#charts').append('<li><a ' + banks[k] + '" data-user-id="' + banks[k] + '">' + banks[k] + '</a>'+  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + '<span>'+ balance[k] +'</span>' + '</li>' );
+                                //$('#fixed_deposit_list').append('<li><div>' + depositname[k] + '</div><div>' + amount + '</div></li>');
+                                $('#fixed_deposit_list').append('<li><div>' + depositname[k] + '</div><div>' + amount + '</div></li>');
+                                //                                $('#current_bank_balance').append('<li>' + banks[k] +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+ balance[k] +  '</li>' );
+                                //$('#drop_charts_balance').append('<li>' + depositamount[k].toFixed(2) + '</li>');
+                            }
+                        })
 
                     rpc.query({
                         model: "account.move",

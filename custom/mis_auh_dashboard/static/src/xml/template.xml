@@ -110,7 +110,78 @@
             <!--		<div class="row" style="margin:0px">-->
             <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
                 <div class="row" style="margin:0px">
-                    <div class="col-md-4" id="col-graph">
+					<div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
+                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b>BANK AND CASH BALANCE</b>
+                                        </h3>
+                                    </div>
+
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="total_bank_balance"/></b>
+                                        </h3>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="card-body p-0" style=" height: 100px; " id="bank_balance_body_hide">
+                                    <ul id="current_bank_balance"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+					<div class="col-md-4">
+                        <div class="card" style="height:366px;">
+                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                <h3 class="custom-h3 card-title">
+                                    <b>SHARE TRADING PROFIT/LOSS</b>
+                                </h3>
+                                 <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="totalshareprofit"/></b>
+                                        </h3>
+                                    </div>
+                            </div>
+
+                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; " id="top_10_body">
+                                <ul class="users-list clearfix" id="top_10_customers"></ul>
+                                <ul class="users-list clearfix" id="top_10_customers_this_month"></ul>
+                                <ul class="users-list clearfix" id="top_10_customers_last_month"></ul>
+                            </div>
+                        </div>
+                    </div>
+					                    <div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
+                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b>FIXED DEPOSIT SUMMARY</b>
+                                        </h3>
+                                    </div>
+
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="totalfixeddeposit"/></b>
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="card-body p-0" style=" height: 100px;">
+
+                                    <ul id="fixed_deposit_list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="col-md-4" id="col-graph">
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
@@ -139,8 +210,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4" id="col-graph">
+                    </div>             
+                                        
+					<div class="col-md-4" id="col-graph">
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
@@ -217,59 +289,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
-                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b>BANK AND CASH BALANCE</b>
-                                        </h3>
-                                    </div>
-
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="total_bank_balance"/></b>
-                                        </h3>
-                                    </div>
-
-
-                                </div>
-
-                                <div class="card-body p-0" style=" height: 100px; " id="bank_balance_body_hide">
-                                    <ul id="current_bank_balance"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <b>
-                                        <h3 class="custom-h3">Aged Receivable</h3>
-                                    </b>
-                                </div>
-                                <div class="card-tools">
-                                    <select>
-                                        <option id="aged_payable_this_month">This Month</option>
-                                        <option id="aged_payable_this_year">This Year</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body" id="ex_body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div>
-                                            <canvas id="canvas1" height="250px" width="400px"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4" id="col-graph">
+					<div class="col-md-4" id="col-graph">
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
@@ -293,26 +313,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card" style="height:366px;">
-                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                <h3 class="custom-h3 card-title">
-                                    <b>SHARE TRADING PROFIT/LOSS</b>
-                                </h3>
-                                 <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="totalshareprofit"/></b>
-                                        </h3>
-                                    </div>
-                            </div>
-
-                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; " id="top_10_body">
-                                <ul class="users-list clearfix" id="top_10_customers"></ul>
-                                <ul class="users-list clearfix" id="top_10_customers_this_month"></ul>
-                                <ul class="users-list clearfix" id="top_10_customers_last_month"></ul>
                             </div>
                         </div>
                     </div>
