@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mis_investment_revaluation_form" model="ir.ui.view">
+            <field name="name">mis.invrevaluation.form</field>
+            <field name="model">mis.invrevaluation</field>
+            <field name="arch" type="xml">
+                <form string="Transaction" class="o_purchase_order">
+                    <header>
+
+                        <button name="action_loaddetail" states="draft" string="Load Detail" type="object" class="oe_highlight"/>
+
+                        <button name="button_draft" attrs="{'invisible':[('state', 'not in',('cancel'))]}" string="Set to Draft" type="object" />
+                        <button name="button_cancel" attrs="{'invisible':[('state', 'not in',('draft'))]}" string="Cancel" type="object"/>
+                        <button name="button_posted" type="object" string="Post" attrs="{'invisible':[('state', 'not in',('draft'))]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancel" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                           <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="trans_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Transaction">
+                                <field name="trans_line"
+                                    attrs="{'readonly': [('state', 'in', ('posted', 'cancel'))]}">
+                                    <tree string="Transaction Lines" editable="bottom" create="0" delete="0">
+                                        <field name="share_id" width="40%" options="{'no_create': True, 'no_edit': True}" readonly="1"/>
+                                        <field name="share_qty" width="7%"  readonly="1"/>
+                                        <field name="closingprice" width="7%"/>
+                                        <field name="closing_amount" width="7%"   readonly="1"  sum="Total"/>
+                                        <field name="unrealized_profit" width="7%"  sum="Total"/>
+                                        <field name="realized_profit_loss" width="7%"  sum="Total" optional="show"/>
+                                        <field name="cost"  width="7%" optional="show"/>
+                                        <field name="amount" width="7%"  sum="Total" optional="show"/>
+                                         <field name="dividend" width="7%"  sum="Total" optional="show"/>
+                                         <field name="brokerage_expense" width="7%"  sum="Total" optional="show"/>
+                                         <field name="net_profit_loss" width="7%"  sum="Total" optional="show"/>
+                                        <!--field name="unrealized_profit_a_c" width="7%"/-->
+                                        <field name="revaluation_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <!--group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="amount_total"/>
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group-->
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="mis_inv_revaluation_tree_view" model="ir.ui.view">
+            <field name="name">mis.invrevaluation.tree</field>
+            <field name="model">mis.invrevaluation</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                 <tree>
+                    <field name="name"/>
+                    <field name="trans_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_inv_revaluation_action" model="ir.actions.act_window">
+            <field name="name">Revaluation</field>
+            <field name="res_model">mis.invrevaluation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Transaction
+                  </p>
+            </field>
+        </record>
+
+        <menuitem id="mis_inv_transaction_menu" name="Transactions" parent="mis_investment_root" sequence="5"
+                  groups="base.group_user"/>
+        <menuitem
+            id="mis_menu_action_inv_transaction"
+            action="mis_inv_revaluation_action"
+            parent="mis_inv_transaction_menu"
+            sequence="3"/>
+
+
+    </data>
+</odoo>

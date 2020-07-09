@@ -37,12 +37,18 @@
                         <group name="investment">
                             <group>
                                 <field name="invest_analytic_tag_ids" widget="many2many_tags" readonly="1"/>
+
                                 <field name="isdeposit"/>
                                 <field name="deposit_date" attrs="{'invisible':[('isdeposit','=',False)]}"/>
                                 <field name="maturity_date" attrs="{'invisible':[('isdeposit','=',False)]}"/>
+                                <field name="interest_rate"  attrs="{'invisible':[('isdeposit','=',False)]}"/>
+                                <field name="day_in_a_year"  attrs="{'invisible':[('isdeposit','=',False)]}"/>
+                                <field name="expected_earning"  attrs="{'invisible':[('isdeposit','=',False)]}"/>
                                 <field name="responsibility_id"/>
                             </group>
                             <group>
+                                <field name="bank_journal"  options="{'no_create_edit': True}"/>
+
                                 <field name="classification_id"/>
                                 <field name="risk_id"/>
                                 <field name="liquidityreturn_id"/>
