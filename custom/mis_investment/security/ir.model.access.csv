@@ -3,3 +3,5 @@ access_mis_inv_classfication,mis.inv.classfication.group_manager,model_mis_inv_c
 access_mis_inv_riskrate,mis.inv.riskrate.group_manager,model_mis_inv_riskrate,account.group_account_manager,1,1,1,1
 access_mis_inv_liquidityreturn,mis.inv.liquidityreturn.group_manager,model_mis_inv_liquidityreturn,account.group_account_manager,1,1,1,1
 access_mis_inv_geographic,mis.inv.geographic.group_manager,model_mis_inv_geographic,account.group_account_manager,1,1,1,1
+access_mis_invrevaluation,mis.invrevaluation.group_manager,model_mis_invrevaluation,account.group_account_manager,1,1,1,1
+access_mis_invrevaluation_line,mis.invrevaluation.line.group_manager,model_mis_invrevaluation_line,account.group_account_manager,1,1,1,1

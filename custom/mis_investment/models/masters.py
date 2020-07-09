@@ -1,5 +1,6 @@
 
 from odoo import models, fields, api, _
+from datetime import date
 from odoo.exceptions import ValidationError, UserError
 
 class MisProduct(models.Model):
@@ -16,7 +17,6 @@ class MisProduct(models.Model):
     isdeposit = fields.Boolean(string="Is Deposit?",   track_visibility='onchange')
     deposit_date = fields.Date(string="Deposit Date", track_visibility='onchange')
     maturity_date = fields.Date(string="Maturity date", track_visibility='onchange')
-
     classification_id = fields.Many2one('mis.inv.classfication', string="Classification")
     risk_id = fields.Many2one('mis.inv.riskrate', string="Risk")
     liquidityreturn_id = fields.Many2one('mis.inv.liquidityreturn', string="Liquidity Return")
@@ -25,6 +25,21 @@ class MisProduct(models.Model):
     invest_analytic_tag_id = fields.Many2one('account.analytic.tag', string='Analytic Tags')
     invest_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     sum_invest_expense = fields.Float(string="Total Expenses", compute='_suminvestexpense')
+    bank_journal = fields.Many2one('account.journal', string="Bank Account",  domain=" [('type', '=', 'bank')]")
+    interest_rate =fields.Float(string="Interest Rate")
+    day_in_a_year = fields.Integer(string="No of Days in Year")
+    expected_earning = fields.Float(string="Expected Earning")
+#    expected_earning_new = fields.Float(string="Expected Earning", compute='calculate_interest', store=True)
+
+    @api.depends('interest_rate', 'day_in_a_year', 'deposit_date', 'maturity_date')
+    def calculate_interest(self):
+        for rec in self:
+            tot_expect_earning =0.00
+            if rec.interest_rate>0 and rec.day_in_a_year>0:
+                if rec.deposit_date and rec.maturity_date and rec.isdeposit==True:
+                    totdays = (rec.maturity_date - rec.deposit_date).days
+                    tot_expect_earning =rec.standard_price*(rec.interest_rate/(rec.day_in_a_year*100))*totdays
+                    rec.expected_earning = tot_expect_earning
 
 
     @api.model
@@ -40,9 +55,22 @@ class MisProduct(models.Model):
             else:
                 group_tag = self.env['mis.analytic.tag.group'].create({'name': group_name})
                 group_id = group_tag.id
+            intrate = vals.get('interest_rate') or self.interest_rate
+            if intrate<0 or intrate>100:
+                raise UserError('Interest Rete should be between 0-100')
             code = vals['name']
-            pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
-                'name': code, 'analytic_tag_group': group_id,})
+
+            obj_analytic_tag_ids = self.env['account.analytic.tag'].search([
+                ('name', '=', code), ('analytic_tag_group', '=', group_id)])
+
+            pro_analytic_tag_ids = obj_analytic_tag_ids
+            if obj_analytic_tag_ids==True:
+                pro_analytic_tag_ids=obj_analytic_tag_ids
+            else:
+                pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
+                    'name': code, 'analytic_tag_group': group_id, })
+#            pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
+#                'name': code, 'analytic_tag_group': group_id,})
             mproduct.invest_analytic_tag_ids = pro_analytic_tag_ids.ids + mproduct.invest_analytic_tag_ids.ids
         return mproduct
 
@@ -64,11 +92,15 @@ class MisProduct(models.Model):
         mproduct = super(MisProduct, self).write(vals)
         temproduct = self.env['product.template'].search([('id', '=', self.id)])
         productname =temproduct.name
+        investment_ok = vals.get('investment_ok') or self.investment_ok
+        intrate = vals.get('interest_rate') or self.interest_rate
+        if intrate < 0 or intrate > 100:
+            raise UserError('Interest Rete should be between 0-100')
 
-
-        if vals.get('investment_ok') == True or productname!=self.name:
+        if vals.get('interest_rate') == True or productname!=self.name:
             group_id = 0
             group_name='Investment'
+
 
             group_tag = self.env['mis.analytic.tag.group'].search([('name', '=', group_name)])
             if group_tag:
@@ -77,15 +109,12 @@ class MisProduct(models.Model):
             else:
                 group_tag = self.env['mis.analytic.tag.group'].create({'name': group_name})
                 group_id = group_tag.id
-
             code = self.name
 
             obj_analytic_tag_ids = self.env['account.analytic.tag'].search([
                 ('name', '=', productname), ('analytic_tag_group', '=', group_id)])
 
-
             if obj_analytic_tag_ids==True:
-
                 pro_analytic_tag_ids = obj_analytic_tag_ids.write({
                     'name': code, 'analytic_tag_group': group_id,})
             else:
