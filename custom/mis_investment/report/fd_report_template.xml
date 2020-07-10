@@ -22,7 +22,7 @@
                         </thead>
                         <tbody>
                         <t t-set="rowno" t-value="1"/>
-                            <t t-set="totamt" t-value="0.0"/>
+							<t t-set="totdeposit" t-value="0.0"/>
                             <t t-set="totearing" t-value="0.0"/>
                             <t t-set="totearningasof" t-value="0.0"/>
                             <t t-foreach="docs" t-as="line">
@@ -46,6 +46,7 @@
                                     </td>
                                      <td class="text-right">
                                             <span t-esc="'{0:,.2f}'.format(line.list_price)"/>
+											<t t-set="totdeposit" t-value="totdeposit+line.list_price"/>
                                      </td>
                                      <td class="text-right">
                                          <span t-esc="'{0:,.2f}'.format(line.interest_rate)"/>%
@@ -61,8 +62,14 @@
                                 </tr>
                             </t>
                                 <tr style="width:100%;height:30px;background-color:#d3d3d3;">
-                                    <td colspan="7" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                    <td colspan="5" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
                                       <b>TOTAL</b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totdeposit))"/></b>
+                                    </td>
+									 <td style="vertical-align:middle;text-align:right;">
+                                        <b>&amp;nbsp;</b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.2f}'.format((totearing))"/></b>
