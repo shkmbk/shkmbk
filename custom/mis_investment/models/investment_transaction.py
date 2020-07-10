@@ -36,7 +36,10 @@ class MisInvestmentRevaluation(models.Model):
     def action_loaddetail(self):
         if len(self.trans_line)==0:
             objpro = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product')])
+
             new_lines = self.env['mis.invrevaluation.line']
+
+
             for rec in objpro:
                 totqty=self.get_total_qty(rec.id)
                 if totqty>0:
@@ -47,6 +50,7 @@ class MisInvestmentRevaluation(models.Model):
                                  'closing_amount':0.00,
                                  'unrealized_profit':0.00,
                      }
+
                     new_lines.create(create_vals)
             return new_lines
 
@@ -71,6 +75,8 @@ class MisInvestmentRevaluation(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('mis.invrevaluation') or _('New')
         result = super(MisInvestmentRevaluation, self).create(vals)
         return result
+
+
 
 class MisInvestmentRevaluationLine(models.Model):
     _name = 'mis.invrevaluation.line'
@@ -100,17 +106,18 @@ class MisInvestmentRevaluationLine(models.Model):
     @api.depends('closingprice')
     def calculate_brokerage_expense(self):
         for rec in self:
-            analytictag = ''
-            for tl in self.share_id.invest_analytic_tag_ids.ids:
-                if analytictag != '':
-                    analytictag += ','
-                analytictag += str(tl)
-            # raise UserError(analytictag)
-            self._cr.execute("""select COALESCE(sum(debit-credit),0.00) as brokerage_expense from 
+            analytictag=""
+            for tl in rec.share_id.invest_analytic_tag_ids.ids:
+                if analytictag!="":
+                    analytictag+=","
+                analytictag+=str(tl)
+            #raise UserError('1')
+            
+            strsql="""select COALESCE(sum(debit-credit),0.00) as brokerage_expense from 
                         account_move_line where account_id in (select id from account_account where code in ('491199'))
                         and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-                        where account_analytic_tag_id in (%s)) and date=%s""",
-                             (analytictag, self.revaluation_id.trans_date))
+                        where account_analytic_tag_id in ("""+analytictag+""")) and date<='"""+str(self.revaluation_id.trans_date) +"'"
+            self._cr.execute(strsql)
             objbrokerage = self._cr.dictfetchall()
 
             for line in objbrokerage:
@@ -120,17 +127,20 @@ class MisInvestmentRevaluationLine(models.Model):
     @api.depends('closingprice')
     def calculate_dividend(self):
         for rec in self:
-            analytictag = ''
-            for tl in self.share_id.invest_analytic_tag_ids.ids:
-                if analytictag != '':
-                    analytictag += ','
-                analytictag += str(tl)
+            analytictag=""
+            for tl in rec.share_id.invest_analytic_tag_ids.ids:
+                if analytictag!="":
+                    analytictag+=","
+                analytictag+=str(tl)
             # raise UserError(analytictag)
-            self._cr.execute("""select COALESCE(sum(credit-debit),0.00) as dividend from 
+            
+            
+            strsql="""select COALESCE(sum(credit-debit),0.00) as dividend from 
                         account_move_line where account_id in (select id from account_account where code in ('491102'))
                         and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-                        where account_analytic_tag_id in (%s)) and date=%s""",
-                             (analytictag, self.revaluation_id.trans_date))
+                        where account_analytic_tag_id in ("""+analytictag+""")) and date<='"""+str(self.revaluation_id.trans_date) +"'"
+                             
+            self._cr.execute(strsql)
             objdividend = self._cr.dictfetchall()
             for line in objdividend:
                 rec.dividend = line['dividend']
@@ -138,18 +148,18 @@ class MisInvestmentRevaluationLine(models.Model):
     @api.depends('share_id')
     def calculate_cost(self):
         for rec in self:
-           #objproduct = self.env['ir.property'].search([('name', '=', 'standard_price'), ('res_id', '=', 'product.product,'+str(rec.share_id.id))])
-           # for pro in objproduct:
-           #     rec.cost=pro.value_float
-            dtfilter = self.revaluation_id.trans_date + timedelta(days=1)
-            objcost = self.env['stock.valuation.layer'].search([('product_id', '=', rec.share_id.id), ('create_date', '<=', dtfilter)])
-            fltotalcost=0.00
-            fltotalqty =0.00
-            for ocost in objcost:
-               fltotalqty+=ocost.quantity
-               fltotalcost += ocost.value
-            if fltotalqty!=0:
-                rec.cost = fltotalcost/fltotalqty
+            objproduct = self.env['ir.property'].search([('name', '=', 'standard_price'), ('res_id', '=', 'product.product,'+str(rec.share_id.id))])
+            for pro in objproduct:
+                rec.cost=pro.value_float
+                rec.amount = rec.share_qty * rec.cost
+            #objcost = self.env['stock.valuation.layer'].search([('product_id', '=', rec.share_id.id), ('create_date', '<=', self.revaluation_id.trans_date)], order='create_date', limit=1)
+            #objcost = self.env['product.product'].search([('id', '=', rec.share_id.id)])
+
+            #if objcost:
+                #rec.cost = objcost.unit_cost
+                #rec.cost = objcost.standard_price
+                #rec.cost = rec.share_id.standard_price
+                #rec.amount = rec.share_qty * rec.cost
 
     @api.depends('closingprice')
     def calculate_amount(self):
@@ -163,17 +173,19 @@ class MisInvestmentRevaluationLine(models.Model):
     def calculate_unrealized_profit_a_c(self):
         for rec in self:
             tot_amount = 0.00
-            analytictag=''
-            for tl in self.share_id.invest_analytic_tag_ids.ids:
-                if analytictag!='':
-                    analytictag+=','
+            analytictag=""
+            
+            for tl in rec.share_id.invest_analytic_tag_ids.ids:
+                if analytictag!="":
+                    analytictag+=","
                 analytictag+=str(tl)
             #raise UserError(analytictag)
-            self._cr.execute("""select COALESCE(sum(debit-credit),0.00) as unrealized_profit_a_c from 
+            #raise UserError('3')
+            strsql="""select COALESCE(sum(debit-credit),0.00) as unrealized_profit_a_c from 
             account_move_line where account_id in (select id from account_account where code in ('491101'))
             and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-            where account_analytic_tag_id in (%s)) and date<=%s""",
-                             (analytictag, self.revaluation_id.trans_date))
+            where account_analytic_tag_id in ("""+analytictag+""")) and date<='"""+str(self.revaluation_id.trans_date) +"'"
+            self._cr.execute(strsql)
             objrealized_profit_loss = self._cr.dictfetchall()
             for line in objrealized_profit_loss:
                 rec.unrealized_profit_a_c = line['unrealized_profit_a_c']
@@ -183,17 +195,20 @@ class MisInvestmentRevaluationLine(models.Model):
     def calculate_realized_profit_loss(self):
         for rec in self:
             tot_amount = 0.00
-            analytictag=''
-            for tl in self.share_id.invest_analytic_tag_ids.ids:
-                if analytictag!='':
-                    analytictag+=','
+            analytictag=""
+            for tl in rec.share_id.invest_analytic_tag_ids.ids:
+                if analytictag!="":
+                    analytictag+=","
                 analytictag+=str(tl)
             #raise UserError(analytictag)
-            self._cr.execute("""select COALESCE(sum(credit-debit),0.00) as totalprofit from 
+            #raise UserError('4')
+                        
+            strsql="""select COALESCE(sum(credit-debit),0.00) as totalprofit from 
             account_move_line where account_id in (select id from account_account where code in ('491103','491104','491105'))
             and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-            where account_analytic_tag_id in (%s)) and date=%s""",
-                             (analytictag, self.revaluation_id.trans_date))
+            where account_analytic_tag_id in ("""+analytictag+""")) and date<='"""+str(self.revaluation_id.trans_date) +"'"
+
+            self._cr.execute(strsql)
             objrealized_profit_loss = self._cr.dictfetchall()
             for line in objrealized_profit_loss:
                 rec.realized_profit_loss = line['totalprofit']
