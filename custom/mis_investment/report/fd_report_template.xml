@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_fd_summary_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>FIXED DEPOSIT BALANCE &amp; ACCRUED INTEREST AS ON <t t-esc="to_date"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
+                                <th name="th_description" class="text-left" width="30%"><strong>Bank</strong></th>
+                                <th class="text-left"><strong>Deposit No</strong></th>
+                                <th class="text-left"><strong>FD Date</strong></th>
+                                <th class="text-left"><strong>Maturity Date</strong></th>
+                                <th class="text-right"><strong>Amount</strong></th>
+                                <th class="text-right"><strong>Rate</strong></th>
+                                <th class="text-right"><strong>Total Interest</strong></th>
+                                <th class="text-right"><strong>Interest as on<br/><t t-esc="to_date"/></strong></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="rowno" t-value="1"/>
+                            <t t-set="totamt" t-value="0.0"/>
+                            <t t-set="totearing" t-value="0.0"/>
+                            <t t-set="totearningasof" t-value="0.0"/>
+                            <t t-foreach="docs" t-as="line">
+                                <tr>
+                                    <td name="product">
+                                        <span t-esc="rowno"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td>
+                                        <!--span t-field="line.bank_journal.bank_account_id.acc_number"/-->
+                                        <span t-field="line.bank_journal.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.deposit_date"/>
+                                    </td>
+                                    <td>
+                                         <span t-field="line.maturity_date"/>
+                                    </td>
+                                     <td class="text-right">
+                                            <span t-esc="'{0:,.2f}'.format(line.list_price)"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line.interest_rate)"/>%
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line.expected_earning)"/>
+                                         <t t-set="totearing" t-value="totearing+line.expected_earning"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(subtable[line.product_tmpl_id.id])"/>
+                                         <t t-set="totearningasof" t-value="totearningasof+subtable[line.product_tmpl_id.id]"/>
+                                     </td>
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="7" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b>TOTAL</b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totearing))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totearningasof))"/></b>
+                                    </td>
+
+                                </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+
