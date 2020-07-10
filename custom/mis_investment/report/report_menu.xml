@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <report id="action_fd_summary_report"
+            model="mis.invrevaluation"
+            string="Fixed Deposit Summary"
+            report_type="qweb-pdf"
+            name="mis_investment.report_fd_summary_document"
+            file="mis_investment.report_fd_summary_document"
+            menu="False"/>
+</odoo>
