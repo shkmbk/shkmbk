@@ -634,13 +634,15 @@ class DashBoard(models.Model):
             states_arg = """ state = 'posted'"""
 
         one_month_ago = (datetime.now() - relativedelta(months=1)).month
-        self._cr.execute((''' SELECT CASE WHEN A.CODE IN('491103','491104') THEN 'Profit/(loss) on sale of Sec. - Listed Stock' ELSE A.name END AS share,'' AS Parent, COALESCE(sum(AML.credit-AML.debit),0.00) as amount from 
+        self._cr.execute((''' SELECT CASE WHEN A.CODE IN('491103','491104','491105') THEN 'Profit/(loss) on Sales'
+                                WHEN A.CODE='491101' THEN 'Unrealized Profit/(loss)'
+                                WHEN A.CODE='491199' THEN 'Brokerage/Other Fee' ELSE A.name END AS share,'' AS Parent, COALESCE(sum(AML.credit-AML.debit),0.00) as amount from 
 								account_move_line AML inner join account_account A ON A.id=account_id
 								INNER JOIN account_analytic_tag_account_move_line_rel AMLAT ON AML.ID=AMLAT.account_move_line_id
 								INNER JOIN account_analytic_tag AAT ON AAT.ID=AMLAT.account_analytic_tag_id
 								INNER JOIN account_move AM ON AM.ID=AML.move_id
 								WHERE AAT.analytic_tag_group=35 AND AM.company_id in (''' + str(company_ids) + ''') AND A.group_id=75 AND AML.parent_state='posted'
-								GROUP BY CASE WHEN A.CODE IN('491103','491104') THEN 'Profit/(loss) on sale of Sec. - Listed Stock' ELSE A.name END 
+								GROUP BY share
 								ORDER BY amount
     										'''))
         record_ss = self._cr.dictfetchall()
