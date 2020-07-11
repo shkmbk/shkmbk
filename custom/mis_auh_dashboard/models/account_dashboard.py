@@ -1127,7 +1127,7 @@ class DashBoard(models.Model):
         else:
             states_arg = """ parent_state in ('posted', 'draft')"""
 
-        self._cr.execute(('''SELECT SUM(list_price)+SUM((((CURRENT_DATE-deposit_date)+1)*expected_earning)/((maturity_date - deposit_date)+1)) AS amount
+        self._cr.execute(('''SELECT COALESCE((SUM(list_price)+SUM((((CURRENT_DATE-deposit_date)+1)*expected_earning)/((maturity_date - deposit_date)+1))),0.00) AS amount
                             FROM product_template PT
                             INNER JOIN account_journal AJ ON PT.bank_journal=AJ.id
                             WHERE PT.type='service' and PT.investment_ok='t' and PT.isdeposit='t' and PT.maturity_date>=CURRENT_DATE and PT.company_id in (''' + str(company_ids) + ''')
@@ -1151,7 +1151,7 @@ class DashBoard(models.Model):
                             WHERE PT.type='service' and PT.investment_ok='t' and PT.isdeposit='t' and PT.maturity_date>=CURRENT_DATE and PT.company_id in (''' + str(company_ids) + ''')
                             GROUP BY  AJ.Name
                             UNION
-                            SELECT CONCAT('Interest As On ',TO_CHAR(CURRENT_DATE, 'dd-MM-yyyy'))  AS FD ,SUM((((CURRENT_DATE-deposit_date)+1)*expected_earning)/((maturity_date - deposit_date)+1)) AS Interestasontoday, 2 AS XOrd
+                            SELECT CONCAT('Interest As On ',TO_CHAR(CURRENT_DATE, 'dd-MM-yyyy'))  AS FD ,COALESCE(SUM((((CURRENT_DATE-deposit_date)+1)*expected_earning)/((maturity_date - deposit_date)+1)),0.00) AS Interestasontoday, 2 AS XOrd
                             FROM product_template PT
                             INNER JOIN account_journal AJ ON PT.bank_journal=AJ.id
                             WHERE PT.type='service' and PT.investment_ok='t' and PT.isdeposit='t' and PT.maturity_date>=CURRENT_DATE and PT.company_id in (''' + str(company_ids) + ''')
