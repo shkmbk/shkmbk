@@ -8,38 +8,13 @@
             <t t-if="not o or not 'company_id' in o">
               <t t-set="company" t-value="res_company"/>
             </t>
-            <!--xpath expr="//div[@class='header']" position="replace">
-                <div class="header">
-                    <div class="row">
-                         <div class="col-12">
-                              <img src="/mis_auh_report/static/src/img/header.jpg"
-                                     style="margin:auto;width:100%;display:block;"/>
-                          </div>
-                    </div>
-                </div>
-            </xpath>
-      </template>
 
-    <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
-        <xpath expr="//div[@class='footer']" position="replace">
-            <div class="footer">
-                <div class="row">
-                    <div class="col-11">
-                        <img src="/mis_auh_report/static/src/img/footer.jpg" style="margin:auto;width:100%"/>
-                    </div>
-                    <div  class="col-1 text-right">
-                      <br/>
-                            Page: <span class="page"/> / <span class="topage"/>
-                    </div>
-                </div>
-            </div>
-        </xpath-->
     </template>
     <t t-call="web.external_layout">
         <t t-set="o" t-value="o.with_context(lang=lang)"/>
         <div class="page">
             <center><h2>Revaluation Report</h2></center>
-            <table class="table table-sm o_main_table" style="font-size: 14px;">
+            <table class="table table-sm o_main_table" style="font-size: 10px;">
                 <thead>
                     <tr>
                         <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
@@ -155,7 +130,7 @@
         string="Print Revalution"
         id="report_revaluation_print"
         model="mis.invrevaluation"
-        report_type="qweb-html"
+        report_type="qweb-pdf"
         name="mis_investment.report_revaluation"
         file="mis_investment.report_revaluation"
     />

@@ -22,7 +22,7 @@ class MisProduct(models.Model):
     liquidityreturn_id = fields.Many2one('mis.inv.liquidityreturn', string="Liquidity Return")
     geographic_id = fields.Many2one('mis.inv.geographic', string="Geographic")
     responsibility_id = fields.Many2one('res.partner', string="Responsibility")
-    invest_analytic_tag_id = fields.Many2one('account.analytic.tag', string='Analytic Tags')
+#    invest_analytic_tag_id = fields.Many2one('account.analytic.tag', string='Analytic Tags')
     invest_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     sum_invest_expense = fields.Float(string="Total Expenses", compute='_suminvestexpense')
     bank_journal = fields.Many2one('account.journal', string="Bank Account",  domain=" [('type', '=', 'bank')]")

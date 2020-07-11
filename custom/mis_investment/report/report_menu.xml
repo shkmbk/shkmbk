@@ -7,4 +7,12 @@
             name="mis_investment.report_fd_summary_document"
             file="mis_investment.report_fd_summary_document"
             menu="False"/>
+
+    <report id="action_share_revalution_report"
+            model="mis.invrevaluation"
+            string="Revaluation Report"
+            report_type="qweb-html"
+            name="mis_investment.report_share_revaluation_document"
+            file="mis_investment.report_share_revaluation_document"
+            menu="False"/>
 </odoo>

@@ -33,7 +33,9 @@
                                     </td>
                                     <td>
                                         <!--span t-field="line.bank_journal.bank_account_id.acc_number"/-->
-                                        <span t-field="line.bank_journal.name"/>
+                                        <t t-if="line.bank_journal">
+                                            <span t-field="line.bank_journal.name"/>
+                                        </t>
                                     </td>
                                     <td>
                                         <span t-field="line.name"/>

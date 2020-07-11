@@ -45,7 +45,7 @@
                                          <field name="dividend" width="7%"  sum="Total" optional="show"/>
                                          <field name="brokerage_expense" width="7%"  sum="Total" optional="show"/>
                                          <field name="net_profit_loss" width="7%"  sum="Total" optional="show"/>
-                                        <!--field name="unrealized_profit_a_c" width="7%"/-->
+                                        <field name="unrealized_profit_a_c" width="7%"  optional="show"/>
                                         <field name="revaluation_id" invisible="1"/>
                                     </tree>
                                 </field>
