@@ -1465,7 +1465,7 @@ class DashBoard(models.Model):
 								INNER JOIN res_partner RS ON RS.id=AML.partner_id
 								WHERE AM.company_id in (''' + str(company_ids) + ''') AND AM.state='posted' AND A.code IN('414101','414102')
 								GROUP BY partner
-                                ORDER BY amount DESC
+                                ORDER BY salaryamount DESC
     										'''))
         record_ss = self._cr.dictfetchall()
 
