@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_share_revaluation_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>SUMMARY OF SHARE INVESTMENTS AS ON  <t t-esc="to_date"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                 <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
+                                <th name="th_description" class="text-left"><strong>Name of Share</strong></th>
+                                <th class="text-right"><strong>Qty</strong></th>
+                                <th class="text-right"><strong>Closing Price</strong></th>
+                                <th class="text-right" ><strong>Closing Amount</strong></th>
+                                <th class="text-right"><strong>UnRealize Profit / Loss</strong></th>
+                                <th class="text-right"><strong>Realize Profit / Loss</strong></th>
+                                <th class="text-right"><strong>Dividend</strong></th>
+                                <th class="text-right"><strong>Expenses</strong></th>
+                                <th class="text-right" ><strong>Net Profit / Loss</strong></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="rowno" t-value="1"/>
+							<t t-set="totnetprofit" t-value="0.0"/>
+                            <t t-set="netprofit" t-value="0.0"/>
+                            <t t-set="totqty" t-value="0.0"/>
+                            <t t-set="totclosingamt" t-value="0.0"/>
+                            <t t-set="totearing" t-value="0.0"/>
+                            <t t-set="totrelize" t-value="0.0"/>
+                            <t t-set="totdividend" t-value="0.0"/>
+                            <t t-set="totbrokerage" t-value="0.0"/>
+                            <t t-set="totunrelize" t-value="0.0"/>
+
+
+                            <t t-foreach="docs" t-as="line">
+                                <tr>
+                                    <td name="product">
+                                        <span t-esc="rowno"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <!--td>
+                                        <span t-field="line.deposit_date"/>
+                                    </td-->
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(table4qty[line.id])"/>
+                                         <t t-set="totqty" t-value="totqty+table4qty[line.id]"/>
+                                    </td>
+                                     <td class="text-right">
+
+                                         <span t-esc="'{0:,.2f}'.format(table4closingamt[line.id])"/>
+
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(table4closingamt[line.id]*table4qty[line.id])"/>
+                                         <t t-set="totclosingamt" t-value="totclosingamt+(table4closingamt[line.id]*table4qty[line.id])"/>
+                                     </td>
+
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(table4unrelize[line.id])"/>
+                                         <t t-set="totunrelize" t-value="totunrelize+(table4unrelize[line.id])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(table4realize_profit[line.id])"/>
+                                         <t t-set="totrelize" t-value="totrelize+(table4realize_profit[line.id])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(table4dividend[line.id])"/>
+                                         <t t-set="totdividend" t-value="totdividend+(table4dividend[line.id])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(table4brokerage_expense[line.id])"/>
+                                         <t t-set="totbrokerage" t-value="totbrokerage+(table4brokerage_expense[line.id])"/>
+                                     </td>
+                                    <td class="text-right">
+                                        <t t-set="netprofit" t-value="((table4unrelize[line.id]+table4realize_profit[line.id]+table4dividend[line.id])-table4brokerage_expense[line.id])"/>
+                                         <span t-esc="'{0:,.2f}'.format(netprofit)"/>
+                                         <t t-set="totnetprofit" t-value="totnetprofit+netprofit"/>
+                                     </td>
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="4" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b>TOTAL</b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totclosingamt))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totunrelize))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totrelize))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totdividend))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totbrokerage))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totnetprofit))"/></b>
+                                    </td>
+
+                                </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+
