@@ -178,7 +178,26 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>.
+					
+					<div class="col-md-4">
+                        <div class="card" style="height:366px;">
+                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                <h3 class="custom-h3 card-title">
+                                    <b>SALARY INCOME SUMMARY</b>
+                                </h3>
+                                 <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="totalsalary"/></b>
+                                        </h3>
+                                    </div>
+                            </div>
+
+                        <div class="card-body p-0" style=" height: 100px;">
+                                    <ul id="salary_list"></ul>
+                                </div>
+                        </div>
+                    </div>					
 					
 					<div class="col-md-4" id="col-graph">
                         <div class="card">
@@ -209,26 +228,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>             
-                                        
-					<div class="col-md-4">
-                        <div class="card" style="height:366px;">
-                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                <h3 class="custom-h3 card-title">
-                                    <b>SALARY INCOME SUMMRY</b>
-                                </h3>
-                                 <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="totalsalary"/></b>
-                                        </h3>
-                                    </div>
-                            </div>
-
-                        <div class="card-body p-0" style=" height: 100px;">
-                                    <ul id="salary_list"></ul>
-                                </div>
-                        </div>
-                    </div>
+                    </div>                                             
 					
 					<div class="col-md-4" id="col-graph">
                         <div class="card">
