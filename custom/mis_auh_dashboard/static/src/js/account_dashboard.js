@@ -1380,6 +1380,35 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                                 $('#net_profit_current_months').append('<span>' + net_profit_this_months + '</span> <div class="title">This Month</div>')
                             }
                         })
+				                        rpc.query({
+                        model: "account.move",
+                        method: "total_salary_income",
+                        args: [posted],
+                    })
+                        .then(function (result) {
+
+                            var totalsalary = result[0].amount;
+                            totalsalary = self.format_currency(currency, totalsalary);
+
+                            $('#totalsalary').append('<span>' + totalsalary + '</span>')
+                            //                            $('#unreconciled_counts_this_year').append('<span style= "color:#455e7b;">' + unreconciled_counts_this_year + ' Item(s)</span><div class="title">This Year</div>')
+                        })
+
+                   rpc.query({
+                        model: "account.move",
+                        method: "salary_list",
+                        args: [posted]
+                    }).then(function (result) {
+                            var due_count = 0;
+                            var amount;
+                            _.forEach(result, function (x) {
+                                $('#salary_list').show();
+                                due_count++;
+                                amount = self.format_currency(currency, x.salaryamount);
+                                $('#salary_list').append('<li><div id="line_' + x.parent + '" data-user-id="' + x.parent + '">' + x.partner + '</div>' + '<div id="line_' + x.parent + '" data-user-id="' + x.parent + '">' + amount + '</div>' + '</li>');
+
+                            });
+                        })	
 
                     rpc.query({
                         model: "account.move",

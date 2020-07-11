@@ -1428,3 +1428,51 @@ class DashBoard(models.Model):
 
         }
         return records
+        
+    @api.model
+    def total_salary_income(self, *post):
+
+        company_ids = self.get_current_multi_company_value()  # self.get_current_company_value()
+
+        states_arg = ""
+        if post != ('posted',):
+            states_arg = """ parent_state = 'posted'"""
+        else:
+            states_arg = """ parent_state in ('posted', 'draft')"""
+
+        self._cr.execute(('''SELECT COALESCE(sum(AML.credit-AML.debit),0.00) as amount from 
+								account_move_line AML inner join account_account A ON A.id=AML.account_id
+								INNER JOIN account_move AM ON AM.ID=AML.move_id
+								INNER JOIN res_partner RS ON RS.id=AML.partner_id
+								WHERE AM.company_id in (''' + str(company_ids) + ''') AND AM.state='posted' AND A.code IN('414101','414102')
+                             '''))
+        totalsalary = self._cr.dictfetchall()
+        return totalsalary
+		
+    @api.model
+    def salary_list(self, *post):
+        company_ids = self.get_current_multi_company_value()
+        states_arg = ""
+        if post[0] != 'posted':
+            states_arg = """ state in ('posted', 'draft')"""
+        else:
+            states_arg = """ state = 'posted'"""
+
+        one_month_ago = (datetime.now() - relativedelta(months=1)).month
+        self._cr.execute(('''SELECT RS.name As partner, COALESCE(sum(AML.credit-AML.debit),0.00) as salaryamount,'' AS parent from 
+								account_move_line AML inner join account_account A ON A.id=AML.account_id
+								INNER JOIN account_move AM ON AM.ID=AML.move_id
+								INNER JOIN res_partner RS ON RS.id=AML.partner_id
+								WHERE AM.company_id in (''' + str(company_ids) + ''') AND AM.state='posted' AND A.code IN('414101','414102')
+								GROUP BY partner
+    										'''))
+        record_ss = self._cr.dictfetchall()
+
+        summed=[]
+        for smm in record_ss:
+            summed.append({
+                'partner': smm['partner'],
+                'salaryamount': smm['salaryamount'],
+                'parent': smm['parent']
+            })
+        return summed
