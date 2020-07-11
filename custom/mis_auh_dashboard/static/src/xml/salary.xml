@@ -1,0 +1,10 @@
+SELECT COALESCE(sum(AML.credit-AML.debit),0.00) as amount from 
+								account_move_line AML inner join account_account A ON A.id=account_id
+								INNER JOIN account_move AM ON AM.ID=AML.move_id
+								WHERE AM.company_id in (''' + str(company_ids) + ''') AND AM.state='posted'
+								
+								
+SELECT COALESCE(sum(AML.credit-AML.debit),0.00) as amount from 
+								account_move_line AML inner join account_account A ON A.id=AML.account_id
+								INNER JOIN account_move AM ON AM.ID=AML.move_id
+								WHERE AM.company_id in (2) AND AM.state='posted'								

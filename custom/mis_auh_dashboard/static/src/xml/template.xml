@@ -156,7 +156,7 @@
                             </div>
                         </div>
                     </div>
-					                    <div class="col-md-4" id="col-graph">
+					<div class="col-md-4" id="col-graph">
                         <div class="card">
                             <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
                                 <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
@@ -174,7 +174,6 @@
                                 </div>
 
                                 <div class="card-body p-0" style=" height: 100px;">
-
                                     <ul id="fixed_deposit_list"></ul>
                                 </div>
                             </div>
@@ -212,83 +211,25 @@
                         </div>
                     </div>             
                                         
-					<div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <b>
-                                        <h3 class="custom-h3">INVOICES</h3>
-                                    </b>
-                                </div>
-                                <div class="card-tools">
-                                    <select>
-                                        <option id="invoice_this_month">This Month</option>
-                                        <option id="invoice_this_year">This Year</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body" id="">
-                                <div class="row">
-                                    <div class="col-md-12 mt-3">
-                                        <h1 class="custom-h1" style="margin-bottom: 0;">Customer Invoice</h1>
-                                        <ul class="skill-list">
-                                            <li class="skill" style="display: flex;justify-content: space-between;color: #000;">
-                                                <p id="total_customer_invoice_paid" />
-                                                <p id="total_customer_invoice" />
-                                                <p id="total_customer_invoice_paid_current_year" />
-                                                <p id="total_customer_invoice_current_year" />
-                                                <p id="total_customer_invoice_paid_current_month" />
-                                                <p id="total_customer_invoice_current_month" />
-                                            </li>
-                                            <li>
-                                                <progress id="tot_invoice" class="skill-1" max="" value="">
-                                                    <strong>Skill Level: 50%</strong>
-                                                </progress>
-                                            </li>
-                                            <li>
-                                                <progress id="tot_invoice_current_year" class="skill-1" max="" value="">
-                                                    <strong>Skill Level: 50%</strong>
-                                                </progress>
-                                            </li>
-                                            <li>
-                                                <progress id="tot_invoice_current_month" class="skill-1" max="" value="">
-                                                    <strong>Skill Level: 50%</strong>
-                                                </progress>
-                                            </li>
-                                        </ul>
-                                        <div role="separator" class="dropdown-divider" />
-                                        <h1 class="custom-h1" style="margin-bottom: 0;">Supplier Invoice</h1>
-                                        <ul class="skill-list">
-                                            <li class="skill" style="display: flex;justify-content: space-between;color: #000;">
-                                                <p id="total_supplier_invoice_paid" />
-                                                <p id="total_supplier_invoice" />
-                                                <p id="total_supplier_invoice_paid_current_year" />
-                                                <p id="total_supplier_invoice_current_year" />
-                                                <p id="total_supplier_invoice_paid_current_month" />
-                                                <p id="total_supplier_invoice_current_month" />
-                                            </li>
-                                            <li>
-                                                <progress id="tot_supplier_inv" class="skill-1" max="" value="">
-                                                    <strong>Skill Level: 50%</strong>
-                                                </progress>
-                                            </li>
-                                            <li>
-                                                <progress id="tot_supplier_inv_current_year" class="skill-1" max="" value="">
-                                                    <strong>Skill Level: 50%</strong>
-                                                </progress>
-                                            </li>
-                                            <li>
-                                                <progress id="tot_supplier_inv_current_month" class="skill-1" max="" value="">
-                                                    <strong>Skill Level: 50%</strong>
-                                                </progress>
-                                            </li>
-                                        </ul>
+					<div class="col-md-4">
+                        <div class="card" style="height:366px;">
+                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                <h3 class="custom-h3 card-title">
+                                    <b>SALARY INCOME SUMMRY</b>
+                                </h3>
+                                 <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="totalsalary"/></b>
+                                        </h3>
                                     </div>
-                                </div>
                             </div>
+
+                        <div class="card-body p-0" style=" height: 100px;">
+                                    <ul id="salary_list"></ul>
+                                </div>
                         </div>
                     </div>
+					
 					<div class="col-md-4" id="col-graph">
                         <div class="card">
                             <div class="card-header">

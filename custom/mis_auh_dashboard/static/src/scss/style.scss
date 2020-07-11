@@ -805,6 +805,23 @@ body {
     padding: 0;
 }
 
+.accounts-dashboard-wrap #salary_list {
+    padding: 0;
+}
+
+.accounts-dashboard-wrap #salary_list li {
+    list-style: none;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: 13px;
+    color: #455e7b !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+    padding-left: 2rem;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2rem;
+}
+
 .accounts-dashboard-wrap #top_10_customers li {
     list-style: none;
     padding-top: 6px;
