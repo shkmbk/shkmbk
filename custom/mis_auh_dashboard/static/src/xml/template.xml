@@ -178,7 +178,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>.
+                    </div>
 					
 					<div class="col-md-4">
                         <div class="card" style="height:366px;">
@@ -228,7 +228,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                                             
+                    </div>                    
+
 					
 					<div class="col-md-4" id="col-graph">
                         <div class="card">
