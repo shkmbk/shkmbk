@@ -19,10 +19,10 @@ class FDSummaryReport(models.AbstractModel):
         return totqty
     def get_last_closing_amount(self, reval_id, share_id, to_date ):
         objlastvalline = self.env['mis.invrevaluation.line'].search([('revaluation_id', '=', reval_id),  ('share_id', '=', share_id)])
-        closeamt=0.0
+        closingprice=0.0
         for valine in objlastvalline:
-            closeamt=valine.closingprice
-        return closeamt
+            closingprice=valine.closingprice
+        return closingprice
 
     def get_last_unrelize_amount(self, reval_id, share_id, to_date ): 
         objlastvalline = self.env['mis.invrevaluation.line'].search([('revaluation_id', '=', reval_id),  ('share_id', '=', share_id)])
@@ -40,11 +40,12 @@ class FDSummaryReport(models.AbstractModel):
             if analytictag != "":
                 analytictag += ","
             analytictag += str(tl)
-
-        self._cr.execute("""select COALESCE(sum(credit-debit),0.00) as dividend from 
+        strsql = """select COALESCE(sum(credit-debit),0.00) as dividend from 
                     account_move_line where account_id in (select id from account_account where code in ('491102'))
                     and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-                    where  account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"'""" +"""AND '""" + str(to_date) +"'""")
+                    where  account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
+
+        self._cr.execute(strsql)
         objdividend = self._cr.dictfetchall()
         for line in objdividend:
             totaldivident += line['dividend']
@@ -59,11 +60,13 @@ class FDSummaryReport(models.AbstractModel):
             if analytictag != "":
                 analytictag += ","
             analytictag += str(tl)
-        # raise UserError(analytictag)
-        self._cr.execute("""select COALESCE(sum(debit-credit),0.00) as brokerage_expense from 
+        strsql = """select COALESCE(sum(debit-credit),0.00) as brokerage_expense from 
                     account_move_line where account_id in (select id from account_account where code in ('491199'))
                     and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-                    where  account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"'""" +"""AND '""" + str(to_date) +"'""")
+                    where  account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
+
+        self._cr.execute(strsql)
+
         objbrokerage = self._cr.dictfetchall()
 
         for line in objbrokerage:
@@ -80,12 +83,13 @@ class FDSummaryReport(models.AbstractModel):
 
         for tl in objpro.invest_analytic_tag_ids.ids:
             if analytictag!="":
-                analytictag+=",";
+                analytictag+=","
             analytictag+=str(tl)
         strsql ="""select COALESCE(sum(credit-debit),0.00) as totalprofit from 
         account_move_line where account_id in (select id from account_account where code in ('491103','491104','491105'))
         and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-        where account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"'""" +"""AND '""" + str(to_date) +"'"""
+        where account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
+
         self._cr.execute(strsql)
         objrealized_profit_loss = self._cr.dictfetchall()
 
@@ -93,24 +97,22 @@ class FDSummaryReport(models.AbstractModel):
             totrealize_profit += line['totalprofit']
         return totrealize_profit
 
-
-
-
     def _get_report_values(self, docids, data=None):
 
         from_date = data['date_from']
         to_date = data['date_to']
         dtfilter = to_date #+ timedelta(days=1)
         last_valudation_date=""
-        table4expearn = {}
-        table4qty = {}
-        table4closingamt = {}
-        table4realize_profit={}
-        table4dividend = {}
-        table4brokerage_expense={}
-        table4unrelize={}
+        expearn = 0.0
+        qty = 0.0
+        closingamt = 0.0
+        realize_profit=0.0
+        dividend = 0.0
+        brokerage_expense=0.0
+        unrelize=0.0
         table4lastvaluation = {}
         reval_id=0
+        master_table =[]
 
         objlastvaluation = self.env['mis.invrevaluation'].search([('trans_date', '<=' ,to_date)], order='trans_date desc', limit=1)
         if objlastvaluation:
@@ -119,25 +121,32 @@ class FDSummaryReport(models.AbstractModel):
 
         objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product')])
         for shr in objshare:
-            table4qty[shr.id] = self.get_total_qty(shr.id, dtfilter)
-            table4closingamt[shr.id] = self.get_last_closing_amount(reval_id, shr.id, to_date)
-            table4realize_profit[shr.id] = self.get_realized_profit_loss(shr.id, from_date, to_date)
-            table4dividend[shr.id] = self.get_dividend(shr.id, from_date, to_date)
-            table4brokerage_expense[shr.id] = self.get_brokerage_expense(shr.id,from_date, to_date)
-            table4unrelize[shr.id]=self.get_last_unrelize_amount(reval_id, shr.id, to_date)        
+            qty = self.get_total_qty(shr.id, dtfilter)
+            closingprice = self.get_last_closing_amount(reval_id, shr.id, to_date)
+            realize_profit = self.get_realized_profit_loss(shr.id, from_date, to_date)
+            dividend = self.get_dividend(shr.id, from_date, to_date)
+            brokerage_expense = self.get_brokerage_expense(shr.id,from_date, to_date)
+            unrelize=self.get_last_unrelize_amount(reval_id, shr.id, to_date)
+            if (qty!=0.0 or realize_profit!=0.0 or dividend!=0.0 or brokerage_expense!=0.0 or unrelize!=0.0):
+                master_table.append({
+                    'sharerec': shr,
+                    'qty': qty,
+                    'closingprice': closingprice,
+                    'realize_profit': realize_profit,
+                    'dividend': dividend,
+                    'brokerage_expense': brokerage_expense,
+                    'unrelize' : unrelize,
+                })
+
+        #master_table.sort(key=lambda item:(item["closingprice"]*item["qty"]),reverse=True)
+        sortedmaster_table= sorted(master_table, key=lambda item: (item["closingprice"]*item["qty"], item["realize_profit"]+item["unrelize"]+item["dividend"]-item["brokerage_expense"]), reverse=True)
 
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'mis.invrevaluation',
-            'docs': objshare,
+            'docs': sortedmaster_table,
             'to_date': to_date,
-            'subtable': table4expearn,
+            'header_date': data['header_date'],
             'lastdate': last_valudation_date,
-            'table4qty':table4qty,
-            'table4closingamt': table4closingamt,
-            'table4realize_profit': table4realize_profit,
-            'table4dividend': table4dividend,
-            'table4brokerage_expense': table4brokerage_expense,
-            'table4unrelize': table4unrelize,
         }
         return docargs
