@@ -227,35 +227,41 @@
             <p t-field="o.notes"/>
             <div class="oe_structure"/>
         </div>
-            <div class="row">
+		
+		<div class="row">
+		  <div class="col-3" style="right;">
+			  <p class="text-center" style="padding-left:5mm;">
+				  <br/><br/><br/><br/>
+				  <span t-esc="o.write_uid.name"/>
+			  </p>
+			<p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+				Prepared by</p>
+		  </div>
 
-              <div class="col-3" style="right;">
-                  <p class="text-center" style="padding-left:5mm;">
-                      <br/><br/><br/><br/>
-                      <span t-esc="o.user_id.name"/>
-                  </p>
+		  <div class="col-2" style="center">
 
-                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+		  </div>
+		  <div class="col-2" style="right;">
+			  <p class="text-center" style="padding-left:5mm;">
+				  <br/><br/><br/><br/><br/>
 
-                    Prepared by</p>
-              </div>
+			  </p>
+			<p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+				Requested by</p>
+		  </div>
 
-              <div class="col-6" style="center">
+		  <div class="col-2" style="center">
 
-              </div>
-
-              <div class="col-3" style="left">
-                  <p class="text-center" style="padding-left:5mm;">
-                      <br/><br/><br/><br/><br/>
-
-                  </p>
-
-                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
-
-                    Approved By
-                </p>
-              </div>
-        </div>
+		  </div>
+		  <div class="col-3" style="left">
+			  <p class="text-center" style="padding-left:5mm;">
+				  <br/><br/><br/><br/><br/>
+			  </p>
+			<p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+				Approved By
+			</p>
+		  </div>
+		</div>
     </t>
     </template>
 

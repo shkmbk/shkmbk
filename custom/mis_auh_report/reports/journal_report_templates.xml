@@ -82,12 +82,12 @@
                                  <tr>
                                      <td align="left"><strong>Company</strong></td>
                                      <td align="left"><strong>:  </strong></td>
-                                     <td align="right"><span t-if="o.company_id"/></td>
+                                     <td align="right"><span t-field="o.company_id"/></td>
                                 </tr>
                                  <tr>
-                                     <td align="left"><strong>Analytic Account</strong></td>
+                                     <td align="left"><strong>Division</strong></td>
                                      <td align="left"><strong>:  </strong></td>
-                                     <td align="right"><span t-if="o.analytic_id"/></td>
+                                     <td align="right"><span t-field="o.analytic_id"/></td>
                                 </tr>
                             </table>
                         </td>

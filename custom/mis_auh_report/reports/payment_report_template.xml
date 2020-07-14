@@ -78,6 +78,16 @@
 
                         <td width="40%" valign="top" align="right">
                             <table width="100%" align="right">
+								<tr>
+                                     <td align="left"><strong>Company</strong></td>
+                                     <td align="left"><strong>:  </strong></td>
+                                     <td align="right"><span t-field="o.company_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td align="left"  width="40%"><strong>Division</strong></td>
+                                    <td align="left"  width="5%"><strong>:</strong></td>
+                                    <td align="right" width="55%"><span t-esc="o.analytic_id.name"/></td>
+                                </tr>							
                                 <tr>
                                     <td align="left"  width="40%"><strong>Payment Method</strong></td>
                                     <td align="left"  width="5%"><strong>:</strong></td>
@@ -123,7 +133,7 @@
                 </t>
             </div>
 
-            <div class="row">
+			<div class="row">
               <div class="col-3" style="right;">
                   <p class="text-center" style="padding-left:5mm;">
                       <br/><br/><br/><br/>
@@ -156,7 +166,7 @@
                     Approved By
                 </p>
               </div>
-        </div>
+			</div>
         </t>
     </template>
 
