@@ -48,14 +48,14 @@
                 <tr>
                     <td width="100%"  colspan="2" valign="middle" align="center">
                         <br/><br/>
-
-
-                        <h2 t-if="o.state == 'draft'">Request for Quotation</h2>
+                        <!--h2 t-if="o.state == 'draft'">Request for Quotation</h2>
                         <h2 t-if="o.state in ['sent', 'to approve']">Purchase Order</h2>
                         <h2 t-if="o.state in ['purchase', 'done']">Purchase Order</h2>
+                        <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order</h2-->
+						<h2 t-if="o.state == 'draft' and is_purchaseorder==0">Request for Quotation</h2>
+                        <h2 t-if="o.state == 'draft' and  is_purchaseorder==1">Purchase Order</h2>
+                        <h2 t-if="o.state in ['purchase', 'done']  and  is_purchaseorder==1">Purchase Order</h2>
                         <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order</h2>
-
-
                     </td>
                 </tr>
                 <tr>
@@ -79,16 +79,21 @@
                                         <td align="left"><strong>:</strong></td>
                                         <td align="right"><span t-field="o.date_order" t-options="{&quot;widget&quot;: &quot;date&quot;}"/></td>
                                     </tr>
-                                     <tr>
+                                     <tr >
                                          <td align="left"><strong>Order No</strong></td>
                                          <td align="left"><strong>:</strong></td>
                                          <td align="right"><span t-field="o.name"/></td>
                                     </tr>
-                                     <tr>
+                                     <tr  t-if="o.analytic_id.id==1">
                                          <td align="left"><strong>TRN</strong></td>
                                          <td align="left"><strong>:</strong></td>
                                          <td align="right">100385617400003</td>
                                     </tr>
+                                     <tr  t-if="o.analytic_id.id!=1">
+                                         <td align="left"><strong>Division</strong></td>
+                                         <td align="left"><strong>:</strong></td>
+                                         <td align="right"><span t-esc="o.analytic_id.name"/></td>
+                                    </tr>									
                                     <tr>
                                          <td align="left"><strong>Currency</strong></td>
                                         <td align="left"><strong>:</strong></td>
@@ -258,6 +263,7 @@
     <t t-call="web.html_container">
          <t t-set="is_header" t-value="1"/>
         <t t-set="is_quotation" t-value="0"/>
+		<t t-set="is_purchaseorder" t-value="1"/>
         <t t-foreach="docs" t-as="o">
             <t t-call="mis_auh_report.report_purchaseorder_document" t-lang="o.partner_id.lang"/>
         </t>
@@ -268,6 +274,7 @@
     <t t-call="web.html_container">
          <t t-set="is_header" t-value="1"/>
         <t t-set="is_quotation" t-value="1"/>
+		<t t-set="is_purchaseorder" t-value="0"/>
         <t t-foreach="docs" t-as="o">
             <t t-call="mis_auh_report.report_purchaseorder_document" t-lang="o.partner_id.lang"/>
         </t>
