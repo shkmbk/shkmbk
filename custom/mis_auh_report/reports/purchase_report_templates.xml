@@ -52,8 +52,8 @@
                         <h2 t-if="o.state in ['sent', 'to approve']">Purchase Order</h2>
                         <h2 t-if="o.state in ['purchase', 'done']">Purchase Order</h2>
                         <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order</h2-->
-						<h2 t-if="o.state == 'draft' and is_purchaseorder==0">Request for Quotation</h2>
-                        <h2 t-if="o.state == 'draft' and  is_purchaseorder==1">Purchase Order</h2>
+						<h2 t-if="o.state in ['draft','sent','to approve'] and is_purchaseorder==0">Request for Quotation</h2>
+                        <h2 t-if="o.state in ['draft','sent','to approve'] and  is_purchaseorder==1">Purchase Order</h2>
                         <h2 t-if="o.state in ['purchase', 'done']  and  is_purchaseorder==1">Purchase Order</h2>
                         <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order</h2>
                     </td>
@@ -109,8 +109,8 @@
                 <thead>
                     <tr>
                         <th name="th_description" class="text-left" width="7%"><strong>Sl No</strong></th>
-                        <th name="th_description" class="text-left"  width="43%"><strong>Description</strong></th>
-                        <th class="text-center"  width="7%"><strong>Qty</strong></th>
+                        <th name="th_description" class="text-left"  width="40%"><strong>Description</strong></th>
+                        <th class="text-center"  width="10%"><strong>Qty</strong></th>
                         <th class="text-right"  width="7%"><strong>Rate</strong></th>
                         <th class="text-right"  width="7%"><strong>Taxable Amount</strong></th>
                         <th class="text-right"  width="9%"><strong>VAT (%)</strong></th>
