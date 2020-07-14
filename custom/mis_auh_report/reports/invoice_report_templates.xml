@@ -92,10 +92,15 @@
                                          <td align="left"><strong>:</strong></td>
                                          <td align="right"><span t-if="o.name != '/'" t-field="o.name"/></td>
                                     </tr>
-                                     <tr>
+                                     <tr  t-if="o.analytic_id.id==1">
                                          <td align="left"><strong>TRN</strong></td>
                                          <td align="left"><strong>:</strong></td>
                                          <td align="right">100385617400003</td>
+                                    </tr>
+                                     <tr  t-if="o.analytic_id.id!=1">
+                                         <td align="left"><strong>Division</strong></td>
+                                         <td align="left"><strong>:</strong></td>
+                                         <td align="right"><span t-esc="o.analytic_id.name"/></td>
                                     </tr>
                                     <tr>
                                          <td align="left"><strong>Currency</strong></td>
