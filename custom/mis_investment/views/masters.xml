@@ -36,7 +36,7 @@
                     <page string="Investment"  attrs="{'invisible':[('investment_ok','=',False)]}" name="investment">
                         <group name="investment">
                             <group>
-                                <field name="invest_analytic_tag_ids" widget="many2many_tags" readonly="1"/>
+                                <field name="invest_analytic_tag_ids" widget="many2many_tags" readonly="0"/>
 
                                 <field name="isdeposit"/>
                                 <field name="deposit_date" attrs="{'invisible':[('isdeposit','=',False)]}"/>
