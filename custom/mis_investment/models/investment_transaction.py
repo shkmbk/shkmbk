@@ -16,11 +16,13 @@ class MisInvestmentRevaluation(models.Model):
     ], string='Status', readonly=True, index=True, copy=False, default='draft', tracking=True)
 
     name = fields.Char('Name')
+    ref = fields.Char('Referenec', required=True)
     trans_date = fields.Date('Date')
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True,
                                  default=lambda self: self.env.company.id)
     trans_line = fields.One2many('mis.invrevaluation.line', 'revaluation_id', string='Revaluation Lines',
                                  states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
+    move_id= fields.Many2one('account.move', 'Posted Journal')
 
     def get_total_qty(self,  productid):
         dtfilter = self.trans_date + timedelta(days=1)
@@ -32,6 +34,91 @@ class MisInvestmentRevaluation(models.Model):
             totqty+=gr.quantity
         return totqty
 
+    def check_unrealized_profit_a_c(self, shareid):
+        analytictag=""
+        for tl in shareid.invest_analytic_tag_ids.ids:
+            if analytictag!="":
+                analytictag+=","
+            analytictag+=str(tl)
+        strsql="""select COALESCE(sum(debit-credit),0.00) as unrealized_profit_a_c from 
+        account_move_line where account_id in (select id from account_account where code in ('491101'))
+        and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
+        where account_analytic_tag_id in ("""+analytictag+""")) and date<='""" + str(self.trans_date) +"'"""" 
+         and parent_state='posted' and company_id="""+ str(self.company_id.id)
+        #raise UserError(strsql)
+
+        self._cr.execute(strsql)
+        objrealized_profit_loss = self._cr.dictfetchall()
+
+        amount =0.0
+        for line in objrealized_profit_loss:
+            amount += line['unrealized_profit_a_c']
+        return amount
+
+    def calculate_brokerage_expense(self, shareid):
+        for rec in self:
+            analytictag = ""
+            for tl in shareid.invest_analytic_tag_ids.ids:
+                if analytictag != "":
+                    analytictag += ","
+                analytictag += str(tl)
+            strsql="""select COALESCE(sum(debit-credit),0.00) as brokerage_expense from 
+                         account_move_line where account_id in (select id from account_account where code in ('491199'))
+                         and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
+                         where  account_analytic_tag_id in (""" + analytictag + """)) and date<='""" + str(
+                self.trans_date) + "'"" and parent_state='posted' and company_id="""+ str(self.company_id.id)
+            #raise UserError(strsql)
+            self._cr.execute(strsql)
+            objbrokerage = self._cr.dictfetchall()
+            amount = 0.0
+            for line in objbrokerage:
+                amount += line['brokerage_expense']
+            return amount
+
+
+    def calculate_dividend(self, shareid):
+        for rec in self:
+            analytictag = ""
+            for tl in shareid.invest_analytic_tag_ids.ids:
+                if analytictag != "":
+                    analytictag += ","
+                analytictag += str(tl)
+            strsql="""select COALESCE(sum(credit-debit),0.00) as dividend from 
+                         account_move_line where account_id in (select id from account_account where code in ('491102'))
+                         and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
+                         where  account_analytic_tag_id in (""" + analytictag + """)) and date<='""" + str(
+                self.trans_date) + "'"" and parent_state='posted' and company_id="""+ str(self.company_id.id)
+
+            #raise UserError(strsql)
+            self._cr.execute(strsql)
+            objdividend = self._cr.dictfetchall()
+            amount = 0.0
+            for line in objdividend:
+                amount += line['dividend']
+            return amount
+
+    def calculate_realized_profit_loss(self, shareid):
+        for rec in self:
+            tot_amount = 0.00
+            analytictag = ""
+            for tl in shareid.invest_analytic_tag_ids.ids:
+                if analytictag != "":
+                    analytictag += ","
+                analytictag += str(tl)
+                strsql = """select COALESCE(sum(credit-debit),0.00) as totalprofit from 
+                account_move_line where account_id in (select id from account_account where code in ('491103','491104','491105'))
+                and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
+                where account_analytic_tag_id in (""" + analytictag + """)) and date<='""" + str(
+                    self.trans_date) + "'"" and parent_state='posted' and company_id="""+ str(self.company_id.id)
+
+            #            raise UserError(strsql)
+            self._cr.execute(strsql)
+            objrealized_profit_loss = self._cr.dictfetchall()
+            amount=0.0
+            for line in objrealized_profit_loss:
+                amount += line['totalprofit']
+        return amount
+
 
     def action_loaddetail(self):
         if len(self.trans_line)==0:
@@ -39,96 +126,119 @@ class MisInvestmentRevaluation(models.Model):
             new_lines = self.env['mis.invrevaluation.line']
             for rec in objpro:
                 totqty=self.get_total_qty(rec.id)
-                if totqty>0:
+                unrealized_profit_a_c = self.check_unrealized_profit_a_c(rec)
+                brokerage_expense = self.calculate_brokerage_expense(rec)
+                dividend = self.calculate_dividend(rec)
+                realized_profit_loss= self.calculate_realized_profit_loss(rec)
+                if totqty>0 or unrealized_profit_a_c!=0.0:
                     create_vals = {'revaluation_id': self.id,
                                    'share_id': rec.id,
                                    'share_qty': totqty,
                                    'closingprice': 0.00,
                                    'closing_amount': 0.00,
-                                   'unrealized_profit': 0.00,
+                                   'unrealized_profit_a_c': unrealized_profit_a_c,
+                                   'realized_profit_loss': realized_profit_loss,
+                                   'brokerage_expense': brokerage_expense,
+                                   'dividend': dividend,
                                    }
                     new_lines.create(create_vals)
             return new_lines
 
     def button_posted(self):
-
         isheader =False
         totalamt =0.00
-        objacmove = self.env['account.move']
-        objacmoveline = self.env['account.move.line']
         objinvestment = self.env['account.analytic.account'].search([('name', '=', 'Investment')])
         obj123202 = self.env['account.account'].search([('code', '=', '123202')])
         obj491101 = self.env['account.account'].search([('code', '=', '491101')])
+        move_line_vals = []
 
-
+        journal_id =0
         for rec in self.trans_line:
             totalamt+=rec.unrealized_profit_a_c
+            journal_id = rec.share_id.categ_id.property_stock_journal.id
+            isheader = True
 
+        #journal_id = self.share_id.categ_id.property_stock_journal.id
 
         for rec in self.trans_line:
-            if isheader==False:
-                journal_id= rec.share_id.categ_id.property_stock_journal
-                isheader = True
-                create_hvals = {'date': self.trans_date,
-                                'journal_id': journal_id.id,
-                                'ref': 'Share Revalution Posting ' + str(self.trans_date),
-                                'company_id': self.env.company.id,
-                                'state': 'draft',
-                                'type': 'entry',
-                                'amount_total_signed': totalamt,
-                                'amount_total': totalamt,
-                               }
-                mvheader = objacmove.create(create_hvals)
-
-            if self.trans_line.unrealized_profit_a_c< 0:
-                create_vals = {'move_id': mvheader.id,
+            journalamount=(rec.unrealized_profit_a_c-(-1*rec.unrealized_profit))
+            if journalamount< 0:
+                create_vals =  (0,0,{'name': self.ref,
                                'date': self.trans_date,
                                'ref': 'Share Revalution Posting  ' + str(self.trans_date),
                                'parent_state': 'draft',
-                               'company_id': self.env.company.id,
+                               'company_id': self.company_id.id,
                                'account_id': obj491101.id,
-                               'account_analytic_id': objinvestment.id,
-                               'analytic_tags_ids': self.trans_line.share_id.invest_analytic_tag_ids,
-                               'debit': self.trans_line.unrealized_profit_a_c,
-                               }
-                objacmoveline.create(create_vals)
-                create_vals = {'move_id': mvheader.id,
-                               'date': self.trans_date,
-                               'ref': 'Stock Revalution Auto Post on ' + str(self.trans_date),
-                               'parent_state': 'draft',
-                               'company_id': self.env.company.id,
-                               'account_id': obj123202.id,
-                               'account_analytic_id': objinvestment.id,
-                               'analytic_tags_ids': self.trans_line.share_id.invest_analytic_tag_ids,
-                               'credit': self.trans_line.unrealized_profit_a_c,
-                               }
-                objacmoveline.create(create_vals)
+                               'quantity': 1,
+                               'analytic_account_id': objinvestment.id,
+                               'analytic_tag_ids': rec.share_id.invest_analytic_tag_ids.ids,
+                               'debit': -1*journalamount,
+                               'credit': 0.0,
+                               })
+                move_line_vals.append(create_vals)
 
-            if self.trans_line.unrealized_profit_a_c>0:
-                create_vals = {'move_id': mvheader.id,
+                create_vals =  (0,0,{'name': self.ref,
                                'date': self.trans_date,
-                               'ref': 'Stock Revalution Auto Post ' + str(self.trans_date),
+                               'ref': 'Share Revalution Posting ' + str(self.trans_date),
                                'parent_state': 'draft',
-                               'company_id': self.env.company.id,
-                               'account_analytic_id': objinvestment.id,
+                               'company_id': self.company_id.id,
                                'account_id': obj123202.id,
-                               'analytic_tags_ids': self.trans_line.share_id.invest_analytic_tag_ids,
-                               'credit': self.trans_line.unrealized_profit_a_c,
-                               }
-                objacmoveline.create(create_vals)
-                create_vals = {'move_id': mvheader.id,
-                               'date': self.trans_date,
-                               'ref': 'Stock Revalution Auto Post ' + str(self.trans_date),
+                               'quantity': 1,
+                               'analytic_account_id': objinvestment.id,
+                               'analytic_tag_ids': rec.share_id.invest_analytic_tag_ids.ids,
+                               'credit': -1*journalamount,
+                               'debit': 0.0,
+                               })
+                move_line_vals.append(create_vals)
+
+            if journalamount>0:
+                create_vals =  (0,0,{'date': self.trans_date,
+                               'name': self.ref,
+                               'ref': 'Share Revalution Posting ' + str(self.trans_date),
                                'parent_state': 'draft',
-                               'company_id': self.env.company.id,
-                               'account_analytic_id': objinvestment.id,
+                               'company_id': self.company_id.id,
+                               'analytic_account_id': objinvestment.id,
                                'account_id': obj491101.id,
-                               'analytic_tags_ids': self.trans_line.share_id.invest_analytic_tag_ids,
-                               'debit': self.trans_line.unrealized_profit_a_c,
-                               }
-                objacmoveline.create(create_vals)
-            #objacmove.post()
+                               'quantity': 1,
+                               'analytic_tag_ids': rec.share_id.invest_analytic_tag_ids.ids,
+                               'credit': journalamount,
+                               'debit': 0.0,
+                               })
+                move_line_vals.append(create_vals)
+
+                create_vals =  (0,0,{
+                               'date': self.trans_date,
+                               'name': self.ref,
+                               'ref': 'Share Revalution Posting ' + str(self.trans_date),
+                               'parent_state': 'draft',
+                               'company_id': self.company_id.id,
+                               'analytic_account_id': objinvestment.id,
+                               'account_id': obj123202.id,
+                               'quantity': 1,
+                               'analytic_tag_ids': rec.share_id.invest_analytic_tag_ids.ids,
+                               'debit': journalamount,
+                               'credit': 0.0,
+                               })
+                move_line_vals.append(create_vals)
+
+        if isheader == True:
+            move_vals  = {'date': self.trans_date,
+                            'journal_id': journal_id,
+                            'ref': 'Share Revalution Posting ' + str(self.trans_date),
+                            'name': '/',
+                            'company_id': self.company_id.id,
+                            'state': 'draft',
+                            'type': 'entry',
+                            'amount_total': totalamt,
+                            'line_ids': move_line_vals,
+                            }
+            objacmove=self.env['account.move'].create(move_vals)
+        objacmove.post()
+        self.move_id=objacmove.id
+
         self.state='posted'
+        if self.name=='Draft':
+            self.name=self.env['ir.sequence'].with_context(force_company=self.company_id.id).next_by_code('mis.invrevaluation') or _('New')
 
 
     def button_cancel(self):
@@ -140,15 +250,22 @@ class MisInvestmentRevaluation(models.Model):
     @api.model
     def create(self, vals):
         vals['state'] = 'draft'
-        if vals.get('name', _('New')) == _('New'):
-            if 'company_id' in vals:
-                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code(
-                    'mis.invrevaluation') or _('New')
-            # vals['state'] = self.jobcard_status
-            else:
-                vals['name'] = self.env['ir.sequence'].next_by_code('mis.invrevaluation') or _('New')
+        vals['name'] = 'Draft'
+        #        if vals.get('name', _('New')) == _('New'):
+#            if 'company_id' in vals:
+#                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code(
+#                    'mis.invrevaluation') or _('New')
+#            else:
+#                vals['name'] = self.env['ir.sequence'].next_by_code('mis.invrevaluation') or _('New')
         result = super(MisInvestmentRevaluation, self).create(vals)
         return result
+        
+    def unlink(self):
+        for invest in self:
+            if invest.name != 'Draft' and not self._context.get('force_delete'):
+                raise UserError(_("You cannot delete an entry which has been posted."))
+            invest.trans_line.unlink()
+        return super(MisInvestmentRevaluation, self).unlink()
 
 class MisInvestmentRevaluationLine(models.Model):
     _name = 'mis.invrevaluation.line'
@@ -164,60 +281,25 @@ class MisInvestmentRevaluationLine(models.Model):
     closing_amount = fields.Float(string='Closing Amount', compute='calculate_amount', store=True)
     unrealized_profit = fields.Float(string='Unrealize Profit / Loss', compute='calculate_amount', store=True)
     cost = fields.Float(string='Cost', compute='calculate_cost', store=True)
-    amount = fields.Float(string='Amount', compute='calculate_amount', store=True)
+    amount = fields.Float(string='Amount', compute='calculate_cost', store=True)
 
-    realized_profit_loss = fields.Float(string='Realize Profit / Loss', compute='calculate_realized_profit_loss', store=True)
+    realized_profit_loss = fields.Float(string='Realize Profit / Loss', readonly=True, store=True)
 
-    dividend = fields.Float(string='Dividend', compute='calculate_dividend',
+    dividend = fields.Float(string='Dividend', readonly=True,
                                         store=True)
-    brokerage_expense = fields.Float(string='Brokerage & Other Expense', compute='calculate_brokerage_expense',
+    brokerage_expense = fields.Float(string='Brokerage & Other Expense', readonly=True,
                                         store=True)
     net_profit_loss = fields.Float(string='Net Profit / Loss', compute='calculate_realized_profit_loss',
                                         store=True)
-    unrealized_profit_a_c = fields.Float(string='Unrealize Profit / Loss A/C', compute='calculate_unrealized_profit_a_c', store=True)
-
-    @api.depends('closingprice')
-    def calculate_brokerage_expense(self):
-        for rec in self:
-            analytictag = ""
-            for tl in self.share_id.invest_analytic_tag_ids.ids:
-                if analytictag != "":
-                    analytictag += ","
-                analytictag += str(tl)
-            # raise UserError(analytictag)
-            self._cr.execute("""select COALESCE(sum(debit-credit),0.00) as brokerage_expense from 
-                        account_move_line where account_id in (select id from account_account where code in ('491199'))
-                        and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-                        where  account_analytic_tag_id in ("""+analytictag+""")) and date='""" + str(self.revaluation_id.trans_date) +"'""")
-            objbrokerage = self._cr.dictfetchall()
-
-            for line in objbrokerage:
-                rec.brokerage_expense = line['brokerage_expense']
+    unrealized_profit_a_c = fields.Float(string='Unrealize Profit / Loss A/C', sreadonly=True, store=True)
 
 
-    @api.depends('closingprice')
-    def calculate_dividend(self):
-        for rec in self:
-            analytictag = ""
-            for tl in self.share_id.invest_analytic_tag_ids.ids:
-                if analytictag != "":
-                    analytictag += ","
-                analytictag += str(tl)
-            # raise UserError(analytictag)
-            self._cr.execute("""select COALESCE(sum(credit-debit),0.00) as dividend from 
-                        account_move_line where account_id in (select id from account_account where code in ('491102'))
-                        and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-                        where  account_analytic_tag_id in ("""+analytictag+""")) and date='""" + str(self.revaluation_id.trans_date) +"'""")
-            objdividend = self._cr.dictfetchall()
-            for line in objdividend:
-                rec.dividend = line['dividend']
+
 
     @api.depends('share_id')
     def calculate_cost(self):
         for rec in self:
-           #objproduct = self.env['ir.property'].search([('name', '=', 'standard_price'), ('res_id', '=', 'product.product,'+str(rec.share_id.id))])
-           # for pro in objproduct:
-           #     rec.cost=pro.value_float
+
             dtfilter = self.revaluation_id.trans_date + timedelta(days=1)
             objcost = self.env['stock.valuation.layer'].search([('product_id', '=', rec.share_id.id), ('create_date', '<=', dtfilter)])
             fltotalcost=0.00
@@ -225,8 +307,10 @@ class MisInvestmentRevaluationLine(models.Model):
             for ocost in objcost:
                fltotalqty+=ocost.quantity
                fltotalcost += ocost.value
+
             if fltotalqty!=0:
                 rec.cost = fltotalcost/fltotalqty
+                rec.amount = fltotalcost
 
     @api.depends('closingprice')
     def calculate_amount(self):
@@ -235,44 +319,3 @@ class MisInvestmentRevaluationLine(models.Model):
             rec.closing_amount = rec.share_qty*rec.closingprice
             rec.unrealized_profit=rec.closing_amount- rec.amount
             rec.net_profit_loss = ((rec.unrealized_profit+rec.realized_profit_loss+rec.dividend)-rec.brokerage_expense)
-
-    @api.depends('share_id')
-    def calculate_unrealized_profit_a_c(self):
-        for rec in self:
-            tot_amount = 0.00
-            analytictag=""
-            for tl in self.share_id.invest_analytic_tag_ids.ids:
-                if analytictag!="":
-                    analytictag+=","
-                analytictag+=str(tl)
-            #raise UserError(analytictag)
-            self._cr.execute("""select COALESCE(sum(debit-credit),0.00) as unrealized_profit_a_c from 
-            account_move_line where account_id in (select id from account_account where code in ('491101'))
-            and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-            where account_analytic_tag_id in ("""+analytictag+""")) and date='""" + str(self.revaluation_id.trans_date) +"'""")
-            objrealized_profit_loss = self._cr.dictfetchall()
-            for line in objrealized_profit_loss:
-                rec.unrealized_profit_a_c = line['unrealized_profit_a_c']
-
-
-    @api.depends('share_id')
-    def calculate_realized_profit_loss(self):
-        for rec in self:
-            tot_amount = 0.00
-            analytictag=""
-            for tl in self.share_id.invest_analytic_tag_ids.ids:
-                if analytictag!="":
-                    analytictag+=","
-                analytictag+=str(tl)
-                strsql ="""select COALESCE(sum(credit-debit),0.00) as totalprofit from 
-            account_move_line where account_id in (select id from account_account where code in ('491103','491104','491105'))
-            and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-            where account_analytic_tag_id in ("""+analytictag+""")) and date='""" + str(self.revaluation_id.trans_date) +"'"""
-
-            #raise UserError(strsql)
-            self._cr.execute(strsql)
-            objrealized_profit_loss = self._cr.dictfetchall()
-
-            for line in objrealized_profit_loss:
-                rec.realized_profit_loss = line['totalprofit']
-
