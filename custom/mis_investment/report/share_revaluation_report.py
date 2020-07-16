@@ -102,24 +102,23 @@ class FDSummaryReport(models.AbstractModel):
         from_date = data['date_from']
         to_date = data['date_to']
         dtfilter = to_date #+ timedelta(days=1)
+        rptstatus=data['status']
+        classification_id = data['classification']
         last_valudation_date=""
-        expearn = 0.0
-        qty = 0.0
-        closingamt = 0.0
-        realize_profit=0.0
-        dividend = 0.0
-        brokerage_expense=0.0
-        unrelize=0.0
-        table4lastvaluation = {}
+
         reval_id=0
         master_table =[]
 
         objlastvaluation = self.env['mis.invrevaluation'].search([('trans_date', '<=' ,to_date)], order='trans_date desc', limit=1)
         if objlastvaluation:
-            last_valudation_date= objlastvaluation.trans_date
+            tmpdate= objlastvaluation.trans_date
+            last_valudation_date= tmpdate.strftime("%d-%m-%Y")
             reval_id=objlastvaluation.id
+        if classification_id:
+            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'), ('classification_id', '=', classification_id)])
+        else:
+            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product')])            
 
-        objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product')])
         for shr in objshare:
             qty = self.get_total_qty(shr.id, dtfilter)
             closingprice = self.get_last_closing_amount(reval_id, shr.id, to_date)
@@ -127,16 +126,40 @@ class FDSummaryReport(models.AbstractModel):
             dividend = self.get_dividend(shr.id, from_date, to_date)
             brokerage_expense = self.get_brokerage_expense(shr.id,from_date, to_date)
             unrelize=self.get_last_unrelize_amount(reval_id, shr.id, to_date)
-            if (qty!=0.0 or realize_profit!=0.0 or dividend!=0.0 or brokerage_expense!=0.0 or unrelize!=0.0):
-                master_table.append({
-                    'sharerec': shr,
-                    'qty': qty,
-                    'closingprice': closingprice,
-                    'realize_profit': realize_profit,
-                    'dividend': dividend,
-                    'brokerage_expense': brokerage_expense,
-                    'unrelize' : unrelize,
-                })
+            
+            if rptstatus=='All':
+                if (qty!=0.0 or realize_profit!=0.0 or dividend!=0.0 or brokerage_expense!=0.0 or unrelize!=0.0):
+                    master_table.append({
+                        'sharerec': shr,
+                        'qty': qty,
+                        'closingprice': closingprice,
+                        'realize_profit': realize_profit,
+                        'dividend': dividend,
+                        'brokerage_expense': brokerage_expense,
+                        'unrelize' : unrelize,
+                    })
+            elif rptstatus=='Active':
+                if (qty!=0.0):
+                    master_table.append({
+                        'sharerec': shr,
+                        'qty': qty,
+                        'closingprice': closingprice,
+                        'realize_profit': realize_profit,
+                        'dividend': dividend,
+                        'brokerage_expense': brokerage_expense,
+                        'unrelize' : unrelize,
+                    })
+            elif rptstatus=='Inactive':
+                if (qty==0.0):
+                    master_table.append({
+                        'sharerec': shr,
+                        'qty': qty,
+                        'closingprice': closingprice,
+                        'realize_profit': realize_profit,
+                        'dividend': dividend,
+                        'brokerage_expense': brokerage_expense,
+                        'unrelize' : unrelize,
+                    })                    
 
         #master_table.sort(key=lambda item:(item["closingprice"]*item["qty"]),reverse=True)
         sortedmaster_table= sorted(master_table, key=lambda item: (item["closingprice"]*item["qty"], item["realize_profit"]+item["unrelize"]+item["dividend"]-item["brokerage_expense"]), reverse=True)

@@ -14,6 +14,8 @@ class FDSummaryReport(models.TransientModel):
         data = {}
         #raise  UserError(self.date_to+ timedelta(days=1))
         data['date_to'] = self.date_to
+        tmpdate = self.date_to
+        data['header_date'] = tmpdate.strftime("%d-%m-%Y")
         report = self.env.ref(
             'mis_investment.action_fd_summary_report')
         return report.report_action(self, data=data)
