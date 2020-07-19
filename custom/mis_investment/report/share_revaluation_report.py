@@ -101,7 +101,7 @@ class FDSummaryReport(models.AbstractModel):
 
         from_date = data['date_from']
         to_date = data['date_to']
-        dtfilter = to_date #+ timedelta(days=1)
+        dtfilter = to_date + timedelta(days=1)
         rptstatus=data['status']
         classification_id = data['classification']
         last_valudation_date=""
