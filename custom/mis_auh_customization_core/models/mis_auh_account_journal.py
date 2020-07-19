@@ -19,3 +19,9 @@ class MisAuhJournal(models.Model):
     sale_sequence_id = fields.Many2one('ir.sequence', string='Sale Sequence', copy=False)
     purchase_sequence = fields.Boolean(string='Dedicated Purchase Sequence', default=False )
     purchase_sequence_id = fields.Many2one('ir.sequence', string='Purchase Sequence', copy=False)
+    custom_user_ids = fields.Many2many('res.users', string='Branch Users', copy=True)
+
+    #@api.model
+    #def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        #args = [('custom_user_ids', 'in', self.env.user.id)]
+        #return super(MisAuhJournal, self)._search(args, offset, limit, order, count, access_rights_uid)    
