@@ -11,7 +11,7 @@ class FDSummaryReport(models.AbstractModel):
     def get_total_qty(self,  productid, dtfilter):
 
         objstock = self.env['stock.valuation.layer'].search(
-            [('product_id', '=', productid), ('create_date', '<', dtfilter)])
+            [('product_id', '=', productid), ('create_date', '<=', dtfilter)])
 
         totqty=0.0
         for gr in objstock:
@@ -101,7 +101,7 @@ class FDSummaryReport(models.AbstractModel):
 
         from_date = data['date_from']
         to_date = data['date_to']
-        dtfilter = to_date + timedelta(days=1)
+        dtfilter = to_date #+ timedelta(days=1)
         rptstatus=data['status']
         classification_id = data['classification']
         last_valudation_date=""
