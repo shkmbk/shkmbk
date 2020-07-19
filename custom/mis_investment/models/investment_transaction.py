@@ -260,12 +260,12 @@ class MisInvestmentRevaluation(models.Model):
         result = super(MisInvestmentRevaluation, self).create(vals)
         return result
         
-    def unlink(self):
-        for invest in self:
-            if invest.name != 'Draft' and not self._context.get('force_delete'):
-                raise UserError(_("You cannot delete an entry which has been posted."))
-            invest.trans_line.unlink()
-        return super(MisInvestmentRevaluation, self).unlink()
+    #def unlink(self):
+        #for invest in self:
+            #if invest.name != 'Draft' and not self._context.get('force_delete'):
+                #raise UserError(_("You cannot delete an entry which has been posted."))
+            #invest.trans_line.unlink()
+        #return super(MisInvestmentRevaluation, self).unlink()
 
 class MisInvestmentRevaluationLine(models.Model):
     _name = 'mis.invrevaluation.line'
