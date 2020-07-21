@@ -4,7 +4,7 @@
     'version': '1.1.1',
     'category': 'Accounting',
     'summary': """ """,
-    'description': """
+    'description': """ Account Asset Extend
                     """,
     'author': "Sananaz Mansuri",
     'website': 'Mindifnosys.com',
