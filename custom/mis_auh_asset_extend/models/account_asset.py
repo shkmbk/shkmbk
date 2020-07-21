@@ -86,8 +86,6 @@ class AccountAssetAsset(models.Model):
             'domain': [('id', 'in', journal_entry)],
         }
 
-
-
     @api.onchange('journal_id')
     def _onchange_journal(self):
         for frm in self:
@@ -99,15 +97,13 @@ class AccountAssetAsset(models.Model):
         if self.state !='model':
             if self.asset_group:
                 if self.asset_subgroup:
-                    companyid = self.env.user.company_id.id
-                    isNotFound=True
+                    companyid = self.company_id.id
+                    isFound=False
                     if self.asset_code:
-                        objisfound = self.env['account.asset'].search([('asset_code', '=', self.asset_code)])
+                        objisfound = self.env['account.asset'].search([('asset_code', '=', self.asset_code), ('company_id', '=', companyid)])
                         if objisfound:
-                            isNotFound=False
-
-                    if  isNotFound:
-
+                            isFound=True
+                    if  isFound==False:
                         cle_query = "select right(max(asset_code), 5) as maxcode  from account_asset where company_id=" + str(companyid) +" and not asset_code is null and asset_group = " + str(self.asset_group.id) +  " and asset_subgroup = " + str(self.asset_subgroup.id)
                         self.env.cr.execute(cle_query)
                         cle_data = self.env.cr.dictfetchall()
