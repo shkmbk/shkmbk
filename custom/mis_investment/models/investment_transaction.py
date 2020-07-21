@@ -161,7 +161,9 @@ class MisInvestmentRevaluation(models.Model):
         #journal_id = self.share_id.categ_id.property_stock_journal.id
 
         for rec in self.trans_line:
-            journalamount=(rec.unrealized_profit_a_c-(-1*rec.unrealized_profit))
+            journalamount=round((rec.unrealized_profit_a_c-(-1*rec.unrealized_profit)),2)
+            #if rec.share_id.id==49:
+                #raise UserError(journalamount)
             if journalamount< 0:
                 create_vals =  (0,0,{'name': self.ref,
                                'date': self.trans_date,
@@ -260,12 +262,12 @@ class MisInvestmentRevaluation(models.Model):
         result = super(MisInvestmentRevaluation, self).create(vals)
         return result
         
-    #def unlink(self):
-        #for invest in self:
-            #if invest.name != 'Draft' and not self._context.get('force_delete'):
-                #raise UserError(_("You cannot delete an entry which has been posted."))
-            #invest.trans_line.unlink()
-        #return super(MisInvestmentRevaluation, self).unlink()
+    def unlink(self):
+        for invest in self:
+            if invest.name != 'Draft' and not self._context.get('force_delete'):
+                raise UserError(_("You cannot delete an entry which has been posted."))
+            invest.trans_line.unlink()
+        return super(MisInvestmentRevaluation, self).unlink()
 
 class MisInvestmentRevaluationLine(models.Model):
     _name = 'mis.invrevaluation.line'
