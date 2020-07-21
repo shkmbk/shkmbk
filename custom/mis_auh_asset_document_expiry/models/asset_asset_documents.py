@@ -7,6 +7,7 @@ from odoo.exceptions import Warning
 
 class AccountAssetDocument(models.Model):
     _name = 'account.asset.document'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Asset Documents'
 
     def mail_reminder(self):
@@ -27,6 +28,7 @@ class AccountAssetDocument(models.Model):
                             'email_to': i.expiry_reminder_user_id.email,
                         }
                         self.env['mail.mail'].create(main_content).send()
+                        i.message_post(body=mail_content)
                 elif i.notification_type == 'multi':
                     exp_date = fields.Date.from_string(i.expiry_date) - timedelta(days=i.before_days)
                     if date_now == exp_date or date_now == i.expiry_date:
@@ -40,6 +42,7 @@ class AccountAssetDocument(models.Model):
                             'email_to': i.expiry_reminder_user_id.email,
                         }
                         self.env['mail.mail'].create(main_content).send()
+                        i.message_post(body=mail_content)
                 elif i.notification_type == 'everyday':
                     exp_date = fields.Date.from_string(i.expiry_date) - timedelta(days=i.before_days)
                     if date_now >= exp_date and date_now == i.expiry_date:
@@ -53,6 +56,7 @@ class AccountAssetDocument(models.Model):
                             'email_to': i.expiry_reminder_user_id.email,
                         }
                         self.env['mail.mail'].create(main_content).send()
+                        i.message_post(body=mail_content)
                 elif i.notification_type == 'everyday_after':
                     exp_date = fields.Date.from_string(i.expiry_date) + timedelta(days=i.before_days)
                     if date_now == exp_date and date_now == i.expiry_date:
@@ -66,6 +70,7 @@ class AccountAssetDocument(models.Model):
                             'email_to': i.expiry_reminder_user_id.email,
                         }
                         self.env['mail.mail'].create(main_content).send()
+                        i.message_post(body=mail_content)
                 else:
                     exp_date = fields.Date.from_string(i.expiry_date) - timedelta(days=7)
                     if date_now >= exp_date:
@@ -79,6 +84,7 @@ class AccountAssetDocument(models.Model):
                             'email_to': i.expiry_reminder_user_id.email,
                         }
                         self.env['mail.mail'].create(main_content).send()
+                        i.message_post(body=mail_content)
 
     @api.constrains('expiry_date')
     def check_expr_date(self):
@@ -89,13 +95,13 @@ class AccountAssetDocument(models.Model):
                     raise Warning('Your Document Is Expired.')
 
     name = fields.Char(string='Document Number', required=True, copy=False, help='You can give your'
-                                                                                 'Document number.')
+                                                                                 'Document number.', track_visibility='always')
     description = fields.Text(string='Description', copy=False, help="Description")
     expiry_date = fields.Date(string='Expiry Date', copy=False, help="Date of expiry")
     doc_attachment_ids = fields.Many2many('ir.attachment', 'doc_attach_rel', 'doc_id', 'attach_id3', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
     issue_date = fields.Date(string='Issue Date', default=fields.datetime.now(), help="Date of issue", copy=False)
-    document_type = fields.Many2one('document.type', string="Document Type", help="Document type")
+    document_type = fields.Many2one('document.type', string="Document Type", required=True, help="Document type")
     before_days = fields.Integer(string="Days", help="How many number of days before to get the notification email")
     expiry_reminder_user_id = fields.Many2one(
         'res.users',
@@ -130,7 +136,7 @@ class AssetAsset(models.Model):
     def document_view(self):
         self.ensure_one()
         domain = [
-            ('expiry_reminder_user_id', '=', self.id)]
+            ('asset_ref', '=', self.id)]
         return {
             'name': _('Documents'),
             'domain': domain,
