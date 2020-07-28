@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+        <record id="view_compute_depreciation_custom" model="ir.ui.view">
+            <field name="name">Compute Depreciation</field>
+            <field name="model">asset.depreciation.wizard.custom</field>
+            <field name="arch" type="xml">
+                <form string="Compute Depreciation">
+                    <separator string="This wizard will compute depreciation with selected assets."/>
+                    <footer>
+                        <button name="custom_compute_depreciation" string="Compute Depreciation" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_compute_depreciation_custom" model="ir.actions.act_window">
+            <field name="name">Compute Depreciation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">asset.depreciation.wizard.custom</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <act_window 
+            id="compute_custom_depreciation"
+            name="Compute Depreciation"
+            res_model="asset.depreciation.wizard.custom"
+            binding_model="account.asset"
+            view_mode="form" 
+            target="new"/>
+</odoo>
