@@ -20,6 +20,7 @@ class MisAuhJournal(models.Model):
     purchase_sequence = fields.Boolean(string='Dedicated Purchase Sequence', default=False )
     purchase_sequence_id = fields.Many2one('ir.sequence', string='Purchase Sequence', copy=False)
     custom_user_ids = fields.Many2many('res.users', string='Branch Users', copy=True)
+    is_disbursement = fields.Boolean(string='Is Disbursement')
 
     #@api.model
     #def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):

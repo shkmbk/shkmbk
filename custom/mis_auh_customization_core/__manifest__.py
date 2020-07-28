@@ -34,7 +34,7 @@
 #        'views/mis_assets.xml',
 #        'views/mis_auh_bank.xml',
         'views/mis_auh_payment.xml',
-#        'views/mis_auh_stockpicking.xml',
+        'views/mis_auh_stockpicking.xml',
        'security/ir.model.access.csv',
     ],
     'demo': [],

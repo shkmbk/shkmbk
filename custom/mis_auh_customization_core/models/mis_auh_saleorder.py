@@ -18,6 +18,8 @@ class MisSaleOrder(models.Model):
     def _setanalytic_account(self):
         for frm in self:
            frm.analytic_account_id = frm.journal_id.analytic_id.id
+           for line in self.order_line:
+               line.account_analytic_id = frm.journal_id.analytic_id.id
 
 
     @api.model
@@ -92,3 +94,12 @@ class MisSaleOrder(models.Model):
             'company_id': self.company_id.id,
         }
         return invoice_vals
+
+    class MisSaleOrder(models.Model):
+        _inherit = "sale.order.line"
+        @api.onchange('name', 'product_id')
+        def _setanalytic_account(self):
+            for line in self:
+                if not line.analytic_tag_ids:
+                    if line.product_id.invest_analytic_tag_ids:
+                        line.analytic_tag_ids=line.product_id.invest_analytic_tag_ids.ids

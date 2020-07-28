@@ -9,7 +9,6 @@
                 <xpath expr="//field[@name='journal_id']" position="after">
                     <field name="analytic_id" required="1"/>
                  </xpath>
-
                 <xpath expr="//field[@name='payment_transaction_id']" position="after">
                     <field name="check_reference"  attrs="{'invisible': [('payment_method_code', '!=', 'check')]}"/>
                     <field name="check_bank"  attrs="{'invisible': [ ('payment_method_code', '!=', 'check')]}"/>
