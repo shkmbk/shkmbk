@@ -11,6 +11,10 @@ class MisPayment(models.Model):
     check_bank= fields.Char('Bank Name')
     check_bank_branch = fields.Char('Bank Branch')
 
+    effective_date = fields.Char('Effective Date')
+    bank_reference = fields.Char('Bank Reference')
+    cheque_reference = fields.Char('Cheque Reference')
+
     @api.onchange('journal_id')
     def _compute_journal_req(self):
         for frm in self:

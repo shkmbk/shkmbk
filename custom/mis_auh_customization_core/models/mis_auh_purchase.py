@@ -13,11 +13,14 @@ from odoo.tools import date_utils
 class MisPurchaseOrder(models.Model):
     _inherit = "purchase.order"
     journal_id = fields.Many2one('account.journal', string='Journal', domain="[('type', '=', 'purchase')]")
+    requested_by= fields.Char(string="Requested By",  required=False, track_visibility='onchange')
 
     @api.onchange('journal_id')
     def _setanalytic_account(self):
         for frm in self:
-           frm.analytic_id = frm.journal_id.analytic_id.id
+            frm.analytic_id = frm.journal_id.analytic_id.id
+            for line in self.order_line:
+                line.account_analytic_id=frm.journal_id.analytic_id.id
 
     @api.model
     def create(self, vals):
@@ -76,6 +79,18 @@ class MisPurchaseOrder(models.Model):
         result['context']['default_invoice_origin'] = self.name
         result['context']['default_ref'] = self.partner_ref
         return result
+
+    class MisPurchaseOrderLine(models.Model):
+        _inherit = "purchase.order.line"
+
+        @api.onchange('name', 'product_id')
+        def _setanalytic_account(self):
+            for line in self:
+                line.account_analytic_id = line.order_id.analytic_id.id
+                if not line.analytic_tag_ids:
+                    if line.product_id.invest_analytic_tag_ids:
+                        line.analytic_tag_ids=line.product_id.invest_analytic_tag_ids.ids
+
 
 
 

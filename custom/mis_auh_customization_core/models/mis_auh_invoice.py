@@ -13,6 +13,19 @@ from odoo.tools import date_utils
 class MisAccountMove(models.Model):
     _inherit = 'account.move'
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(MisAccountMove, self).create(vals_list)
+        for move in res:
+            for line in move.line_ids:
+                if not line.analytic_account_id and move.analytic_id:
+                    line.analytic_account_id = move.analytic_id
+        return res
+    def _get_report_base_filename(self):
+        #        if any(not move.is_invoice(True) for move in self):
+        #            raise UserError(_("Only invoices could be printed."))
+        return self._get_move_display_name()
+
     @api.depends('currency_id')
     def _compute_exchage_rate(self):
         for frm in self:
@@ -38,10 +51,14 @@ class MisAccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
 
-    @api.onchange('account_id')
+    @api.onchange('account_id', 'product_id')
     def _fillanalytic(self):
        for line in self:
            line.analytic_account_id = line.move_id.analytic_id
+           line.parent_analytic_id = line.move_id.analytic_id
+           if not line.analytic_tag_ids:
+               if line.product_id.invest_analytic_tag_ids:
+                   line.analytic_tag_ids = line.product_id.invest_analytic_tag_ids.ids
 
 
 
