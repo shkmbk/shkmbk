@@ -28,6 +28,10 @@ class AccountAssetAsset(models.Model):
     asset_location = fields.Many2one('mis.asset.location', string='Location')
     asset_sublocation = fields.Many2one('mis.asset.sublocation', string='Sub Location', domain="[('main_location', '=', asset_location)]")
     asset_custodian = fields.Many2one('mis.asset.custodian', string='Custodian')
+    asset_purchase_date = fields.Date(string="Purchase Date")
+    asset_purchase_amount = fields.Monetary(string="Purchase Amount")
+    asset_area = fields.Many2one('mis.asset.area', string='Area')
+    is_opening = fields.Boolean(string="Opening Asset",default=False)    
 
     _sql_constraints = [
             ('code_uniq', 'unique (asset_code)', "Asset Code already exists !"),
@@ -178,4 +182,13 @@ class MisAuhAssetCustodian(models.Model):
 
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Asset Custodian already exists !"),
+    ]
+class MisAuhAssetArea(models.Model):
+    _name = 'mis.asset.area'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    name = fields.Char(string="Asset Area",  required=True, track_visibility='onchange')
+
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Asset Area already exists !"),
     ]

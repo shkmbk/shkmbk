@@ -14,8 +14,6 @@
                          </span>
                          <span class="o_stat_text">Expenses</span>
                      </div>
-
-
                 </button>
             </xpath>
             <xpath expr="//div[@class='oe_title']" position="after">
@@ -29,8 +27,11 @@
             <xpath expr="//field[@name='original_value']" position="before">
                 <field name="custom_checkbox"/>
             </xpath>
-            <xpath expr="//field[@name='account_analytic_id']" position="replace">
-                <field name="account_analytic_id"  required="True"  domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+			
+            <xpath expr="//field[@name='analytic_tag_ids']" position="after">
+				<field name="is_opening"/>
+                <field name="asset_purchase_date" attrs="{'invisible': [('is_opening', '=', False)]}"/>
+				<field name="asset_purchase_amount" attrs="{'invisible': [('is_opening', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='first_depreciation_date']" position="before">
                 <field name="asset_group" attrs="{'invisible': [('asset_type',  'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
@@ -38,6 +39,7 @@
                 <field name="asset_brand"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
                 <field name="asset_location"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
                 <field name="asset_sublocation"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
+				<field name="asset_area"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
                 <field name="asset_custodian"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
             </xpath>
         </field>
@@ -64,7 +66,6 @@
         </field>
     </record>
 
-
     <record id="mis_asset_group_form_view" model="ir.ui.view">
         <field name="name">mis.asset.group.form</field>
         <field name="model">mis.asset.group</field>
@@ -78,6 +79,18 @@
         </field>
     </record>
 
+    <record id="mis_asset_group_action" model="ir.actions.act_window">
+        <field name="name">Asset Group</field>
+        <field name="res_model">mis.asset.group</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Asset Group
+              </p>
+        </field>
+    </record>
+
+
     <record id="mis_asset_subgroup_form_view" model="ir.ui.view">
         <field name="name">mis.asset.subgroup.form</field>
         <field name="model">mis.asset.subgroup</field>
@@ -90,6 +103,17 @@
             </form>
         </field>
     </record>
+    <record id="mis_asset_subgroup_action" model="ir.actions.act_window">
+        <field name="name">Asset Sub Group</field>
+        <field name="res_model">mis.asset.subgroup</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Asset Sub Group
+              </p>
+        </field>
+    </record>
+
 
     <record id="mis_asset_brand_form_view" model="ir.ui.view">
         <field name="name">mis.asset.brand.form</field>
@@ -102,6 +126,17 @@
             </form>
         </field>
     </record>
+    <record id="mis_asset_brand_action" model="ir.actions.act_window">
+        <field name="name">Asset Brand</field>
+        <field name="res_model">mis.asset.brand</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Asset Brand
+              </p>
+        </field>
+    </record>
+
 
     <record id="mis_asset_location_form_view" model="ir.ui.view">
         <field name="name">mis.asset.location.form</field>
@@ -112,6 +147,16 @@
                     <field name="name"/>
                 </group>
             </form>
+        </field>
+    </record>
+     <record id="mis_asset_location_action" model="ir.actions.act_window">
+        <field name="name">Asset Location</field>
+        <field name="res_model">mis.asset.location</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Asset Location
+              </p>
         </field>
     </record>
 
@@ -128,6 +173,41 @@
         </field>
     </record>
 
+    <record id="mis_asset_sublocation_action" model="ir.actions.act_window">
+        <field name="name">Asset Sub Location</field>
+        <field name="res_model">mis.asset.sublocation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Asset Sub Location
+              </p>
+        </field>
+    </record>
+
+    <record id="area" model="ir.ui.view">
+        <field name="name">mis.asset.area.form</field>
+        <field name="model">mis.asset.area</field>
+        <field name="arch" type="xml">
+            <form string="Asset Area">
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mis_asset_area_action" model="ir.actions.act_window">
+        <field name="name">Asset Area</field>
+        <field name="res_model">mis.asset.area</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Asset Area
+              </p>
+        </field>
+    </record>	
+	
+
     <record id="mis_asset_custodian_form_view" model="ir.ui.view">
         <field name="name">mis.asset.custodian.form</field>
         <field name="model">mis.asset.custodian</field>
@@ -140,4 +220,23 @@
         </field>
     </record>
 
+    <record id="mis_asset_custodian_action" model="ir.actions.act_window">
+        <field name="name">Asset Sub Custodian</field>
+        <field name="res_model">mis.asset.custodian</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Asset Sub Custodian
+              </p>
+        </field>
+    </record>
+	<menuitem id="menu_finance_custom_settings" name="Custom Settings" parent="account_accountant.menu_accounting" sequence="70" groups="account.group_account_manager"/>
+		<menuitem parent="menu_finance_custom_settings" name="Asset Master" id="menu_account_asset_type_config"  sequence="1" groups="account.group_account_manager"/>
+			<menuitem parent="menu_account_asset_type_config" id="menu_action_account_asset_group" action="mis_asset_group_action" sequence="1" groups="account.group_account_manager"/>
+			<menuitem parent="menu_account_asset_type_config" id="menu_action_account_asset_subgroup" action="mis_asset_subgroup_action" sequence="2" groups="account.group_account_manager"/>
+			<menuitem parent="menu_account_asset_type_config" id="menu_action_account_asset_brand" action="mis_asset_brand_action" sequence="3" groups="account.group_account_manager"/>
+			<menuitem parent="menu_account_asset_type_config" id="menu_action_account_asset_location" action="mis_asset_location_action" sequence="4" groups="account.group_account_manager"/>
+			<menuitem parent="menu_account_asset_type_config" id="menu_action_account_asset_sublocation" action="mis_asset_sublocation_action" sequence="5" groups="account.group_account_manager"/>
+			<menuitem parent="menu_account_asset_type_config" id="menu_action_account_asset_area" action="mis_asset_area_action" sequence="6" groups="account.group_account_manager"/>
+			<menuitem parent="menu_account_asset_type_config" id="menu_action_account_asset_custodian" action="mis_asset_custodian_action" sequence="7" groups="account.group_account_manager"/>
 </odoo>
