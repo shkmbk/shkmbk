@@ -7,6 +7,9 @@
             <field name="arch" type="xml">
                 <form string="Compute Depreciation">
                     <separator string="This wizard will compute depreciation with selected assets."/>
+					<group>
+                        <field name="is_post"/>
+                    </group>
                     <footer>
                         <button name="custom_compute_depreciation" string="Compute Depreciation" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
