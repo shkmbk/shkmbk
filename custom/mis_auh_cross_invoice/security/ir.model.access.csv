@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mis_crossinvoice,miscrossinvoice.group_manager,model_mis_crossinvoice,account.group_account_manager,1,1,1,1
+access_mis_crossinvoice_line,miscrossinvoice.line.group_manager,model_mis_crossinvoice_line,account.group_account_manager,1,1,1,1
+access_mis_crossinvoice_partner,miscrossinvoicepartner.group_manager,model_mis_crossinvoice_partner,account.group_account_manager,1,1,1,1
+access_mis_crossinvoice_journal,miscrossinvoicejournal.group_manager,model_mis_crossinvoice_journal,account.group_account_manager,1,1,1,1
+access_mis_crossinvoice_wizard,miscrossinvoicewizard.group_manager,model_mis_crossinvoice_wizard,account.group_account_manager,1,1,1,1

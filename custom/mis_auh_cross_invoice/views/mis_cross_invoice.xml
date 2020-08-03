@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mis_cross_invoice_form" model="ir.ui.view">
+            <field name="name">mis.crossinvoice.form</field>
+            <field name="model">mis.crossinvoice</field>
+            <field name="arch" type="xml">
+                <form string="Cross Invoice" class="o_purchase_order">
+                    <header>
+                        <button name="button_draft" attrs="{'invisible':[('state', 'not in',('cancel'))]}" string="Set to Draft" type="object" />
+                        <button name="button_cancel" attrs="{'invisible':[('state', 'not in',('draft'))]}" string="Cancel" type="object"/>
+                        <button name="button_invoice" type="object" string="Create Invoice" attrs="{'invisible':['|', ('state', 'not in',('draft')), ('totalline', '=', 0)]}"  class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancel" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                           <h1>
+                               <field name="name" readonly="1"/>
+                           </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="ref"/>
+                                <field name="trans_date" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="sales_journal_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="purchase_journal_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="invoice_id" attrs="{'invisible': [('invoice_id', '=', False)]}"  readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="totalline" invisible="1"/>
+                                <button name="%(action_mis_crossinvoice_wizard)d" width="400" height="50" attrs="{'invisible':['|', ('state', 'not in',('draft')), ('totalline', '>', 0)]}" type="action"  string="Load Crossinvoice Bill" class="oe_highlight"/>
+                            </group>
+                            <group></group>
+                        </group>
+                        <notebook>
+                            <page string="Cross Invoice Lines">
+                                <field name="cross_line_ids"
+                                    attrs="{'readonly': [('state', 'in', ('posted', 'cancel'))]}">
+                                    <tree string="Cross Invoice Lines" editable="bottom" create="0" delete="0">
+                                        <field name="move_line_id" options="{'no_create': True, 'no_edit': True}" invisible="1"/>
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="name" readonly="1"/>
+                                        <field name="account_id"/>
+                                        <field name="analytic_account_id"/>
+                                        <field name="analytic_tag_ids" widget="many2many_tags"/>
+                                        <field name="quantity" readonly="1"/>
+                                        <field name="price_unit" readonly="1"/>
+                                        <field name="tax_ids" widget="many2many_tags"/>
+                                        <field name="sub_total" sum="Total" readonly="1" optional="show"/>
+                                        <field name="tax_amount" sum="Total Tax" readonly="1"/>
+                                        <field name="price_total" sum="Total" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="mis_cross_invoice_tree_view" model="ir.ui.view">
+            <field name="name">mis.crossinvoice.tree</field>
+            <field name="model">mis.crossinvoice</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                 <tree>
+                     <field name="name"/>
+                     <field name="ref"/>
+                     <field name="trans_date"/>
+                     <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_crossinvoice_action" model="ir.actions.act_window">
+            <field name="name">Cross Invoice</field>
+            <field name="res_model">mis.crossinvoice</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Cross Invoice
+                  </p>
+            </field>
+        </record>
+        <menuitem id="menu_finance_crossinvoice" name="Cross Invoice" parent="account_accountant.menu_accounting" sequence="2" groups="account.group_account_user"/>
+        <menuitem
+            id="mis_menu_action_crossinvoice"
+            action="mis_crossinvoice_action"
+            parent="menu_finance_crossinvoice"
+            groups="account.group_account_user"
+            sequence="3"/>
+
+    </data>
+</odoo>
