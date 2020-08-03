@@ -18,15 +18,22 @@ class MisCrossinvoiceBillWizard(models.TransientModel):
         else:
             return 0
 
-    def _get_available_bill_domain(self, purchasejournalid):
-       return [('id', 'not in', self._previousmove()), ('state', '=', 'posted'), ('type', '=', 'in_invoice') , ('company_id', '=', self.env.company.id), ('journal_id', '=', purchasejournalid)]
+    def _get_available_bill_domain(self, purchasejournalid, transdate, accountid):
+        objmvl = self.env['account.move.line'].search([('account_id', '=', accountid)])
+
+        return [('id', 'not in', self._previousmove()), ('id', 'in', objmvl.move_id.ids), ('state', '=', 'posted'), ('type', '=', 'in_invoice') , ('company_id', '=', self.env.company.id), ('journal_id', '=', purchasejournalid), ('invoice_date', '<=', transdate)]
 
     def _get_bill(self):
         objcrossinv = self.env['mis.crossinvoice'].browse(self.env.context.get('active_id'))
         purchasejournalid = objcrossinv.purchase_journal_id.id
-        return self.env['account.move'].search(self._get_available_bill_domain(purchasejournalid))
+        transdate =objcrossinv.trans_date
+        partnerid = objcrossinv.partner_id.id
+        accountid = self.getpartneraccount(partnerid)
+
+        return self.env['account.move'].search(self._get_available_bill_domain(purchasejournalid, transdate, accountid))
 
     def _previousmove(self):
+
         crossinvoiceids = self.env['mis.crossinvoice.line'].search([]).mapped('move_line_id').move_id
         return crossinvoiceids.ids
 
