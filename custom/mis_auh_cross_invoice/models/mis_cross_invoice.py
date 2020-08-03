@@ -21,6 +21,14 @@ class MisAuhCrossInvoice(models.Model):
             sjnllist.append(r.sales_journal_id.id)
         return sjnllist
 
+    @api.onchange('sales_journal_id')
+    def _onchange_journal_id(self):
+        recjnr = self.env['mis.crossinvoice.journal'].search([('sales_journal_id', '=', self.sales_journal_id.id)])
+
+        if recjnr:
+            self.purchase_journal_id=recjnr.purchase_journal_id.id
+
+
     state = fields.Selection([
         ('draft', 'New'),
         ('posted', 'Posted'),
@@ -143,3 +151,4 @@ class MisAuhCrossInvoiceLine(models.Model):
     tax_amount = fields.Float(string='Tax Amount')
     price_total = fields.Float(string='Total')
 
+#You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one.
