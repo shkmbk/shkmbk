@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="mis_crossinvoice_partner_tree_view" model="ir.ui.view">
+            <field name="name">mis.crossinvoice.partner.tree</field>
+            <field name="model">mis.crossinvoice.partner</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree  editable="bottom" create="1" delete="1"  string="Partner Account Setting">
+                    <field name="partner_id" required="1"/>
+                     <field name="account_id"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_crossinvoice_partner_action" model="ir.actions.act_window">
+            <field name="name">Partner Configuration</field>
+            <field name="res_model">mis.crossinvoice.partner</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Partner Configuration
+                  </p>
+            </field>
+        </record>
+        <record id="mis_crossinvoice_journal_form_view" model="ir.ui.view">
+            <field name="name">mis.crossinvoice.journal.form</field>
+            <field name="model">mis.crossinvoice.journal</field>
+            <field name="arch" type="xml">
+                <form string="Journal">
+                    <group>
+                        <field name="name" readonly="1"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="purchase_journal_id"/>
+                        </group>
+                        <group>
+                            <field name="sales_journal_id"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="mis_crossinvoice_journal_tree_view" model="ir.ui.view">
+            <field name="name">mis.crossinvoice.journal.tree</field>
+            <field name="model">mis.crossinvoice.journal</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree  editable="bottom" create="1" delete="1"  string="Journal Setting">
+                    <field name="purchase_journal_id" required="1"/>
+                    <field name="sales_journal_id"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mis_crossinvoice_journal_action" model="ir.actions.act_window">
+            <field name="name">Journal Configuration</field>
+            <field name="res_model">mis.crossinvoice.journal</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Journal Configuration
+                  </p>
+            </field>
+        </record>
+
+
+        <menuitem
+            id="mis_menu_action_partner_configuration"
+            action="mis_crossinvoice_partner_action"
+            parent="menu_finance_crossinvoice"
+            sequence="10"/>
+        <menuitem
+            id="mis_menu_action_journal_configuration"
+            action="mis_crossinvoice_journal_action"
+            parent="menu_finance_crossinvoice"
+            sequence="20"/>
+
+    </data>
+
+</odoo>
