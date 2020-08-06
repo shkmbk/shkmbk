@@ -16,6 +16,9 @@
                 <xpath expr="//page[@id='invoice_tab']//field//tree//field[@name='account_id']" position="attributes">
                     <attribute name="groups">mis_auh_override_view.group_account_override_view_custom, account.group_account_user</attribute>
                 </xpath>
+                <xpath expr="//button[@name='action_invoice_register_payment']" position="attributes">
+                    <attribute name="groups">mis_auh_override_view.group_account_override_view_custom, account.group_account_user</attribute>
+                </xpath>	
 
             </field>
     </record>
