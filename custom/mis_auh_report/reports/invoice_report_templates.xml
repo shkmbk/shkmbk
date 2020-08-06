@@ -252,7 +252,7 @@
                        <strong>Total Amount in words : </strong><span t-esc="o.currency_id.amount_to_text(o.amount_total)"/> only
                     </p>
                     <p t-if="o.type in ('out_invoice', 'in_refund')">
-                        Kindly check invoice upon receipt, if correction is required it should be intimated within 7 dyas on receipt of invoice.</p>
+                        Kindly check invoice upon receipt, if correction is required it should be intimated within 7 days on receipt of invoice.</p>
 
                     <p t-if="o.narration" name="comment">
                         <span t-field="o.narration"/>
