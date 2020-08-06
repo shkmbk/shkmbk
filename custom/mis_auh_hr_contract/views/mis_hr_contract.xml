@@ -11,6 +11,7 @@
                         <field name="x_house_rent"/>
                         <field name="x_transport"/>
                         <field name="x_other_allowance"/>
+						<field name="x_fixed_ot"/>
                     </group>
                 </xpath>
                  <xpath expr="//group[@name='duration_group']" position="after">
