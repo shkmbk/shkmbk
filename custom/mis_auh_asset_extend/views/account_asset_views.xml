@@ -22,14 +22,19 @@
                     <h3>
                         <field name="asset_code"  placeholder="e.g. Group + Sub Group - XXXXX" attrs="{'invisible': ['|', ('state', '=', 'model'), ('asset_type', 'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
                     </h3>
+					<h6>
+						<field name="asset_description"  placeholder="Asset Description" attrs="{'invisible': ['|', ('state', '=', 'model'), ('asset_type', 'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
+					</h6>
                 </div>
             </xpath>
-            <xpath expr="//field[@name='original_value']" position="before">
-                <field name="custom_checkbox"/>
+            <xpath expr="//field[@name='acquisition_date']" position="after">
+                <field name="asset_qty" attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
+				<field name="asset_cost" attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>				
             </xpath>
 			
             <xpath expr="//field[@name='analytic_tag_ids']" position="after">
-				<field name="is_opening"/>
+				<field name="custom_checkbox" attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
+				<field name="is_opening" attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
                 <field name="asset_purchase_date" attrs="{'invisible': [('is_opening', '=', False)]}"/>
 				<field name="asset_purchase_amount" attrs="{'invisible': [('is_opening', '=', False)]}"/>
             </xpath>
@@ -61,7 +66,6 @@
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
                 <filter string="Asset Code" name="asset_code" context="{'group_by':'asset_code'}"/>
-
             </xpath>
         </field>
     </record>
@@ -221,12 +225,12 @@
     </record>
 
     <record id="mis_asset_custodian_action" model="ir.actions.act_window">
-        <field name="name">Asset Sub Custodian</field>
+        <field name="name">Asset Custodian</field>
         <field name="res_model">mis.asset.custodian</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
              <p>
-                Add a new Asset Sub Custodian
+                Add a new Asset Custodian
               </p>
         </field>
     </record>

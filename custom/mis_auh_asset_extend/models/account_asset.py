@@ -31,7 +31,10 @@ class AccountAssetAsset(models.Model):
     asset_purchase_date = fields.Date(string="Purchase Date")
     asset_purchase_amount = fields.Monetary(string="Purchase Amount")
     asset_area = fields.Many2one('mis.asset.area', string='Area')
-    is_opening = fields.Boolean(string="Opening Asset",default=False)    
+    is_opening = fields.Boolean(string="Opening Asset",default=False)
+    asset_qty = fields.Float(string="Quantity", default=1)
+    asset_cost = fields.Float(string="Cost")
+    asset_description = fields.Char(string="Asset Description")
 
     _sql_constraints = [
             ('code_uniq', 'unique (asset_code)', "Asset Code already exists !"),
