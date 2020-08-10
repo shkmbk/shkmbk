@@ -9,8 +9,8 @@ from io import BytesIO
 from pytz import timezone
 import pytz
 
-class Wizard(models.TransientModel):
-    _name = 'wps.wizard'
+class WizardPayroll(models.TransientModel):
+    _name = 'wps.wizard.payroll'
 
     @api.model
     def get_default_date_model(self):
@@ -93,7 +93,7 @@ class Wizard(models.TransientModel):
             if start[1] == end[1]:
                 self.salary_month = start[1]
 
-    def print_xlsx(self):
+    def print_payroll_xlsx(self):
         if not self.env['res.users'].browse(self.env.uid).tz:
             raise UserError(_('Please Set a User Timezone'))
         if self.start_date and self.end_date:
@@ -101,7 +101,7 @@ class Wizard(models.TransientModel):
             end = str(self.end_date).split('-')
             if not start[1] == end[1]:
                 raise UserError(_('The Dates Can of Same Month Only'))
-        #return self.env['hr.employee'].search(self._get_available_contracts_domain())
+
         slips = self.env['hr.payslip'].search(self._get_filtered_domain())
 
         if not slips:
@@ -115,12 +115,9 @@ class Wizard(models.TransientModel):
         else:
             date = datetime.now()
             time = datetime.now()
-
-        datetime_string = self.get_default_date_model().strftime("%Y-%m-%d %H:%M:%S")
-        date_string = self.get_default_date_model().strftime("%Y-%m-%d")
         date_string =  self.end_date.strftime("%B-%y")
 
-        report_name = 'WPS_'+ date.strftime("%y%m%d%H%M%S")
+        report_name = 'PayrollReport_'+ date.strftime("%y%m%d%H%M%S")
         filename = '%s %s' % (report_name, date_string)
 
 
@@ -146,91 +143,179 @@ class Wizard(models.TransientModel):
 
 
         worksheet = workbook.add_worksheet(report_name)
-        worksheet2 = workbook.add_worksheet("Summary")
-        worksheet2.merge_range('A1:E1', 'EMPLOYEES SALARY', wbf['header'])
 
         col=0
         column_width=15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Bank Routing Code', wbf['content'])
-        worksheet2.set_column(col, col, 10)
-        worksheet2.write(1, col, 'SL No', wbf['content_border'])
+        worksheet.write(0, col, 'Sl.  No.', wbf['content_border'])
         col = 1
         column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transaction Type', wbf['content'])
-        worksheet2.set_column(col, col, 25)
-        worksheet2.write(1, col, 'EMPLOYEES NAME', wbf['content_border'])
+        worksheet.write(0, col, 'Employee Name', wbf['content_border'])
         col = 2
         column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transaction Code', wbf['content'])
-        worksheet2.set_column(col, col, 25)
-        worksheet2.write(1, col, 'NAME OF BANK', wbf['content_border'])
+        worksheet.write(0, col, 'Designation', wbf['content_border'])
         col = 3
         column_width = 30
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Beneficiary Name (Max.140 characters)', wbf['content'])
-        worksheet2.set_column(col, col, 25)
-        worksheet2.write(1, col, 'IBAN NUMBER', wbf['content_border'])
+        worksheet.write(0, col, 'Division', wbf['content_border'])
         col = 4
         column_width = 30
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Beneficiary IBAN No. (Max. 23 charcters)', wbf['content'])
-        worksheet2.set_column(col, col, 15)
-        worksheet2.write(1, col, 'SALARY AED', wbf['content_border'])
+        worksheet.write(0, col, 'Department', wbf['content_border'])
         col = 5
         column_width = 20
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Amount (Only 2 decimals)', wbf['content'])
+        worksheet.write(0, col, 'Payment Mode', wbf['content_border'])
         col = 6
         column_width = 30
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Remittance Information (Max. 135 characters)', wbf['content'])
+        worksheet.write(0, col, 'Contract Salary (Basic+Allowance)', wbf['content_border'])
         col = 7
         column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transfer Month(MMM-YY)', wbf['content'])
-
+        worksheet.write(0, col, 'Days', wbf['content_border'])
+        col = 8
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'Basic Salary', wbf['content_border'])
+        col = 9
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'Allowance', wbf['content_border'])
+        col = 9
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'Fixed OT', wbf['content_border'])
+        col = 9
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'L.Salary', wbf['content_border'])
+        col = 10
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'Ticket Allowance', wbf['content_border'])
+        col = 11
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'EOSB', wbf['content_border'])
+        col = 12
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'Gross Amount', wbf['content_border'])
+        col = 13
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'Fine & Penalty', wbf['content_border'])
+        col = 14
+        column_width = 15
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'Net Salary', wbf['content_border'])
 
         count = 0
         sum = 0
-        monthyear = self.end_date
-        monthyear = str(monthyear).split('-')
-        monthyear = str(monthyear[1]) + str(monthyear[0])
-
         for rec in slips:
             count += 1
             col=0
-            worksheet.write(count, col,rec.employee_id.agent_id.routing_code,  wbf['content'])
-            worksheet2.write(count+1, col, count, wbf['content_border'])
-            col += 1
-            worksheet.write(count, col, "Salary", wbf['content'])
-            col += 1
-            worksheet.write(count, col, "SAL", wbf['content'])
-            col += 1
-            worksheet.write(count, col, rec.employee_id.name, wbf['content'])
-            worksheet2.write(count + 1, 1, rec.employee_id.name, wbf['content_border'])
-            col+=1
-            worksheet.write(count, col, rec.employee_id.iban_number,  wbf['content'])
-            worksheet2.write(count+1, 2, rec.employee_id.iban_number, wbf['content_border'])
-            worksheet2.write(count + 1, 3, rec.employee_id.agent_id.name, wbf['content_border'])
-            col += 1
-            slipline = self.env['hr.payslip.line'].search([('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'NET')])
-            amount=0.0
-            if slipline:
-                amount=slipline.total
 
-            worksheet.write(count, col, amount, wbf['content_float'])
-            worksheet2.write(count + 1, 4, amount,  wbf['content_float_border'])
-            sum+=amount
+            worksheet.write(count, col, count,  wbf['content_border'])
             col += 1
-            worksheet.write(count, col, "Salary Transfer", wbf['content'])
+
+            worksheet.write(count, col, rec.employee_id.name, wbf['content_border'])
             col += 1
-            worksheet.write(count, col, date_string, wbf['content'])
+            worksheet.write(count, col, rec.employee_id.job_id.name, wbf['content_border'])
+            col += 1
+            worksheet.write(count, col, rec.employee_id.department_id.name, wbf['content_border'])
+            col += 1
+            worksheet.write(count, col, rec.employee_id.name, wbf['content_border'])
+            col+=1
+
+            worksheet.write(count, col, rec.employee_id.payment_method.name,  wbf['content_border'])
+            col+=1
+            worksheet.write(count, col, "contract amt",  wbf['content_border'])
+            col+=1
+            worksheet.write(count, col, "Days",  wbf['content_border'])
+            col += 1
+            amountbasic = 0.0
+            slipbasic = self.env['hr.payslip.line'].search([('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'BASIC')])
+            if slipbasic:
+                amountbasic=slipbasic.total
+            worksheet.write(count, col, amountbasic, wbf['content_float_border'])
+
+            col += 1
+            amountallow = 0.0
+            sliphra = self.env['hr.payslip.line'].search(
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'HRA')])
+            if sliphra:
+                amountallow = sliphra.total
+            worksheet.write(count, col, amountallow, wbf['content_float_border'])
+
+            col += 1
+            amountfixot = 0.0
+            slipfixot = self.env['hr.payslip.line'].search(
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'FOT')])
+            if slipfixot:
+                amountfixot = slipfixot.total
+            worksheet.write(count, col, amountfixot, wbf['content_float_border'])
+
+            col += 1
+            amountlsal = 0.0
+            sliplsal = self.env['hr.payslip.line'].search(
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'LSAL')])
+            if sliplsal:
+                amountlsal = sliplsal.total
+            worksheet.write(count, col, amountlsal, wbf['content_float_border'])
+
+            col += 1
+            amounttall = 0.0
+            sliptall = self.env['hr.payslip.line'].search(
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'TALL')])
+            if sliptall:
+                amounttall = sliptall.total
+            worksheet.write(count, col, amounttall, wbf['content_float_border'])
+
+            col += 1
+            amounteosb= 0.0
+            slipeosb = self.env['hr.payslip.line'].search(
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'EOSB')])
+            if slipeosb:
+                amounteosb = slipeosb.total
+            worksheet.write(count, col, amounteosb, wbf['content_float_border'])
+
+            col += 1
+            amountgross= 0.0
+            slipgross = self.env['hr.payslip.line'].search(
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'GROSS')])
+            if slipgross:
+                amountgross = slipgross.total
+            worksheet.write(count, col, amountgross, wbf['content_float_border'])
+
+            col += 1
+            amountfine= 0.0
+            slipfine = self.env['hr.payslip.line'].search(
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'FINE')])
+            if slipfine:
+                amountfine = slipfine.total
+            worksheet.write(count, col, amountfine, wbf['content_float_border'])
+
+            col += 1
+            amountadv= 0.0
+            slipadv = self.env['hr.payslip.line'].search(
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'ADV')])
+            if slipadv:
+                amountadv = slipadv.total
+            worksheet.write(count, col, amountadv, wbf['content_float_border'])
+            col += 1
+            amountnet = 0.0
+            slipnet = self.env['hr.payslip.line'].search([('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'NET')])
+            if slipnet:
+                amountnet=slipnet.total
+            worksheet.write(count, col, amountnet, wbf['content_float_border'])
+
         count+=2
-        worksheet2.merge_range('A%s:D%s'%(count,count), 'Total', wbf['content_border'])
-        worksheet2.write(count-1, 4, sum, wbf['content_float_border'])
+#        worksheet.merge_range('A%s:D%s'%(count,count), 'Total', wbf['content_border'])
+#        worksheet.write(count-1, 4, sum, wbf['content_float_border'])
 
 
 

@@ -5,36 +5,50 @@ from odoo import models, fields, api
 class Employee(models.Model):
     _inherit = 'hr.employee'
 
-    labour_card_number = fields.Char(string="Employee Card Number", size=14, required=False,
+    labour_card_number = fields.Char(string="Employee Card Number", size=14,
                                      help="Labour Card Number Of Employee")
-    salary_card_number = fields.Char(string="Salary Account Number", size=16, required=False,
+    salary_card_number = fields.Char(string="Salary Account Number",size=16,
                                      help="Salary card number or account number of employee")
-    iban_number = fields.Char(string="IBAN Number", size=23, required=False, help="IBAN Number")                                     
-    agent_id = fields.Many2one('res.bank', string="Agent/Bank", required=False, help="Agent ID or bank ID of Employee")
+    iban_number = fields.Char(string="IBAN Number", size=23,  help="IBAN Number")
+    agent_id = fields.Many2one('res.bank', string="Agent/Bank", help="Agent ID or bank ID of Employee")
     date_of_join = fields.Date(string="Date of Join", size=14, required=True)
-    id_expiry = fields.Date(string="ID Expiry", size=14, required=False)
-    passport_expiry = fields.Date(string="Passport Expiry", size=14, required=False)
+    id_expiry = fields.Date(string="ID Expiry", size=14)
+    passport_expiry = fields.Date(string="Passport Expiry", size=14)
+    payment_method = fields.Many2one('mis.hr.paymentmethod', string="Payment Method")
     
 
     def write(self, vals):
         if 'labour_card_number' in vals.keys():
-            if len(vals['labour_card_number']) < 14 and len(vals['salary_card_number'])!=0:
-                vals['labour_card_number'] = vals['labour_card_number'].zfill(14)
+            if vals['labour_card_number']:
+                if len(vals['labour_card_number']) < 14 and len(vals['labour_card_number'])!=0:
+                    vals['labour_card_number'] = vals['labour_card_number'].zfill(14)
         if 'salary_card_number' in vals.keys():
-            if len(vals['salary_card_number']) < 16 and len(vals['salary_card_number'])!=0:
-                vals['salary_card_number'] = vals['salary_card_number'].zfill(16)
+            if vals['salary_card_number']:
+                if len(vals['salary_card_number']) < 16 and len(vals['salary_card_number'])!=0:
+                    vals['salary_card_number'] = vals['salary_card_number'].zfill(16)
         return super(Employee, self).write(vals)
 
     @api.model
     def create(self, vals):
         if 'labour_card_number' in vals.keys():
-            if len(vals['labour_card_number']) < 14 and len(vals['salary_card_number'])!=0:
-                vals['labour_card_number'] = vals['labour_card_number'].zfill(14)
-        if 'salary_card_number' in vals.keys() and len(vals['salary_card_number'])!=0:
-            if len(vals['salary_card_number']) < 16:
-                vals['salary_card_number'] = vals['salary_card_number'].zfill(16)
+            if vals['labour_card_number']:
+                if len(vals['labour_card_number']) < 14 and len(vals['labour_card_number'])!=0:
+                    vals['labour_card_number'] = vals['labour_card_number'].zfill(14)
+        if 'salary_card_number' in vals.keys():
+            if vals['salary_card_number']:
+                if len(vals['salary_card_number']) < 16 and len(vals['salary_card_number'])!=0:
+                    vals['salary_card_number'] = vals['salary_card_number'].zfill(16)
         return super(Employee, self).create(vals)
 
+class MisAuhPaymentMethod(models.Model):
+    _name = 'mis.hr.paymentmethod'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    name = fields.Char(string="Payment Method",  required=True, track_visibility='onchange')
+
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Payment Method already exists !"),
+    ]
 
 class Bank(models.Model):
     _inherit = 'res.bank'
