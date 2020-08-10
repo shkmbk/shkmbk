@@ -28,7 +28,7 @@ class MisProduct(models.Model):
     bank_journal = fields.Many2one('account.journal', string="Bank Account",  domain=" [('type', '=', 'bank')]")
     interest_rate =fields.Float(string="Interest Rate")
     day_in_a_year = fields.Integer(string="No of Days in Year")
-    expected_earning = fields.Float(string="Expected Earning")
+    expected_earning = fields.Float(string="Expected Earning",compute='calculate_interest', store=True, default=False)
 #    expected_earning_new = fields.Float(string="Expected Earning", compute='calculate_interest', store=True)
 
     @api.depends('interest_rate', 'day_in_a_year', 'deposit_date', 'maturity_date')
@@ -38,7 +38,7 @@ class MisProduct(models.Model):
             if rec.interest_rate>0 and rec.day_in_a_year>0:
                 if rec.deposit_date and rec.maturity_date and rec.isdeposit==True:
                     totdays = (rec.maturity_date - rec.deposit_date).days
-                    tot_expect_earning =rec.standard_price*(rec.interest_rate/(rec.day_in_a_year*100))*totdays
+                    tot_expect_earning =rec.list_price*(rec.interest_rate/(rec.day_in_a_year*100))*totdays
                     rec.expected_earning = tot_expect_earning
 
 
