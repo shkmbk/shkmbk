@@ -16,9 +16,10 @@
         'hr_holidays',
         ],
     'data': [
-        'views/action_manager.xml',
         'views/view.xml',
         'wizard/wizard.xml',
+        'wizard/wizard_payroll.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': False,

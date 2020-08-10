@@ -14,6 +14,7 @@
                         <field name="labour_card_number" string="Emp Card No."/>
                         <field name="salary_card_number"  string="Salary Card No."/>
 						<field name="iban_number" string="IBAN No."/>
+                        <field name="payment_method"/>
                 </xpath>
                 <xpath expr="//field[@name='job_id']" position="after">
                         <field name="date_of_join"/>
@@ -47,6 +48,17 @@
                 <xpath expr="//field[@name='company_registry']" position="after">
                     <field name="employer_id"/>
                 </xpath>
+            </field>
+        </record>
+        <record id="mis_hr_payment_method_form_view" model="ir.ui.view">
+            <field name="name">mis.hr.paymentmethod.form</field>
+            <field name="model">mis.hr.paymentmethod</field>
+            <field name="arch" type="xml">
+                <form string="Payment Method">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
             </field>
         </record>
     </data>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
-        <record id="wps_wizard_form" model="ir.ui.view">
-            <field name="name">wps.wizard.form</field>
-            <field name="model">wps.wizard</field>
+        <record id="mis_payroll_wizard_form" model="ir.ui.view">
+            <field name="name">wps.wizard.payroll.form</field>
+            <field name="model">wps.wizard.payroll</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Generate WPS">
@@ -29,26 +29,25 @@
                         </group>
                     </group>
                     <footer>
-                        <button string="Print xlsx" name="print_xlsx" type="object" class="btn-primary"/>
+                        <button string="Print Payroll xlsx" name="print_payroll_xlsx" type="object" class="btn-primary"/>
                         <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
                     </footer>
                 </form>
             </field>
         </record>
-        <record id="wps_action_view" model="ir.actions.act_window">
-            <field name="name">Generate WPS</field>
+        <record id="mis_payroll_action_view" model="ir.actions.act_window">
+            <field name="name">Payroll Report</field>
             <field name="target">new</field>
-            <field name="res_model">wps.wizard</field>
+            <field name="res_model">wps.wizard.payroll</field>
             <field name="view_mode">form</field>
         </record>
 
         <menuitem
-                id="wps_wizard_submenu"
-                name="WPS"
+                id="mis_payroll_wizard_submenu"
+                name="Payroll Report"
                 parent="hr_payroll.menu_hr_payroll_report"
-                action="wps_action_view"
+                action="mis_payroll_action_view"
                 groups="account.group_account_manager"/>
-
     </data>
 
 </odoo>
