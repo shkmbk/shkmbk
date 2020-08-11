@@ -22,14 +22,14 @@ class MisProduct(models.Model):
     liquidityreturn_id = fields.Many2one('mis.inv.liquidityreturn', string="Liquidity Return")
     geographic_id = fields.Many2one('mis.inv.geographic', string="Geographic")
     responsibility_id = fields.Many2one('res.partner', string="Responsibility")
-#    invest_analytic_tag_id = fields.Many2one('account.analytic.tag', string='Analytic Tags')
     invest_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     sum_invest_expense = fields.Float(string="Total Expenses", compute='_suminvestexpense')
     bank_journal = fields.Many2one('account.journal', string="Bank Account",  domain=" [('type', '=', 'bank')]")
     interest_rate =fields.Float(string="Interest Rate")
     day_in_a_year = fields.Integer(string="No of Days in Year")
     expected_earning = fields.Float(string="Expected Earning",compute='calculate_interest', store=True, default=False)
-#    expected_earning_new = fields.Float(string="Expected Earning", compute='calculate_interest', store=True)
+    type_id = fields.Many2one('mis.inv.type', string="Type")
+
 
     @api.depends('interest_rate', 'day_in_a_year', 'deposit_date', 'maturity_date')
     def calculate_interest(self):
@@ -169,5 +169,15 @@ class MisInvGeographic(models.Model):
 
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Geographic already exists !"),
+    ]
+class MisInvType(models.Model):
+    _name = 'mis.inv.type'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _description ='Type'
+
+    name = fields.Char(string="Type",  track_visibility='onchange')
+    typepercentage = fields.Float(string="Retern %", defualt=0.00)
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Type already exists !"),
     ]
 
