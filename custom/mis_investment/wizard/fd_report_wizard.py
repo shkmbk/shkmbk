@@ -9,6 +9,7 @@ class FDSummaryReport(models.TransientModel):
     _description = 'Fixed Deposit Summary Report'
 
     date_to = fields.Date(default=fields.Date.to_string(date.today()), required="1")
+    type_id = fields.Many2one('mis.inv.type', string="Type")
 
     def button_export_pdf(self):
         data = {}
@@ -16,6 +17,7 @@ class FDSummaryReport(models.TransientModel):
         data['date_to'] = self.date_to
         tmpdate = self.date_to
         data['header_date'] = tmpdate.strftime("%d-%m-%Y")
+        data['type'] = self.type_id.id
         report = self.env.ref(
             'mis_investment.action_fd_summary_report')
         return report.report_action(self, data=data)
