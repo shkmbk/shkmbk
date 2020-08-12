@@ -188,7 +188,7 @@ class WizardPayroll(models.TransientModel):
         col = 6
         column_width = 30
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Contract Salary (Basic+Allowance)', wbf['content_border_bg'])
+        worksheet.write(0, col, 'Contract Salary', wbf['content_border_bg'])
         col = 7
         column_width = 10
         worksheet.set_column(col, col, column_width)
@@ -271,11 +271,16 @@ class WizardPayroll(models.TransientModel):
             # CONTRACT SALARY (BASIC + ALLOWANCE)
             col+=1
 
-            basic_allow=rec.employee_id.contract_id.wage+rec.employee_id.contract_id.x_house_rent+rec.employee_id.contract_id.x_transpot+rec.employee_id.contract_id.x_other_allowance+rec.employee_id.contract_id.x_other_allowance+rec.employee_id.contract_id.x_fixed_ot
+            basic_allow=rec.employee_id.contract_id.wage+rec.employee_id.contract_id.x_house_rent+rec.employee_id.contract_id.x_transport+rec.employee_id.contract_id.x_other_allowance+rec.employee_id.contract_id.x_fixed_ot
             worksheet.write(count, col, basic_allow,  wbf['content_float_border'])
             # DAYS
+            #worksheet.write(count, col, ((self.end_date-self.start_date).days+1),  wbf['content_border']) #For Days in Period
+            worked_days=0.0
+            payslip_worked_days = self.env['hr.payslip.worked_days'].search([('payslip_id', '=', rec.id), ('work_entry_type_id', '=',1)])
+            if payslip_worked_days:
+                worked_days=payslip_worked_days.number_of_days
             col+=1
-            worksheet.write(count, col, ((self.end_date-self.start_date).days+1),  wbf['content_border'])
+            worksheet.write(count, col, worked_days,  wbf['content_float_border'])
             # BASIC AFTER UNPAID
             col += 1
             amountbasic = 0.0
