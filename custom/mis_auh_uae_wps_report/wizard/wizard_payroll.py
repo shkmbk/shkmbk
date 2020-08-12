@@ -186,7 +186,7 @@ class WizardPayroll(models.TransientModel):
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Payment Mode', wbf['content_border_bg'])
         col = 6
-        column_width = 30
+        column_width = 20
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Contract Salary', wbf['content_border_bg'])
         col = 7

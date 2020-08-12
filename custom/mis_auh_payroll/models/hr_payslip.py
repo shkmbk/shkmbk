@@ -13,10 +13,12 @@ class MisHrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
     paid_allowance = fields.Monetary(compute='_compute_allowance')
+    paid_fot=fields.Monetary(compute='_compute_fot')
+
 
     def _compute_allowance(self):
         contract = self.contract_id
-        allowance_amount = contract.x_house_rent
+        allowance_amount = contract.x_other_allowance
         unpaid_work_entry_types = self.struct_id.unpaid_work_entry_type_ids
 
 
@@ -33,6 +35,25 @@ class MisHrPayslip(models.Model):
                 is_unpaid = line.work_entry_type_id in unpaid_work_entry_types
                 total_allowance += line.number_of_hours * allowance_amount / total_hours if is_unpaid else 0
             payslip.paid_allowance = allowance_amount-total_allowance
+            
+    def _compute_fot(self):
+        contract = self.contract_id
+        fot_amount = contract.x_fixed_ot
+        unpaid_work_entry_types = self.struct_id.unpaid_work_entry_type_ids
+
+        work_hours = contract._get_work_hours(self.date_from, self.date_to)
+        total_hours = sum(work_hours.values()) or 1
+
+        for payslip in self:
+            self.ensure_one()
+            if not self.worked_days_line_ids:
+                return fot_amount
+            total_allowance = 0
+            is_unpaid = False
+            for line in self.worked_days_line_ids:
+                is_unpaid = line.work_entry_type_id in unpaid_work_entry_types
+                total_allowance += line.number_of_hours * fot_amount / total_hours if is_unpaid else 0
+            payslip.paid_fot = fot_amount-total_allowance
 
     def _get_paid_amount(self):
         self.ensure_one()
