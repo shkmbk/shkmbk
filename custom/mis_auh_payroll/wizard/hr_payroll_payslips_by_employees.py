@@ -42,7 +42,7 @@ class HrMisPayslipEmployees(models.TransientModel):
 
     def _get_available_contracts_domain(self):
 
-        return [('contract_ids.state', 'in', ('open', 'close')),
+        return [('contract_ids.state', '=', ('open')),
                 self._get_hr_tags(), self._get_analytic_account(), self._get_analytic_tag_ids(),
                 self._get_department_ids(),
                 ('company_id', '=', self.env.company.id)]
