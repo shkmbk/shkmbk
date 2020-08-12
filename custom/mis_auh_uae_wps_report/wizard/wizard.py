@@ -209,8 +209,8 @@ class Wizard(models.TransientModel):
             col += 1
             worksheet.write(count, col, "SAL", wbf['content'])
             col += 1
-            worksheet.write(count, col, rec.employee_id.name, wbf['content'])
-            worksheet2.write(count + 1, 1, rec.employee_id.name, wbf['content_border'])
+            worksheet.write(count, col, rec.employee_id.full_name, wbf['content'])
+            worksheet2.write(count + 1, 1, rec.employee_id.full_name, wbf['content_border'])
             col+=1
             worksheet.write(count, col, rec.employee_id.iban_number,  wbf['content'])
             worksheet2.write(count+1, 2, rec.employee_id.iban_number, wbf['content_border'])

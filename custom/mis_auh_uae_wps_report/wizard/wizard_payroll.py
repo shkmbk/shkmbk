@@ -246,7 +246,7 @@ class WizardPayroll(models.TransientModel):
             col += 1
             amountallow = 0.0
             sliphra = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'HRA')])
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'ALW')])
             if sliphra:
                 amountallow = sliphra.total
             worksheet.write(count, col, amountallow, wbf['content_float_border'])
@@ -262,7 +262,7 @@ class WizardPayroll(models.TransientModel):
             col += 1
             amountlsal = 0.0
             sliplsal = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'LSAL')])
+                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'LS')])
             if sliplsal:
                 amountlsal = sliplsal.total
             worksheet.write(count, col, amountlsal, wbf['content_float_border'])
