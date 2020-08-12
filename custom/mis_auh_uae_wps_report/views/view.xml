@@ -18,8 +18,12 @@
                 </xpath>
                 <xpath expr="//field[@name='job_id']" position="after">
                         <field name="date_of_join"/>
-
                 </xpath>
+				
+                <xpath expr="//page[@name='personal_information']//field[@name='address_home_id']" position="before">
+                        <field name="full_name" string="Full Name"/>
+                </xpath>
+				
                 <xpath expr="//page[@name='personal_information']//field[@name='identification_id']" position="after">
                         <field name="id_expiry" string="ID Expiry"/>
                 </xpath>

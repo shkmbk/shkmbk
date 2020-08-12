@@ -15,6 +15,7 @@ class Employee(models.Model):
     id_expiry = fields.Date(string="ID Expiry", size=14)
     passport_expiry = fields.Date(string="Passport Expiry", size=14)
     payment_method = fields.Many2one('mis.hr.paymentmethod', string="Payment Method")
+    full_name = fields.Char(string="Full Name", help="As per Passport/Bank Account")
     
 
     def write(self, vals):
