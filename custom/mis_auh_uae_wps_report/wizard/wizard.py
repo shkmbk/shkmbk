@@ -150,47 +150,52 @@ class Wizard(models.TransientModel):
         worksheet2.merge_range('A1:E1', 'EMPLOYEES SALARY', wbf['header'])
 
         col=0
-        column_width=15
+        column_width=30
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Bank Routing Code', wbf['content'])
+        worksheet.write(0, col, 'Beneficiary Bank Name', wbf['content'])
         worksheet2.set_column(col, col, 10)
         worksheet2.write(1, col, 'SL No', wbf['content_border'])
         col = 1
         column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transaction Type', wbf['content'])
+        worksheet.write(0, col, 'Bank Routing Code', wbf['content'])
         worksheet2.set_column(col, col, 25)
         worksheet2.write(1, col, 'EMPLOYEES NAME', wbf['content_border'])
         col = 2
         column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transaction Code', wbf['content'])
+        worksheet.write(0, col, 'Transaction Type', wbf['content'])
         worksheet2.set_column(col, col, 25)
         worksheet2.write(1, col, 'NAME OF BANK', wbf['content_border'])
         col = 3
-        column_width = 30
+        column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Beneficiary Name (Max.140 characters)', wbf['content'])
+        worksheet.write(0, col, 'Transaction Code', wbf['content'])
         worksheet2.set_column(col, col, 25)
         worksheet2.write(1, col, 'IBAN NUMBER', wbf['content_border'])
         col = 4
         column_width = 30
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Beneficiary IBAN No. (Max. 23 charcters)', wbf['content'])
+        worksheet.write(0, col, 'Beneficiary Name (Max.140 characters)', wbf['content'])        
         worksheet2.set_column(col, col, 15)
         worksheet2.write(1, col, 'SALARY AED', wbf['content_border'])
         col = 5
+        column_width = 30
+        worksheet.set_column(col, col, column_width)
+        worksheet.write(0, col, 'Beneficiary IBAN No. (Max. 23 charcters)', wbf['content'])        
+        col = 6
         column_width = 20
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Amount (Only 2 decimals)', wbf['content'])
-        col = 6
+        worksheet.write(0, col, 'Amount (Only 2 decimals)', wbf['content'])        
+        col = 7
         column_width = 30
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Remittance Information (Max. 135 characters)', wbf['content'])
-        col = 7
+        worksheet.write(0, col, 'Transfer Month(MMM-YY)', wbf['content'])
+        col = 8
         column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transfer Month(MMM-YY)', wbf['content'])
+        worksheet.write(0, col, 'Transfer Month(MMM-YY)', wbf['content'])        
 
 
         count = 0
@@ -202,8 +207,10 @@ class Wizard(models.TransientModel):
         for rec in slips:
             count += 1
             col=0
-            worksheet.write(count, col,rec.employee_id.agent_id.routing_code,  wbf['content'])
+            worksheet.write(count, col, rec.employee_id.agent_id.name, wbf['content_border'])
             worksheet2.write(count+1, col, count, wbf['content_border'])
+            col += 1
+            worksheet.write(count, col,rec.employee_id.agent_id.routing_code,  wbf['content'])
             col += 1
             worksheet.write(count, col, "Salary", wbf['content'])
             col += 1
@@ -213,8 +220,8 @@ class Wizard(models.TransientModel):
             worksheet2.write(count + 1, 1, rec.employee_id.full_name, wbf['content_border'])
             col+=1
             worksheet.write(count, col, rec.employee_id.iban_number,  wbf['content'])
-            worksheet2.write(count+1, 2, rec.employee_id.iban_number, wbf['content_border'])
-            worksheet2.write(count + 1, 3, rec.employee_id.agent_id.name, wbf['content_border'])
+            worksheet2.write(count + 1, 2, rec.employee_id.agent_id.name, wbf['content_border'])
+            worksheet2.write(count+1, 3, rec.employee_id.iban_number, wbf['content_border'])            
             col += 1
             slipline = self.env['hr.payslip.line'].search([('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'NET')])
             amount=0.0
@@ -231,8 +238,6 @@ class Wizard(models.TransientModel):
         count+=2
         worksheet2.merge_range('A%s:D%s'%(count,count), 'Total', wbf['content_border'])
         worksheet2.write(count-1, 4, sum, wbf['content_float_border'])
-
-
 
         workbook.close()
         out=base64.encodestring(fp.getvalue())
