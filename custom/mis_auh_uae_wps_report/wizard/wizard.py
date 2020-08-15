@@ -129,8 +129,14 @@ class Wizard(models.TransientModel):
         wbf = {}
 
         wbf['content'] = workbook.add_format()
-        wbf['header'] = workbook.add_format(
-            {'bold': 1, 'align': 'center'})
+        wbf['header1'] = workbook.add_format(
+            {'bold': 1, 'align': 'center', 'font_size': '13' })
+        wbf['header2'] = workbook.add_format(
+            {'bold': 1, 'align': 'center', 'bg_color':'#C4D79B' })
+        wbf['header2'].set_top()
+        wbf['header2'].set_bottom()
+        wbf['header2'].set_left()
+        wbf['header2'].set_right()                
         wbf['content_float'] = workbook.add_format({'align': 'right', 'num_format': '#,##0.00'})
 
         wbf['content_border'] = workbook.add_format()
@@ -143,59 +149,63 @@ class Wizard(models.TransientModel):
         wbf['content_float_border'].set_bottom()
         wbf['content_float_border'].set_left()
         wbf['content_float_border'].set_right()
+        wbf['content_float_border_bg'] = workbook.add_format({'align': 'right', 'num_format': '#,##0.00', 'bold': 1, 'bg_color': '#E1E1E1'})
+        wbf['content_float_border_bg'].set_top()
+        wbf['content_float_border_bg'].set_bottom()
+        wbf['content_float_border_bg'].set_left()
+        wbf['content_float_border_bg'].set_right()        
 
 
         worksheet = workbook.add_worksheet(report_name)
         worksheet2 = workbook.add_worksheet("Summary")
-        worksheet2.merge_range('A1:E1', 'EMPLOYEES SALARY', wbf['header'])
+        worksheet2.merge_range('A1:E1', 'EMPLOYEES SALARY', wbf['header1'])
 
         col=0
-        column_width=30
+        column_width=25
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Beneficiary Bank Name', wbf['content'])
-        worksheet2.set_column(col, col, 10)
-        worksheet2.write(1, col, 'SL No', wbf['content_border'])
+        worksheet.write(0, col, 'Beneficiary Bank Name', wbf['header2'])
+        worksheet2.set_column(col, col, 7)
+        worksheet2.write(1, col, 'SL No', wbf['header2'])
         col = 1
-        column_width = 15
+        column_width = 16
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Bank Routing Code', wbf['content'])
-        worksheet2.set_column(col, col, 25)
-        worksheet2.write(1, col, 'EMPLOYEES NAME', wbf['content_border'])
+        worksheet.write(0, col, 'Bank Routing Code', wbf['header2'])
+        worksheet2.set_column(col, col, 40)
+        worksheet2.write(1, col, 'EMPLOYEES NAME', wbf['header2'])
         col = 2
         column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transaction Type', wbf['content'])
+        worksheet.write(0, col, 'Transaction Type', wbf['header2'])
         worksheet2.set_column(col, col, 25)
-        worksheet2.write(1, col, 'NAME OF BANK', wbf['content_border'])
+        worksheet2.write(1, col, 'Beneficiary Bank Name', wbf['header2'])
         col = 3
         column_width = 15
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transaction Code', wbf['content'])
+        worksheet.write(0, col, 'Transaction Code', wbf['header2'])
         worksheet2.set_column(col, col, 25)
-        worksheet2.write(1, col, 'IBAN NUMBER', wbf['content_border'])
+        worksheet2.write(1, col, 'IBAN NUMBER', wbf['header2'])
         col = 4
-        column_width = 30
+        column_width = 40
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Beneficiary Name (Max.140 characters)', wbf['content'])        
-        worksheet2.set_column(col, col, 15)
-        worksheet2.write(1, col, 'SALARY AED', wbf['content_border'])
+        worksheet.write(0, col, 'Beneficiary Name (Max.140 characters)', wbf['header2'])        
+        worksheet2.set_column(col, col, 12)
+        worksheet2.write(1, col, 'SALARY AED', wbf['header2'])
         col = 5
-        column_width = 30
+        column_width = 25
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Beneficiary IBAN No. (Max. 23 charcters)', wbf['content'])        
+        worksheet.write(0, col, 'Beneficiary IBAN No.', wbf['header2'])        
         col = 6
-        column_width = 20
+        column_width = 12
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Amount (Only 2 decimals)', wbf['content'])        
+        worksheet.write(0, col, 'Amount', wbf['header2'])        
         col = 7
-        column_width = 30
+        column_width = 21
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Remittance Information (Max. 135 characters)', wbf['content'])
-        worksheet.write(0, col, 'Transfer Month(MMM-YY)', wbf['content'])
+        worksheet.write(0, col, 'Remittance Information', wbf['header2'])
         col = 8
-        column_width = 15
+        column_width = 14
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Transfer Month(MMM-YY)', wbf['content'])        
+        worksheet.write(0, col, 'Transfer Month', wbf['header2'])        
 
 
         count = 0
@@ -207,7 +217,7 @@ class Wizard(models.TransientModel):
         for rec in slips:
             count += 1
             col=0
-            worksheet.write(count, col, rec.employee_id.agent_id.name, wbf['content_border'])
+            worksheet.write(count, col, rec.employee_id.agent_id.name, wbf['content'])
             worksheet2.write(count+1, col, count, wbf['content_border'])
             col += 1
             worksheet.write(count, col,rec.employee_id.agent_id.routing_code,  wbf['content'])
@@ -236,8 +246,8 @@ class Wizard(models.TransientModel):
             col += 1
             worksheet.write(count, col, date_string, wbf['content'])
         count+=2
-        worksheet2.merge_range('A%s:D%s'%(count,count), 'Total', wbf['content_border'])
-        worksheet2.write(count-1, 4, sum, wbf['content_float_border'])
+        worksheet2.merge_range('A%s:D%s'%(count,count), 'Total', wbf['content_float_border_bg'])
+        worksheet2.write(count-1, 4, sum, wbf['content_float_border_bg'])
 
         workbook.close()
         out=base64.encodestring(fp.getvalue())
