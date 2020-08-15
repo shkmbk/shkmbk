@@ -162,76 +162,76 @@ class WizardPayroll(models.TransientModel):
         worksheet = workbook.add_worksheet(report_name)
 
         col=0
-        column_width=10
+        column_width=6
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Sl.  No.', wbf['content_border_bg'])
+        worksheet.write(0, col, 'Sl. No.', wbf['content_border_bg'])
         col = 1
-        column_width = 30
+        column_width = 40
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Employee Name', wbf['content_border_bg'])
         col = 2
-        column_width = 30
+        column_width = 21
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Designation', wbf['content_border_bg'])
         col = 3
-        column_width = 30
+        column_width = 12
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Division', wbf['content_border_bg'])
         col = 4
-        column_width = 30
+        column_width = 25
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Department', wbf['content_border_bg'])
         col = 5
-        column_width = 20
+        column_width = 14
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Payment Mode', wbf['content_border_bg'])
         col = 6
-        column_width = 20
+        column_width = 14
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Contract Salary', wbf['content_border_bg'])
         col = 7
-        column_width = 10
+        column_width = 5
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Days', wbf['content_border_bg'])
         col = 8
-        column_width = 15
+        column_width = 10
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Basic Salary', wbf['content_border_bg'])
         col = 9
-        column_width = 15
+        column_width = 10
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Allowance', wbf['content_border_bg'])
         col = 10
-        column_width = 15
+        column_width = 8
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Fixed OT', wbf['content_border_bg'])
         col = 11
-        column_width = 15
+        column_width = 8
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'L.Salary', wbf['content_border_bg'])
         col = 12
-        column_width = 15
+        column_width = 8
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Ticket Allowance', wbf['content_border_bg'])
+        worksheet.write(0, col, 'Air Ticket', wbf['content_border_bg'])
         col = 13
-        column_width = 15
+        column_width = 10
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'EOSB', wbf['content_border_bg'])
         col = 14
-        column_width = 15
+        column_width = 13
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Gross Amount', wbf['content_border_bg'])
         col = 15
-        column_width = 15
+        column_width = 13
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Fine & Penalty', wbf['content_border_bg'])
         col = 16
-        column_width = 15
+        column_width = 10
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Salary Advance', wbf['content_border_bg'])
+        worksheet.write(0, col, 'S. Advance', wbf['content_border_bg'])
 
         col = 17
-        column_width = 15
+        column_width = 14
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Net Salary', wbf['content_border_bg'])
 
@@ -261,7 +261,7 @@ class WizardPayroll(models.TransientModel):
             worksheet.write(count, col, rec.employee_id.job_id.name, wbf['content_border'])
             # DIVISION
             col += 1
-            worksheet.write(count, col, rec.employee_id.department_id.name, wbf['content_border'])
+            worksheet.write(count, col, rec.employee_id.contract_id.analytic_account_id.name, wbf['content_border'])
             # DEPARTMENT
             col += 1
             worksheet.write(count, col, rec.employee_id.department_id.name, wbf['content_border'])

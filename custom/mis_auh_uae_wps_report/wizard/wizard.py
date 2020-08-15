@@ -217,10 +217,18 @@ class Wizard(models.TransientModel):
         for rec in slips:
             count += 1
             col=0
-            worksheet.write(count, col, rec.employee_id.agent_id.name, wbf['content'])
             worksheet2.write(count+1, col, count, wbf['content_border'])
+            if rec.employee_id.agent_id.name:
+                worksheet.write(count, col, rec.employee_id.agent_id.name, wbf['content'])
+                worksheet2.write(count + 1, 2, rec.employee_id.agent_id.name, wbf['content_border'])
+            else:
+                worksheet2.write(count + 1, 2, '', wbf['content_border'])
+                
+                
+                
             col += 1
-            worksheet.write(count, col,rec.employee_id.agent_id.routing_code,  wbf['content'])
+            if rec.employee_id.agent_id.routing_code:
+                worksheet.write(count, col,rec.employee_id.agent_id.routing_code,  wbf['content'])
             col += 1
             worksheet.write(count, col, "Salary", wbf['content'])
             col += 1
@@ -229,9 +237,12 @@ class Wizard(models.TransientModel):
             worksheet.write(count, col, rec.employee_id.full_name, wbf['content'])
             worksheet2.write(count + 1, 1, rec.employee_id.full_name, wbf['content_border'])
             col+=1
-            worksheet.write(count, col, rec.employee_id.iban_number,  wbf['content'])
-            worksheet2.write(count + 1, 2, rec.employee_id.agent_id.name, wbf['content_border'])
-            worksheet2.write(count+1, 3, rec.employee_id.iban_number, wbf['content_border'])            
+            if rec.employee_id.iban_number:
+                worksheet.write(count, col, rec.employee_id.iban_number,  wbf['content'])
+                worksheet2.write(count+1, 3, rec.employee_id.iban_number, wbf['content_border'])
+            else:
+                worksheet2.write(count+1, 3, '', wbf['content_border'])
+                
             col += 1
             slipline = self.env['hr.payslip.line'].search([('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'NET')])
             amount=0.0
@@ -246,8 +257,8 @@ class Wizard(models.TransientModel):
             col += 1
             worksheet.write(count, col, date_string, wbf['content'])
         count+=2
-        worksheet2.merge_range('A%s:D%s'%(count,count), 'Total', wbf['content_float_border_bg'])
-        worksheet2.write(count-1, 4, sum, wbf['content_float_border_bg'])
+        worksheet2.merge_range('A%s:D%s'%(count+1,count+1), 'Total', wbf['content_float_border_bg'])
+        worksheet2.write(count, 4, sum, wbf['content_float_border_bg'])
 
         workbook.close()
         out=base64.encodestring(fp.getvalue())
