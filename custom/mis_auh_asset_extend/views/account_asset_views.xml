@@ -37,6 +37,8 @@
 				<field name="is_opening" attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
                 <field name="asset_purchase_date" attrs="{'invisible': [('is_opening', '=', False)]}"/>
 				<field name="asset_purchase_amount" attrs="{'invisible': [('is_opening', '=', False)]}"/>
+				<field name="op_duration" attrs="{'invisible': [('is_opening', '=', False)]}"/>
+				
             </xpath>
             <xpath expr="//field[@name='first_depreciation_date']" position="before">
                 <field name="asset_group" attrs="{'invisible': [('asset_type',  'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>

@@ -11,6 +11,7 @@
     'depends': ['base','account','account_asset'],
     'data': [
         'views/account_asset_views.xml',
+        'wizard/mis_asset_report_wizard.xml',
         'security/ir.model.access.csv',
     ],
     'qweb': [
