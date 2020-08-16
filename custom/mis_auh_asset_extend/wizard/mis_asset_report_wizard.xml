@@ -32,7 +32,7 @@
             </field>
         </record>
         <record id="mis_asset_custom_action_view" model="ir.actions.act_window">
-            <field name="name">Asset Custom Report</field>
+            <field name="name">Fixed Asset Register</field>
             <field name="target">new</field>
             <field name="res_model">mis.asset.custom.report</field>
             <field name="view_mode">form</field>
