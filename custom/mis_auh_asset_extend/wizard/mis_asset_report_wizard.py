@@ -307,6 +307,8 @@ class MisAssetCustomReport(models.TransientModel):
             col += 1
             if purchase_date:     
                 worksheet.write(count, col, purchase_date.strftime("%d-%m-%Y"), wbf['content_border'])
+            else:
+                worksheet.write(count, col,'', wbf['content_border'])
             # QTY
             col+=1
             total_qty+=rec.asset_qty
