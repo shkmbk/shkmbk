@@ -257,12 +257,12 @@ class MisAssetCustomReport(models.TransientModel):
         col += 1
         column_width = 16
         worksheet.set_column(col, col, column_width)
-        worksheet.write(count, col, 'NBV '+str(pre_cls_date), wbf['content_border_bg'])
+        worksheet.write(count, col, 'NBV '+pre_cls_date.strftime("%d-%m-%Y"), wbf['content_border_bg'])
 
         col += 1
         column_width = 16
         worksheet.set_column(col, col, column_width)
-        worksheet.write(count, col, 'NBV '+str(self.to_date), wbf['content_border_bg'])
+        worksheet.write(count, col, 'NBV '+self.to_date.strftime("%d-%m-%Y"), wbf['content_border_bg'])
 
         sum = 0
         total_qty=0.0
@@ -306,7 +306,7 @@ class MisAssetCustomReport(models.TransientModel):
             # Purchase Date
             col += 1
                 
-            worksheet.write(count, col, str(purchase_date), wbf['content_border'])
+            worksheet.write(count, col, purchase_date.strftime("%d-%m-%Y"), wbf['content_border'])
             # QTY
             col+=1
             total_qty+=rec.asset_qty
