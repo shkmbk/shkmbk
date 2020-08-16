@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mis_asset_custom_report_form" model="ir.ui.view">
+            <field name="name">mis.asset.custom.report.form</field>
+            <field name="model">mis.asset.custom.report</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Asset Report">
+                    <group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name='asset_id' options="{'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name="asset_group" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name='asset_subgroup' options="{'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name='asset_brand'  options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                        <group>
+                            <field name="to_date"/>
+                            <field name='asset_location' options="{'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name='asset_sublocation' options="{'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name='asset_custodian' options="{'no_quick_create':True,'no_create_edit':True}"/>
+                            <field name='asset_area' options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Print Asset xlsx" name="print_asset_xlsx" type="object" class="btn-primary"/>
+                        <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="mis_asset_custom_action_view" model="ir.actions.act_window">
+            <field name="name">Fixed Asset Register</field>
+            <field name="target">new</field>
+            <field name="res_model">mis.asset.custom.report</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <menuitem
+                id="mis_asset_custom_report"
+                name="Fixed Asset Register"
+                parent="account.account_reports_management_menu"
+                action="mis_asset_custom_action_view"
+                groups="account.group_account_manager"/>
+    </data>
+
+</odoo>
