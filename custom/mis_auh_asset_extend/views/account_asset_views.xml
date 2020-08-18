@@ -18,12 +18,12 @@
             </xpath>
             <xpath expr="//div[@class='oe_title']" position="after">
                 <div class="oe_title">
-                    <label for="asset_code" name="model_code_label" string="Asset Code" class="oe_edit_only" attrs="{'invisible': ['|', ('state', '!=', 'model'), ('asset_type', 'in', ('expense', 'sale'))]}"/>
+                    <label for="asset_code" name="model_code_label" string="Asset Code" class="oe_edit_only" attrs="{'invisible': ['|', ('state', '=', 'model'), ('asset_type', 'in', ('expense', 'sale'))]}"/>
                     <h3>
                         <field name="asset_code"  placeholder="e.g. Group + Sub Group - XXXXX" attrs="{'invisible': ['|', ('state', '=', 'model'), ('asset_type', 'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
                     </h3>
 					<h6>
-						<field name="asset_description"  placeholder="Asset Description" attrs="{'invisible': ['|', ('state', '=', 'model'), ('asset_type', 'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
+						<field name="asset_description"  placeholder="Asset Description" attrs="{'invisible': ['|', ('state', '=', 'model'), ('asset_type', 'in', ('expense', 'sale'))]}"/>
 					</h6>
                 </div>
             </xpath>
@@ -42,7 +42,7 @@
             </xpath>
             <xpath expr="//field[@name='first_depreciation_date']" position="before">
                 <field name="asset_group" attrs="{'invisible': [('asset_type',  'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
-                <field name="asset_subgroup"  attrs="{'invisible': [('asset_type',  'in', ('expense', 'sale'))], 'required': [('asset_type', '=', 'purchase')]}"/>
+                <field name="asset_subgroup"  attrs="{'invisible': [('asset_type',  'in', ('expense', 'sale'))]}"/>
                 <field name="asset_brand"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
                 <field name="asset_location"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
                 <field name="asset_sublocation"  attrs="{'invisible': [('asset_type', 'in', ('expense', 'sale'))]}"/>
