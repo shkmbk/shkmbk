@@ -53,11 +53,13 @@ class MisAuhCrossInvoice(models.Model):
 
     def button_invoice(self):
         totalamt = 0.00
+        analytic_id = 0
         move_line_vals = []
         for rec in self.cross_line_ids:
             tax_ids = []
             taxes = rec.tax_ids.filtered(lambda r: not self.company_id or r.company_id == self.company_id)
             tax_ids = taxes.ids
+            analytic_id = rec.analytic_account_id.id
             create_vals = (0, 0, {
                 'date': self.trans_date,
                 'name': rec.product_id.name,
@@ -85,6 +87,7 @@ class MisAuhCrossInvoice(models.Model):
                      'company_id': self.company_id.id,
                      'state': 'draft',
                      'type': 'out_invoice',
+                     'analytic_id': analytic_id,
                      'invoice_line_ids': move_line_vals,
                      }
         objacmove = self.env['account.move'].create(move_vals)
