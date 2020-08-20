@@ -129,7 +129,7 @@
 								<t t-if="rowno==18">
                                     <t t-set="rowno" t-value="0"/>
                                     <tr>
-                                        <td colspan="5"  style="height:4cm;"/>
+                                        <td colspan="5"  style="height:3cm;"/>
                                     </tr>
                                      <tr>
                                         <th><span>Invoice Date</span></th>
