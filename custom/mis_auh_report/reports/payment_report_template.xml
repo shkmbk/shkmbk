@@ -115,15 +115,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.reconciled_invoice_ids" t-as="inv">
+                             <t t-set="rowno" t-value="0"/>
+
+                            <t t-foreach="o.reconciled_invoice_ids" t-as="inv">
+                                <tr>
+                                <t t-set="rowno" t-value="rowno+1"/>
                                 <td><span t-field="inv.invoice_date"/></td>
                                 <td><span t-field="inv.name"/></td>
                                 <td class="text-right"><span t-field="inv.amount_total"/></td>
                                 <td class="text-right"><span t-esc="o._get_invoice_payment_amount(inv)" t-options="{'widget': 'monetary', 'display_currency': inv.currency_id}"/></td>
                                 <td class="text-right"><span t-field="inv.amount_residual"/></td>
-                            </tr>
+                                </tr>
+								<t t-if="rowno==18">
+                                    <t t-set="rowno" t-value="0"/>
+                                    <tr>
+                                        <td colspan="5"  style="height:4cm;"/>
+                                    </tr>
+                                     <tr>
+                                        <th><span>Invoice Date</span></th>
+                                        <th><span>Invoice Number</span></th>
+                                        <th class="text-riIght"><span>Original Amount</span></th>
+                                        <th class="text-right"><span>Amount Paid</span></th>
+                                        <th class="text-right"><span>Balance</span></th>
+                                    </tr>
+                                 </t>
+                            </t>
+
                         </tbody>
                     </table>
+                    <!--p style="page-break-after:always;"/-->
                 </t>
             </div>
             <div class="row">
