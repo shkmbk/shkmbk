@@ -8,10 +8,10 @@ class ShareRevaluationReport(models.TransientModel):
     _name = 'mis.auh.revaluation.wizard'
     _description = 'Share Revaluation Report'
 
-    date_from = fields.Date(default=fields.Date.to_string(date.today()), required="1")
+    date_from = fields.Date(default='2020-06-01', required="1", )
     date_to = fields.Date(default=fields.Date.to_string(date.today()), required="1")
     classification_id = fields.Many2one('mis.inv.classfication', string="Classification")
-    status = fields.Selection([('All', 'All'), ('Active', 'Active'), ('Inactive', 'Inactive')], default='All', required="1")
+    status = fields.Selection([('All', 'All'), ('Active', 'Active'), ('Inactive', 'Inactive')], default='Active', required="1")
 
 
     def button_export_pdf(self):
