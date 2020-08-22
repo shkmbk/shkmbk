@@ -28,13 +28,14 @@ class MisHrPayslip(models.Model):
 
         mstartdate=datetime(startyear, startmonth , 1)
         end_date = mstartdate +  relativedelta(months=1)
-        end_date = end_date + relativedelta(days=-1)        
+        end_date = end_date + relativedelta(days=-1)    
+        month_days=(end_date - mstartdate).days+1
 
 
-        work_hours = contract._get_work_hours(self.date_from, self.date_to)
-        work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
-        total_hours = sum(work_hours.values()) or 1
-        total_work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
+        #work_hours = contract._get_work_hours(self.date_from, self.date_to)
+        #work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
+        #total_hours = sum(work_hours.values()) or 1
+        #total_work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
 
         for payslip in self:
             self.ensure_one()
@@ -43,9 +44,8 @@ class MisHrPayslip(models.Model):
             total_allowance = 0
             is_paid = False
             for line in self.worked_days_line_ids:
-                #is_unpaid = line.work_entry_type_id in unpaid_work_entry_types
                 is_paid = line.work_entry_type_id not in unpaid_work_entry_types
-                total_allowance += line.number_of_hours * allowance_amount / total_work_hours_in_this_month if is_paid else 0
+                total_allowance += line.number_of_days * allowance_amount / month_days if is_paid else 0
             payslip.paid_allowance = total_allowance
             
     def _compute_fot(self):
@@ -56,27 +56,27 @@ class MisHrPayslip(models.Model):
         startmonth=stdate.month
         startyear = stdate.year
 
+
         mstartdate=datetime(startyear, startmonth , 1)
         end_date = mstartdate +  relativedelta(months=1)
-        end_date = end_date + relativedelta(days=-1)        
+        end_date = end_date + relativedelta(days=-1)
+        month_days=(end_date - mstartdate).days+1    
         
         
-        work_hours = contract._get_work_hours(self.date_from, self.date_to)
-        work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
-        total_hours = sum(work_hours.values()) or 1
-        total_work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
+        #work_hours = contract._get_work_hours(self.date_from, self.date_to)
+        #work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
+        #total_hours = sum(work_hours.values()) or 1
+        #total_work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
 
         for payslip in self:
             self.ensure_one()
             if not self.worked_days_line_ids:
                 return fot_amount
             total_fot = 0
-            #is_unpaid = False
             is_paid = False
             for line in self.worked_days_line_ids:
-                #is_unpaid = line.work_entry_type_id in unpaid_work_entry_types
                 is_paid = line.work_entry_type_id not in unpaid_work_entry_types
-                total_fot+= line.number_of_hours * fot_amount / total_work_hours_in_this_month if is_paid else 0
+                total_fot+= line.number_of_days * fot_amount / month_days if is_paid else 0
             payslip.paid_fot = total_fot
 
     def _get_paid_amount(self):
@@ -102,19 +102,21 @@ class MisHrPayslip(models.Model):
             stdate=self.date_from
             startmonth=stdate.month
             startyear = stdate.year
+            
 
             mstartdate=datetime(startyear, startmonth , 1)
 
             end_date = mstartdate +  relativedelta(months=1)
             end_date = end_date + relativedelta(days=-1)
+            month_days=(end_date - mstartdate).days+1
 
             #raise UserError(end_date)
 
             work_hours = contract._get_work_hours(self.date_from, self.date_to)
-            work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
+            #work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
 
             total_hours = sum(work_hours.values()) or 1
-            work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
+            #work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
             work_hours_ordered = sorted(work_hours.items(), key=lambda x: x[1])
             biggest_work = work_hours_ordered[-1][0] if work_hours_ordered else 0
             #raise UserError(biggest_work)
@@ -133,7 +135,7 @@ class MisHrPayslip(models.Model):
                     'work_entry_type_id': work_entry_type_id,
                     'number_of_days': day_rounded,
                     'number_of_hours': hours,
-                    'amount': hours * paid_amount / work_hours_in_this_month if is_paid else 0,
+                    'amount': day_rounded * paid_amount / month_days if is_paid else 0,
                 }
                 res.append(attendance_line)
         return res
