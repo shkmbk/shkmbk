@@ -1,5 +1,7 @@
 import base64
 from datetime import date, datetime
+from datetime import timedelta
+import calendar
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.addons.hr_payroll.models.browsable_object import BrowsableObject, InputLine, WorkedDays, Payslips
@@ -20,40 +22,62 @@ class MisHrPayslip(models.Model):
         contract = self.contract_id
         allowance_amount = contract.x_other_allowance
         unpaid_work_entry_types = self.struct_id.unpaid_work_entry_type_ids
+        stdate=self.date_from
+        startmonth=stdate.month
+        startyear = stdate.year
+
+        mstartdate=datetime(startyear, startmonth , 1)
+        end_date = mstartdate +  relativedelta(months=1)
+        end_date = end_date + relativedelta(days=-1)        
 
 
         work_hours = contract._get_work_hours(self.date_from, self.date_to)
+        work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
         total_hours = sum(work_hours.values()) or 1
+        total_work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
 
         for payslip in self:
             self.ensure_one()
             if not self.worked_days_line_ids:
                 return allowance_amount
             total_allowance = 0
-            is_unpaid = False
+            is_paid = False
             for line in self.worked_days_line_ids:
-                is_unpaid = line.work_entry_type_id in unpaid_work_entry_types
-                total_allowance += line.number_of_hours * allowance_amount / total_hours if is_unpaid else 0
-            payslip.paid_allowance = allowance_amount-total_allowance
+                #is_unpaid = line.work_entry_type_id in unpaid_work_entry_types
+                is_paid = line.work_entry_type_id not in unpaid_work_entry_types
+                total_allowance += line.number_of_hours * allowance_amount / total_work_hours_in_this_month if is_paid else 0
+            payslip.paid_allowance = total_allowance
             
     def _compute_fot(self):
         contract = self.contract_id
         fot_amount = contract.x_fixed_ot
         unpaid_work_entry_types = self.struct_id.unpaid_work_entry_type_ids
+        stdate=self.date_from
+        startmonth=stdate.month
+        startyear = stdate.year
 
+        mstartdate=datetime(startyear, startmonth , 1)
+        end_date = mstartdate +  relativedelta(months=1)
+        end_date = end_date + relativedelta(days=-1)        
+        
+        
         work_hours = contract._get_work_hours(self.date_from, self.date_to)
+        work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
         total_hours = sum(work_hours.values()) or 1
+        total_work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
 
         for payslip in self:
             self.ensure_one()
             if not self.worked_days_line_ids:
                 return fot_amount
-            total_allowance = 0
-            is_unpaid = False
+            total_fot = 0
+            #is_unpaid = False
+            is_paid = False
             for line in self.worked_days_line_ids:
-                is_unpaid = line.work_entry_type_id in unpaid_work_entry_types
-                total_allowance += line.number_of_hours * fot_amount / total_hours if is_unpaid else 0
-            payslip.paid_fot = fot_amount-total_allowance
+                #is_unpaid = line.work_entry_type_id in unpaid_work_entry_types
+                is_paid = line.work_entry_type_id not in unpaid_work_entry_types
+                total_fot+= line.number_of_hours * fot_amount / total_work_hours_in_this_month if is_paid else 0
+            payslip.paid_fot = total_fot
 
     def _get_paid_amount(self):
         self.ensure_one()
@@ -64,6 +88,55 @@ class MisHrPayslip(models.Model):
             total_amount += line.amount
         return total_amount
 
+    def _get_worked_day_lines(self):
+        """
+        :returns: a list of dict containing the worked days values that should be applied for the given payslip
+        """
+        res = []
+        # fill only if the contract as a working schedule linked
+        self.ensure_one()
+        contract = self.contract_id
+        if contract.resource_calendar_id:
+            paid_amount = self._get_contract_wage()
+            unpaid_work_entry_types = self.struct_id.unpaid_work_entry_type_ids.ids
+            stdate=self.date_from
+            startmonth=stdate.month
+            startyear = stdate.year
+
+            mstartdate=datetime(startyear, startmonth , 1)
+
+            end_date = mstartdate +  relativedelta(months=1)
+            end_date = end_date + relativedelta(days=-1)
+
+            #raise UserError(end_date)
+
+            work_hours = contract._get_work_hours(self.date_from, self.date_to)
+            work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
+
+            total_hours = sum(work_hours.values()) or 1
+            work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
+            work_hours_ordered = sorted(work_hours.items(), key=lambda x: x[1])
+            biggest_work = work_hours_ordered[-1][0] if work_hours_ordered else 0
+            #raise UserError(biggest_work)
+            add_days_rounding = 0
+            for work_entry_type_id, hours in work_hours_ordered:
+                work_entry_type = self.env['hr.work.entry.type'].browse(work_entry_type_id)
+                is_paid = work_entry_type_id not in unpaid_work_entry_types
+                calendar = contract.resource_calendar_id
+                days = round(hours / calendar.hours_per_day, 5) if calendar.hours_per_day else 0
+                if work_entry_type_id == biggest_work:
+                    days += add_days_rounding
+                day_rounded = self._round_days(work_entry_type, days)
+                add_days_rounding += (days - day_rounded)
+                attendance_line = {
+                    'sequence': work_entry_type.sequence,
+                    'work_entry_type_id': work_entry_type_id,
+                    'number_of_days': day_rounded,
+                    'number_of_hours': hours,
+                    'amount': hours * paid_amount / work_hours_in_this_month if is_paid else 0,
+                }
+                res.append(attendance_line)
+        return res
 
     def action_payslip_done(self):
 
