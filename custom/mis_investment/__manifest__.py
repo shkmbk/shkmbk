@@ -32,7 +32,6 @@
         'views/liquidityreturn _views.xml',
         'views/geographic_views.xml',
         'report/report_menu.xml',
-        'report/revalution_report_template.xml',
         'report/share_revaluation_template.xml',
         'wizard/fd_summaryreport_wizard.xml',
         'wizard/share_revaluation_report_wizard.xml',

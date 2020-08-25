@@ -21,7 +21,6 @@
                                 <th class="text-right"><strong>Dividend</strong></th>
                                 <th class="text-right"><strong>Expenses</strong></th>
                                 <th class="text-right" ><strong>Net Profit / Loss</strong></th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -36,7 +35,6 @@
                             <t t-set="totdividend" t-value="0.0"/>
                             <t t-set="totbrokerage" t-value="0.0"/>
                             <t t-set="totunrelize" t-value="0.0"/>
-
 
                             <t t-foreach="docs" t-as="line">
                                 <tr>
