@@ -12,8 +12,8 @@
                                  <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
                                 <th name="th_description" class="text-left"><strong>Name of Share</strong></th>
                                 <th class="text-right"><strong>Qty</strong></th>
-                                <th class="text-right"><strong>Closing Cost</strong></th>
-                                <th class="text-right" ><strong>Closing Amount</strong></th>								
+                                <th class="text-right"><strong>Cost</strong></th>
+                                <th class="text-right" ><strong>Amount</strong></th>								
                                 <th class="text-right"><strong>Market Price</strong></th>
                                 <th class="text-right" ><strong>Market Value</strong></th>
                                 <th class="text-right"><strong>UnRealize Profit / Loss</strong></th>
