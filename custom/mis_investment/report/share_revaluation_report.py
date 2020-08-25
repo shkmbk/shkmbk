@@ -17,6 +17,16 @@ class FDSummaryReport(models.AbstractModel):
         for gr in objstock:
             totqty+=gr.quantity
         return totqty
+    def get_closing_amount(self,  productid, dtfilter):
+
+        objstock = self.env['stock.valuation.layer'].search(
+            [('product_id', '=', productid), ('create_date', '<=', dtfilter)])
+
+        closingamount=0.0
+        for gr in objstock:
+            closingamount+=gr.value
+        return closingamount
+        
     def get_last_closing_amount(self, reval_id, share_id, to_date ):
         objlastvalline = self.env['mis.invrevaluation.line'].search([('revaluation_id', '=', reval_id),  ('share_id', '=', share_id)])
         closingprice=0.0
@@ -126,12 +136,19 @@ class FDSummaryReport(models.AbstractModel):
             dividend = self.get_dividend(shr.id, from_date, to_date)
             brokerage_expense = self.get_brokerage_expense(shr.id,from_date, to_date)
             unrelize=self.get_last_unrelize_amount(reval_id, shr.id, to_date)
+            closing_amount=self.get_closing_amount(shr.id, dtfilter)
+            cost=0.00
+            if qty>0:
+                cost=closing_amount/qty
+            
             
             if rptstatus=='All':
                 if (qty!=0.0 or realize_profit!=0.0 or dividend!=0.0 or brokerage_expense!=0.0 or unrelize!=0.0):
                     master_table.append({
                         'sharerec': shr,
                         'qty': qty,
+                        'cost': cost,
+                        'closing_amount':closing_amount,
                         'closingprice': closingprice,
                         'realize_profit': realize_profit,
                         'dividend': dividend,
@@ -143,6 +160,8 @@ class FDSummaryReport(models.AbstractModel):
                     master_table.append({
                         'sharerec': shr,
                         'qty': qty,
+                        'cost': cost,
+                        'closing_amount':closing_amount,
                         'closingprice': closingprice,
                         'realize_profit': realize_profit,
                         'dividend': dividend,
@@ -154,6 +173,8 @@ class FDSummaryReport(models.AbstractModel):
                     master_table.append({
                         'sharerec': shr,
                         'qty': qty,
+                        'cost': cost,
+                        'closing_amount':closing_amount,
                         'closingprice': closingprice,
                         'realize_profit': realize_profit,
                         'dividend': dividend,

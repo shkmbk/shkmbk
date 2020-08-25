@@ -12,8 +12,10 @@
                                  <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
                                 <th name="th_description" class="text-left"><strong>Name of Share</strong></th>
                                 <th class="text-right"><strong>Qty</strong></th>
-                                <th class="text-right"><strong>Closing Price</strong></th>
-                                <th class="text-right" ><strong>Closing Amount</strong></th>
+                                <th class="text-right"><strong>Cost</strong></th>
+                                <th class="text-right" ><strong>Amount</strong></th>								
+                                <th class="text-right"><strong>Market Price</strong></th>
+                                <th class="text-right" ><strong>Market Value</strong></th>
                                 <th class="text-right"><strong>UnRealize Profit / Loss</strong></th>
                                 <th class="text-right"><strong>Realize Profit / Loss</strong></th>
                                 <th class="text-right"><strong>Dividend</strong></th>
@@ -27,6 +29,7 @@
 							<t t-set="totnetprofit" t-value="0.0"/>
                             <t t-set="netprofit" t-value="0.0"/>
                             <t t-set="totqty" t-value="0.0"/>
+							<t t-set="totinvamt" t-value="0.0"/>
                             <t t-set="totclosingamt" t-value="0.0"/>
                             <t t-set="totearing" t-value="0.0"/>
                             <t t-set="totrelize" t-value="0.0"/>
@@ -44,13 +47,19 @@
                                     <td>
                                         <span t-field="line['sharerec'].name"/>
                                     </td>
-                                    <!--td>
-                                        <span t-field="line.deposit_date"/>
-                                    </td-->
+
                                     <td class="text-right">
                                         <span t-esc="'{0:,.2f}'.format(line['qty'])"/>
                                          <t t-set="totqty" t-value="totqty+line['qty']"/>
                                     </td>
+                                     <td class="text-right">
+                                       <span t-esc="'{0:,.2f}'.format(line['cost'])"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['closing_amount'])"/>
+                                         <t t-set="totinvamt" t-value="totinvamt+(line['closing_amount'])"/>
+                                     </td>									
+									
                                      <td class="text-right">
                                        <span t-esc="'{0:,.2f}'.format(line['closingprice'])"/>
                                      </td>
@@ -86,6 +95,12 @@
                                     <td colspan="4" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
                                       <b>TOTAL</b>
                                     </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totinvamt))"/></b>
+                                    </td>
+									<td style="vertical-align:middle;text-align:right;">
+                                        <b>&amp;nbsp;</b>
+                                    </td>									
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.2f}'.format((totclosingamt))"/></b>
                                     </td>
