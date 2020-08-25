@@ -117,9 +117,7 @@
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.2f}'.format((totnetprofit))"/></b>
                                     </td>
-
                                 </tr>
-
                         </tbody>
                     </table>
                 </div>
