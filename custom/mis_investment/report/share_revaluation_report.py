@@ -138,7 +138,7 @@ class FDSummaryReport(models.AbstractModel):
             unrelize=self.get_last_unrelize_amount(reval_id, shr.id, to_date)
             closing_amount=self.get_closing_amount(shr.id, dtfilter)
             cost=0.00
-            if qty>0:
+            if qty>0.0:
                 cost=closing_amount/qty
             
             
