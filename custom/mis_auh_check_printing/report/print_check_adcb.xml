@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="print_adcb_check">
+            <div class="page">
+                <!--Date-->
+                <div style="position: absolute;top: 50mm; left: 160mm;font-size: 12pt;">
+                    <span t-field="o.payment_date" t-field-options='{"format": "d/MM/y"}'/>
+                </div>
+                <!--amount-->
+                <div style="position: absolute;top: 65mm; left: 165mm;font-size: 12pt;">
+                    <span t-esc="'{0:,.2f}'.format(o.amount)"/>
+                </div>
+                <!--customer/payee name-->
+                <div style="position: absolute;top: 75mm; left: 65mm;font-size: 12pt;">
+                    <span t-esc="o.partner_id.name"/>
+                </div>
+                <!--amount in words-->
+                <div style="position: absolute;top:85mm; left: 45mm;font-size: 12pt;">
+                    <t t-esc="o.check_amount_in_words" /> Only
+                </div>
+            </div>
+        </template>
+        <template id="print_check_adcb">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <t t-call="mis_auh_check_printing.print_adcb_check"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
