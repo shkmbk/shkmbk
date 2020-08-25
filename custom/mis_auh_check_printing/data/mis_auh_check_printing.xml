@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="paperformat_check_adib" model="report.paperformat">
+            <field name="name">ADIB Check Paper</field>
+            <field name="default" eval="False" />
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="paperformat_check_adcb" model="report.paperformat">
+            <field name="name">ADCB Check Paper</field>
+            <field name="default" eval="False" />
+            <field name="format">custom</field>
+            <field name="page_height">130</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report id="action_print_check_adib"
+            string="Print Check (ADIB)"
+            model="account.payment"
+            name="mis_auh_check_printing.print_check_adib"
+            file="mis_auh_check_printing.print_check_adib"
+            report_type="qweb-pdf"
+            attachment_use="True"
+
+            paperformat="mis_auh_check_printing.paperformat_check_adib"
+            print_report_name="'Check ADIB - %s' % (object.partner_id.name or '',)"
+            menu="False"
+        />
+        <report id="action_print_check_adcb"
+            string="Print Check (ADCB)"
+            model="account.payment"
+            name="mis_auh_check_printing.print_check_adcb"
+            file="mis_auh_check_printing.print_check_adcb"
+            report_type="qweb-pdf"
+            attachment_use="True"
+
+            paperformat="mis_auh_check_printing.paperformat_check_adcb"
+            print_report_name="'Check ADCB - %s' % (object.partner_id.name or '',)"
+            menu="False"
+        />
+
+    </data>
+</odoo>
