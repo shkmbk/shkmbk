@@ -29,7 +29,7 @@
                                             <td style="width:25mm;">
                                                 <span t-field="inv.ref"/>
                                             </td>
-                                            <td style="width:36mm;">
+                                            <td style="width:36mm;font-size: 9pt;">
                                                 <span t-field="inv.name"/>
                                             </td>
 											<td style="width:5mm;">
@@ -75,11 +75,11 @@
                 </t>
 				
                <!--Prepared User-->
-				<div style="position: absolute;top: 205mm; left: 20mm;font-size: 12pt;">
+				<div style="position: absolute;top: 206mm; left: 14mm;font-size: 12pt;width:40mm;" class="text-center;">
                     <span t-field="user.name"/>
                 </div>
                <!--Date-->
-                <div style="position: absolute;top: 247mm; left: 200mm;font-size: 12pt;">
+                <div style="position: absolute;top: 247mm; left: 195mm;font-size: 12pt;">
                     <span t-field="o.payment_date" t-field-options='{"format": "d/MM/y"}'/>
                 </div>
                 <!--amount-->
@@ -87,11 +87,11 @@
                     <span t-esc="'{0:,.2f}'.format(o.amount)"/>
                 </div>
                 <!--customer/payee name-->
-                <div style="position: absolute;top: 275mm; left: 48mm;font-size: 12pt;width:150mm;">
+                <div style="position: absolute;top: 278mm; left: 48mm;font-size: 12pt;width:150mm;">
                     <span t-esc="o.partner_id.name"/>
                 </div>
                 <!--amount in words-->
-                <div style="position: absolute;top: 286mm; left: 35mm;font-size: 12pt;width:180mm;">
+                <div style="position: absolute;top: 288mm; left: 35mm;font-size: 12pt;width:180mm;">
                     <t t-esc="o.check_amount_in_words"/> Only
                 </div>
             </div>
