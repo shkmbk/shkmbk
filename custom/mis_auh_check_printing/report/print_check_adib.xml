@@ -75,7 +75,7 @@
                 </t>
 				
                <!--Prepared User-->
-				<div style="position: absolute;top: 206mm; left: 14mm;font-size: 12pt;width:40mm;" class="text-center;">
+				<div style="position: absolute;top: 206mm; left: 14mm;font-size: 12pt;width:42mm; text-align:center;">
                     <span t-field="user.name"/>
                 </div>
                <!--Date-->
