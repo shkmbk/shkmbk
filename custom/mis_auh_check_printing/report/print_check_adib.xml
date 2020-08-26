@@ -87,11 +87,11 @@
                     <span t-esc="'{0:,.2f}'.format(o.amount)"/>
                 </div>
                 <!--customer/payee name-->
-                <div style="position: absolute;top: 278mm; left: 48mm;font-size: 12pt;width:150mm;">
+                <div style="position: absolute;top: 277mm; left: 48mm;font-size: 12pt;width:150mm;">
                     <span t-esc="o.partner_id.name"/>
                 </div>
                 <!--amount in words-->
-                <div style="position: absolute;top: 288mm; left: 35mm;font-size: 12pt;width:180mm;">
+                <div style="position: absolute;top: 286mm; left: 35mm;font-size: 12pt;width:180mm;">
                     <t t-esc="o.check_amount_in_words"/> Only
                 </div>
             </div>
