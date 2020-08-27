@@ -13,9 +13,9 @@ class FDSummaryReport(models.AbstractModel):
 
 
         if type_id:
-            fixeddeposit_ids = self.env['product.product'].search([('investment_ok', '=', True), ('isdeposit', '=', True), ('maturity_date', '>', to_date), ('type_id', '=', type_id)],order='maturity_date')
+            fixeddeposit_ids = self.env['product.product'].search([('investment_ok', '=', True), ('isdeposit', '=', True), ('maturity_date', '>', to_date), ('type_id', '=', type_id), ('categ_id', '=', 15)],order='maturity_date')
         else:
-            fixeddeposit_ids = self.env['product.product'].search([('investment_ok', '=', True), ('isdeposit', '=', True), ('maturity_date', '>', to_date)],order='maturity_date')
+            fixeddeposit_ids = self.env['product.product'].search([('investment_ok', '=', True), ('isdeposit', '=', True), ('maturity_date', '>', to_date), ('categ_id', '=', 15)],order='maturity_date')
 
         self._cr.execute("""select id, (maturity_date::date - deposit_date::date) as totaldays, 
         ('""" + str(to_date) + """'::date-deposit_date::date)+1 as totalason,expected_earning
