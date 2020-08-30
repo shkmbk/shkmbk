@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mbk_billsummary_wizard_form" model="ir.ui.view">
+            <field name="name">mbk.wizard.billsummary.form</field>
+            <field name="model">mbk.wizard.report.billsummary</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Generate Purchase Summary">
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="analytic_id"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print Bill Summary" name="print_bill_summary_pdf" type="object" class="btn-primary"/>
+                        <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mbk_billsummary_action_view" model="ir.actions.act_window">
+            <field name="name">Bill Summary Report</field>
+            <field name="res_model">mbk.wizard.report.billsummary</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mbk_billsummary_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="mbk_billsummary_wizard_submenu"
+                  name="Bill Summary Report"
+                  parent="account_reports.account_reports_partners_reports_menu"
+                  action="mbk_billsummary_action_view"
+                  groups="account.group_account_manager"
+                  sequence="10"/>
+    </data>
+
+</odoo>

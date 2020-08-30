@@ -29,6 +29,7 @@ class MisProduct(models.Model):
     day_in_a_year = fields.Integer(string="No of Days in Year")
     expected_earning = fields.Float(string="Expected Earning",compute='calculate_interest', store=True, default=False)
     type_id = fields.Many2one('mis.inv.type', string="Type")
+    inv_currency_id = fields.Many2one('res.currency', string="Currency")
 
 
     @api.depends('interest_rate', 'day_in_a_year', 'deposit_date', 'maturity_date')
