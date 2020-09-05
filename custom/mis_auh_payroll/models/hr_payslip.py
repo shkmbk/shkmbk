@@ -17,67 +17,53 @@ class MisHrPayslip(models.Model):
     paid_allowance = fields.Monetary(compute='_compute_allowance')
     paid_fot=fields.Monetary(compute='_compute_fot')
 
-
     def _compute_allowance(self):
-        contract = self.contract_id
-        allowance_amount = contract.x_other_allowance
-        unpaid_work_entry_types = self.struct_id.unpaid_work_entry_type_ids
-        stdate=self.date_from
-        startmonth=stdate.month
-        startyear = stdate.year
-
-        mstartdate=datetime(startyear, startmonth , 1)
-        end_date = mstartdate +  relativedelta(months=1)
-        end_date = end_date + relativedelta(days=-1)    
-        month_days=(end_date - mstartdate).days+1
-
-
-        #work_hours = contract._get_work_hours(self.date_from, self.date_to)
-        #work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
-        #total_hours = sum(work_hours.values()) or 1
-        #total_work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
-
-        for payslip in self:
-            self.ensure_one()
-            if not self.worked_days_line_ids:
-                return allowance_amount
-            total_allowance = 0
-            is_paid = False
-            for line in self.worked_days_line_ids:
-                is_paid = line.work_entry_type_id not in unpaid_work_entry_types
-                total_allowance += line.number_of_days * allowance_amount / month_days if is_paid else 0
-            payslip.paid_allowance = total_allowance
+        for rec in self:
+            contract = rec.contract_id
+            allowance_amount = contract.x_other_allowance
+            unpaid_work_entry_types = rec.struct_id.unpaid_work_entry_type_ids
+            stdate = rec.date_from
+            startmonth = stdate.month
+            startyear = stdate.year
+            mstartdate = datetime(startyear, startmonth, 1)
+            end_date = mstartdate + relativedelta(months=1)
+            end_date = end_date + relativedelta(days=-1)
+            month_days = (end_date - mstartdate).days + 1
+            for payslip in rec:
+                if not payslip.worked_days_line_ids:
+                    return allowance_amount
+                total_allowance = 0
+                is_paid = False
+                for line in payslip.worked_days_line_ids:
+                    is_paid = line.work_entry_type_id not in unpaid_work_entry_types
+                    total_allowance += line.number_of_days * allowance_amount / month_days if is_paid else 0
+                payslip.paid_allowance = total_allowance
             
     def _compute_fot(self):
-        contract = self.contract_id
-        fot_amount = contract.x_fixed_ot
-        unpaid_work_entry_types = self.struct_id.unpaid_work_entry_type_ids
-        stdate=self.date_from
-        startmonth=stdate.month
-        startyear = stdate.year
+        for rec in self:
+            contract = rec.contract_id
+            fot_amount = contract.x_fixed_ot
+            unpaid_work_entry_types = rec.struct_id.unpaid_work_entry_type_ids
+            stdate=rec.date_from
+            startmonth=stdate.month
+            startyear = stdate.year
 
 
-        mstartdate=datetime(startyear, startmonth , 1)
-        end_date = mstartdate +  relativedelta(months=1)
-        end_date = end_date + relativedelta(days=-1)
-        month_days=(end_date - mstartdate).days+1    
-        
-        
-        #work_hours = contract._get_work_hours(self.date_from, self.date_to)
-        #work_hours_in_this_month = contract._get_work_hours(mstartdate, end_date)
-        #total_hours = sum(work_hours.values()) or 1
-        #total_work_hours_in_this_month = sum(work_hours_in_this_month.values()) or 1
+            mstartdate=datetime(startyear, startmonth , 1)
+            end_date = mstartdate +  relativedelta(months=1)
+            end_date = end_date + relativedelta(days=-1)
+            month_days=(end_date - mstartdate).days+1      
+           
 
-        for payslip in self:
-            self.ensure_one()
-            if not self.worked_days_line_ids:
-                return fot_amount
-            total_fot = 0
-            is_paid = False
-            for line in self.worked_days_line_ids:
-                is_paid = line.work_entry_type_id not in unpaid_work_entry_types
-                total_fot+= line.number_of_days * fot_amount / month_days if is_paid else 0
-            payslip.paid_fot = total_fot
+            for payslip in rec:
+                if not payslip.worked_days_line_ids:
+                    return fot_amount
+                total_fot = 0
+                is_paid = False
+                for line in payslip.worked_days_line_ids:
+                    is_paid = line.work_entry_type_id not in unpaid_work_entry_types
+                    total_fot+= line.number_of_days * fot_amount / month_days if is_paid else 0
+                payslip.paid_fot = total_fot
 
     def _get_paid_amount(self):
         self.ensure_one()
@@ -329,5 +315,3 @@ class MisHrPayslip(models.Model):
                 for slip in slip_mapped_data[journal_id][slip_date]:
                     slip.write({'move_id': move.id, 'date': date})
         return res
-
-
