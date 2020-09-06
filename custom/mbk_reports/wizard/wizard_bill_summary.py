@@ -159,7 +159,7 @@ class MbkBillSummary(models.TransientModel):
             count += 1
             col=0
             #SEQ
-            worksheet.write(count, col, count,  wbf['content_border'])
+            worksheet.write(count, col, count-1,  wbf['content_border'])
             # Bill No
             col += 1
             worksheet.write(count, col, rec.ref, wbf['content_border'])

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mbk_stock_details_form" model="ir.ui.view">
+            <field name="name">mbk.wizard.stockdetails.form</field>
+            <field name="model">mbk.wizard.report.stockdetails</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Consumable Details Report">
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="analytic_id"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="View Stock Summary" name="print_stock_details_pdf" type="object" class="btn-primary" invisible="1"/>
+						<button string="Export to Excel" name="print_cstock_summary_pdf" type="object" class="btn-primary"/>						
+                        <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mbk_stockdetails_action_view" model="ir.actions.act_window">
+            <field name="name">Consumable Details Report</field>
+            <field name="res_model">mbk.wizard.report.stockdetails</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mbk_stock_details_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="mbk_stock_details_wizard_submenu"
+                  name="Cosumable Details Report"
+                  parent="stock.menu_warehouse_report"
+                  action="mbk_stockdetails_action_view"
+                  groups="account.group_account_manager"
+                  sequence="11"/>
+    </data>
+
+</odoo>

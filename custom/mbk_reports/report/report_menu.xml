@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <report id="stock_details_pdf"
+            model="stock.move"
+            string="Stock Details Report"
+            report_type="qweb-html"
+            name="mbk_reports.report_stock_details_document"
+            file="mbk_reports.report_stock_details_document"
+            menu="False"/>
+		</odoo>

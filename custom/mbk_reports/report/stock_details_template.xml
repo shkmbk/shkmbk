@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_stock_details_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+					<right>As On:<t t-esc="to_date"/></right>
+                    <center><h4>STOCK DETAILS REPORT AS ON  <t t-esc="header_date"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                 <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
+                                <th name="th_description" class="text-left"><strong>Transaction No</strong></th>
+                                <th class="text-right"><strong>Date</strong></th>
+                                <th class="text-right"><strong>Partner</strong></th>
+                                <th class="text-right" ><strong>Product</strong></th>								
+                                <th class="text-right"><strong>Opening Qty</strong></th>
+                                <th class="text-right" ><strong>In Qty</strong></th>
+                                <th class="text-right"><strong>Out Qty</strong></th>
+                                <th class="text-right"><strong>Balance</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="rowno" t-value="1"/>
+							<t t-set="totin_qty" t-value="0.0"/>
+                            <t t-set="totopening_qty" t-value="0.0"/>
+                            <t t-set="totqty" t-value="0.0"/>
+							<t t-set="totin_qty" t-value="0.0"/>
+                            <t t-set="totout_qty" t-value="0.0"/>
+                            <t t-set="totbalance" t-value="0.0"/>
+                            <t t-set="totbalance" t-value="0.0"/>
+                            <t t-foreach="docs" t-as="line">
+                                <tr>
+                                    <td name="slno">
+                                        <span t-esc="rowno"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['transaction_no']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['date_done']"/>
+                                    </td>
+                                     <td class="text-right">
+                                       <span t-esc="line['partner_name']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="line['product_name']"/>                                         
+                                     </td>									
+                                     <td class="text-right">
+                                       <span t-esc="'{0:,.2f}'.format(line['opening_qty'])"/>
+									   <t t-set="totopening_qty" t-value="totopening_qty+(line['opening_qty'])"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['in_qty'])"/>
+                                         <t t-set="totin_qty" t-value="totin_qty+(line['in_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['out_qty'])"/>
+                                         <t t-set="totout_qty" t-value="totout_qty+(line['out_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['sum_balance'])"/>
+                                         <t t-set="totbalance" t-value="totbalance+(line['sum_balance'])"/>
+                                     </td>
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="5" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b>TOTAL</b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totopening_qty))"/></b>
+                                    </td>
+							
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totin_qty))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totout_qty))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totbalance))"/></b>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+
