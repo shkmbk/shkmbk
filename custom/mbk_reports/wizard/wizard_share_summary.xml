@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mbk_share_summary_form" model="ir.ui.view">
+            <field name="name">mbk.wizard.sharesummary.form</field>
+            <field name="model">mbk.wizard.report.sharesummary</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Generate Stock Summary">
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Export Share Summary" name="print_share_summary_pdf" type="object" class="btn-primary"/>
+                        <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mbk_sharesummary_action_view" model="ir.actions.act_window">
+            <field name="name">Stock Summary Report</field>
+            <field name="res_model">mbk.wizard.report.sharesummary</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mbk_share_summary_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="mbk_sharesummary_wizard_submenu"
+                  name="Stock Summary Report"
+                  parent="stock.menu_warehouse_report"
+                  action="mbk_sharesummary_action_view"
+                  groups="account.group_account_manager"
+                  sequence="12"/>
+    </data>
+
+</odoo>

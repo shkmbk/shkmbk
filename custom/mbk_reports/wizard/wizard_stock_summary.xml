@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mbk_stock_summary_form" model="ir.ui.view">
+            <field name="name">mbk.wizard.stocksummary.form</field>
+            <field name="model">mbk.wizard.report.stocksummary</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Generate Cosumable Summary Report">
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="analytic_id"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print Stock Summary" name="print_stock_summary_pdf" type="object" class="btn-primary"/>
+                        <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mbk_stocksummary_action_view" model="ir.actions.act_window">
+            <field name="name">Consumable Summary Report</field>
+            <field name="res_model">mbk.wizard.report.stocksummary</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mbk_stock_summary_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="mbk_stocksummary_wizard_submenu"
+                  name="Consumable Summary Report"
+                  parent="stock.menu_warehouse_report"
+                  action="mbk_stocksummary_action_view"
+                  groups="account.group_account_manager"
+                  sequence="10"/>
+    </data>
+
+</odoo>
