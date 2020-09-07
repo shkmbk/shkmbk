@@ -20,7 +20,8 @@
         'wizard/wizard_stock_details.xml',
         'wizard/wizard_stock_summary.xml',
         'wizard/wizard_share_summary.xml',
-        'wizard/wizard_share_details.xml',        
+        'wizard/wizard_share_details.xml',
+        'wizard/wizard_farm_stock_summary.xml',
         'report/report_menu.xml',
         'report/stock_details_template.xml',
 
