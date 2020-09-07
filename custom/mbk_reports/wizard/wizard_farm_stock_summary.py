@@ -296,11 +296,11 @@ class MbkStockSummary(models.TransientModel):
         col += 1
         worksheet.write(count - 1, col, sum_purchase_qty, wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_consumption_qty, wbf['content_float_border_bg'])
+        worksheet.write(count - 1, col, -sum_consumption_qty, wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_sale_qty, wbf['content_float_border_bg'])
+        worksheet.write(count - 1, col, -sum_sale_qty, wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_death_qty, wbf['content_float_border_bg'])               
+        worksheet.write(count - 1, col, -sum_death_qty, wbf['content_float_border_bg'])               
         col += 1
         worksheet.write(count - 1, col, sum_immature_qty, wbf['content_float_border_bg'])          
         col += 1
