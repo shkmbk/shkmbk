@@ -244,8 +244,8 @@ class MbkStockDetailsW(models.TransientModel):
         data['from_date'] = self.from_date
         data['to_date'] = self.to_date
         tmpdate = self.to_date
-        data['product_id'] = self.product_id
-        data['analytic_id'] = self.analytic_id
+        data['product_id'] = self.product_id.id
+        data['analytic_id'] = self.analytic_id.id
         data['header_date'] = tmpdate.strftime("%d-%m-%Y")
         report = self.env.ref('mbk_reports.stock_details_pdf')        
         return report.report_action(self, data=data)    

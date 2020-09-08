@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_farmstock_details">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>FARM STOCK DETAILS REPORT AS ON  <t t-esc="header_date"/></h4></center>
+                    <table class="table table-sm o_main_table" border="2" style="font-size: 13px;">
+                        <thead>
+                            <tr style="background-color:#d3d3d3;">
+                                <th name="th_description" class="text-left" width="2%" rowspan="2"><strong>Sl No</strong></th>
+                                <th name="th_description" class="text-left" rowspan="2"><strong>Product</strong></th>
+                                <th name="th_description" class="text-left" rowspan="2"><strong>Opening</strong></th>                                
+                                <th name="th_description" class="text-center" colspan="2"><strong>Inward Qty</strong></th>
+                                <th name="th_description" class="text-center" colspan="3"><strong>Outward Qty</strong></th>
+                                <th name="th_description" class="text-center" colspan="3"><strong>Closing Qty</strong></th>
+                            </tr>
+                            <tr  style="background-color:#c3e6d7;">
+                                <th class="text-right"><strong>Birth</strong></th>
+                                <th class="text-right"><strong>Purchase</strong></th>
+                                <th class="text-right" ><strong>Consumption</strong></th>								
+                                <th class="text-right"><strong>Sale</strong></th>
+                                <th class="text-right" ><strong>Death</strong></th>
+                                <th class="text-right"><strong>Immature</strong></th>
+                                <th class="text-right"><strong>Mature</strong></th>
+                                <th class="text-right"><strong>Net</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="rowno" t-value="1"/>
+                            <t t-set="totopening_qty" t-value="0.0"/>
+							<t t-set="totbirth_qty" t-value="0.0"/>
+                            <t t-set="totpurchase_qty" t-value="0.0"/>
+                            <t t-set="totconsumption_qty" t-value="0.0"/>
+							<t t-set="totsale_qty" t-value="0.0"/>
+                            <t t-set="totdeath_qty" t-value="0.0"/>
+                            <t t-set="totimmature_qty" t-value="0.0"/>
+                            <t t-set="totmature_qty" t-value="0.0"/>
+                            <t t-set="totnet_qty" t-value="0.0"/>                            
+                            <t t-foreach="docs" t-as="line">
+                                <tr>
+                                    <td name="slno">
+                                        <span t-esc="rowno"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['product_name']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['opening_qty'])"/>
+                                        <t t-set="totopening_qty" t-value="totopening_qty+(line['opening_qty'])"/>
+                                    </td>
+                                     <td class="text-right">
+                                       <span t-esc="'{0:,.0f}'.format(line['birth_qty'])"/>
+                                       <t t-set="totbirth_qty" t-value="totbirth_qty+(line['birth_qty'])"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.0f}'.format(line['purchase_qty'])"/>
+                                         <t t-set="totpurchase_qty" t-value="totpurchase_qty+(line['purchase_qty'])"/>                                       
+                                     </td>									
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.0f}'.format(line['consumption_qty'])"/>
+                                         <t t-set="totconsumption_qty" t-value="totconsumption_qty+(line['consumption_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.0f}'.format(line['sale_qty'])"/>
+                                         <t t-set="totsale_qty" t-value="totsale_qty+(line['sale_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.0f}'.format(line['death_qty'])"/>
+                                         <t t-set="totdeath_qty" t-value="totdeath_qty+(line['death_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.0f}'.format(line['immature_qty'])"/>
+                                         <t t-set="totimmature_qty" t-value="totimmature_qty+(line['immature_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.0f}'.format(line['mature_qty'])"/>
+                                         <t t-set="totmature_qty" t-value="totmature_qty+(line['mature_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.0f}'.format(line['net_qty'])"/>
+                                         <t t-set="totnet_qty" t-value="totnet_qty+(line['net_qty'])"/>
+                                     </td>                                                                                                               
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="2" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b>TOTAL</b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totopening_qty))"/></b>
+                                    </td>							
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totbirth_qty))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totpurchase_qty))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totconsumption_qty))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totsale_qty))"/></b>
+                                    </td>							
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totdeath_qty))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totimmature_qty))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totmature_qty))"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format((totnet_qty))"/></b>
+                                    </td>                                    
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+

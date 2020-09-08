@@ -41,7 +41,7 @@ class MbkStockSummary(models.TransientModel):
     def _getdomainfilter(self):
         return [('create_date', '<=', self.to_date),('company_id', '=', self.env.company.id), self._get_product(), self._get_analytic()]
 
-    def print_stock_summary_pdf(self):
+    def print_farm_stock_summary_xls(self):
      
         if not self.env['res.users'].browse(self.env.uid).tz:
             raise UserError(_('Please Set a User Timezone'))
@@ -230,7 +230,7 @@ class MbkStockSummary(models.TransientModel):
                         if wip.name in ['Birth','Purchase']:
                             immature_qty+=rec.quantity
             if immature_qty>closing_qty:
-                immature_qty=0.00
+                immature_qty=closing_qty
             else:
                 mature_qty=closing_qty-immature_qty                         
  
@@ -254,13 +254,13 @@ class MbkStockSummary(models.TransientModel):
             worksheet.write(count, col, purchase_qty,  wbf['content_float_border'])            
             # Out Qty-Consumption
             col+=1
-            worksheet.write(count, col, -consumption_qty,  wbf['content_float_border'])
+            worksheet.write(count, col, abs(consumption_qty),  wbf['content_float_border'])
             # Out Qty-Sales
             col+=1
-            worksheet.write(count, col, -sale_qty,  wbf['content_float_border'])
+            worksheet.write(count, col, abs(sale_qty),  wbf['content_float_border'])
             # Out Qty-Death
             col+=1
-            worksheet.write(count, col, -death_qty,  wbf['content_float_border'])                          
+            worksheet.write(count, col, abs(death_qty),  wbf['content_float_border'])                          
             # Balance Qty- Inmature
             col+=1
             worksheet.write(count, col, immature_qty,  wbf['content_float_border'])
@@ -272,8 +272,6 @@ class MbkStockSummary(models.TransientModel):
             worksheet.write(count, col, closing_qty,  wbf['content_float_border'])       
             
             sum_opening_qty +=opening_qty
-            #sum_in_qty+=in_qty
-            #sum_out_qty+=out_qty
             sum_closing_qty +=closing_qty
             sum_birth_qty+=birth_qty
             sum_purchase_qty+=purchase_qty
@@ -289,18 +287,16 @@ class MbkStockSummary(models.TransientModel):
         worksheet.merge_range('A%s:B%s'%(count,count), 'Total', wbf['content_border_bg_total'])
         col =2
         worksheet.write(count - 1, col,sum_opening_qty, wbf['content_float_border_bg'])
-
         col+=1
         worksheet.write(count - 1, col, sum_birth_qty, wbf['content_float_border_bg'])
-
         col += 1
         worksheet.write(count - 1, col, sum_purchase_qty, wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, -sum_consumption_qty, wbf['content_float_border_bg'])
+        worksheet.write(count - 1, col, abs(sum_consumption_qty), wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, -sum_sale_qty, wbf['content_float_border_bg'])
+        worksheet.write(count - 1, col, abs(sum_sale_qty), wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, -sum_death_qty, wbf['content_float_border_bg'])               
+        worksheet.write(count - 1, col, abs(sum_death_qty), wbf['content_float_border_bg'])               
         col += 1
         worksheet.write(count - 1, col, sum_immature_qty, wbf['content_float_border_bg'])          
         col += 1
@@ -318,4 +314,14 @@ class MbkStockSummary(models.TransientModel):
             'type': 'ir.actions.act_url',
             'target': 'new',
             'url': 'web/content/?model='+self._name+'&id='+str(self.id)+'&field=datas&download=true&filename='+filename,
-        }   
+        }
+    def print_stock_details_pdf(self):
+        data = {}
+        data['from_date'] = self.from_date
+        data['to_date'] = self.to_date
+        tmpdate = self.to_date
+        data['product_id'] = self.product_id.id
+        data['analytic_id'] = self.analytic_id.id
+        data['header_date'] = tmpdate.strftime("%d-%m-%Y")
+        report = self.env.ref('mbk_reports.farmstock_details_pdf')        
+        return report.report_action(self, data=data)

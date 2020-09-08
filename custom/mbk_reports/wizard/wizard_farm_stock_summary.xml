@@ -18,7 +18,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button string="Print Farm Stock Summary" name="print_stock_summary_pdf" type="object" class="btn-primary"/>
+                        <button string="View Farm Stock Summary" name="print_stock_details_pdf" type="object" class="btn-primary"/>
+                        <button string="Export Farm Stock Summary" name="print_farm_stock_summary_xls" type="object" class="btn-primary"/>
                         <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
                     </footer>
                 </form>

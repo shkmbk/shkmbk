@@ -18,7 +18,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button string="View Stock Summary" name="print_stock_details_pdf" type="object" class="btn-primary" invisible="1"/>
+                        <button string="View Stock Summary" name="print_stock_details_pdf" type="object" class="btn-primary"/>
 						<button string="Export to Excel" name="print_cstock_summary_pdf" type="object" class="btn-primary"/>						
                         <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
                     </footer>
