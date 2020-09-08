@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <report id="stock_details_pdf"
-            model="stock.move"
+            model="stock.valuation.layer"
             string="Stock Details Report"
             report_type="qweb-html"
-            name="mbk_reports.report_stock_details_document"
-            file="mbk_reports.report_stock_details_document"
+            name="mbk_reports.report_stock_details"
+            file="mbk_reports.report_stock_details"
             menu="False"/>
-		</odoo>
+    <report id="farmstock_details_pdf"
+            model="stock.valuation.layer"
+            string="Stock Details Report"
+            report_type="qweb-html"
+            name="mbk_reports.report_farmstock_details"
+            file="mbk_reports.report_farmstock_details"
+            menu="False"/>
+</odoo>

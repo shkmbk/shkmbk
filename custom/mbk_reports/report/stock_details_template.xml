@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_stock_details_document">
+    <template id="report_stock_details">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <div class="page">
-					<right>As On:<t t-esc="to_date"/></right>
                     <center><h4>STOCK DETAILS REPORT AS ON  <t t-esc="header_date"/></h4></center>
                     <table class="table table-sm o_main_table" style="font-size: 13px;">
                         <thead>
@@ -39,7 +38,7 @@
                                         <span t-esc="line['transaction_no']"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="line['date_done']"/>
+                                        <span t-esc="line['trn_date']"/>
                                     </td>
                                      <td class="text-right">
                                        <span t-esc="line['partner_name']"/>
@@ -49,7 +48,9 @@
                                      </td>									
                                      <td class="text-right">
                                        <span t-esc="'{0:,.2f}'.format(line['opening_qty'])"/>
-									   <t t-set="totopening_qty" t-value="totopening_qty+(line['opening_qty'])"/>
+                                       <t t-if="rowno=='1'">
+									        <t t-set="totopening_qty" t-value="line['opening_qty']"/>
+                                        </t>
                                      </td>
                                      <td class="text-right">
                                          <span t-esc="'{0:,.2f}'.format(line['in_qty'])"/>
@@ -60,8 +61,8 @@
                                          <t t-set="totout_qty" t-value="totout_qty+(line['out_qty'])"/>
                                      </td>
                                     <td class="text-right">
-                                         <span t-esc="'{0:,.2f}'.format(line['sum_balance'])"/>
-                                         <t t-set="totbalance" t-value="totbalance+(line['sum_balance'])"/>
+                                         <span t-esc="'{0:,.2f}'.format(line['balance'])"/>
+                                         <t t-set="totbalance" t-value="(line['balance'])"/>
                                      </td>
                                 </tr>
                             </t>
