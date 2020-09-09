@@ -45,6 +45,7 @@
                                 <field name="day_in_a_year"  attrs="{'invisible':[('isdeposit','=',False)]}"/>
                                 <field name="expected_earning"  attrs="{'invisible':[('isdeposit','=',False)]}"/>
 								<field name="inv_currency_id"/>
+								<field name="inv_currency_rate" attrs="{'invisible':[('inv_currency_id','=',False)]}"/>
                                 <field name="responsibility_id"/>
                             </group>
                             <group>
