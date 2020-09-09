@@ -30,6 +30,7 @@ class MisProduct(models.Model):
     expected_earning = fields.Float(string="Expected Earning",compute='calculate_interest', store=True, default=False)
     type_id = fields.Many2one('mis.inv.type', string="Type")
     inv_currency_id = fields.Many2one('res.currency', string="Currency")
+    inv_currency_rate = fields.Float(default='1.00', string="Exchange Rate", digits=(12,12))
 
 
     @api.depends('interest_rate', 'day_in_a_year', 'deposit_date', 'maturity_date')
