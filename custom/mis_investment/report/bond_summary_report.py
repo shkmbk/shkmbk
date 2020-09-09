@@ -36,7 +36,7 @@ class BondSummaryReport(models.AbstractModel):
             cur_rate=bd.inv_currency_rate
             b_amount=bd.list_price*cur_rate
             b_expected_earning= bd.expected_earning*cur_rate
-            b_earningasof= (bd.expected_earning *((to_date-bd.deposit_date).days+1))/(bd.maturity_date-bd.deposit_date).days
+            b_earningasof= (b_expected_earning*((to_date-bd.deposit_date).days+1))/(bd.maturity_date-bd.deposit_date).days
 
             master_table.append({
                 'bond': bd.name,
