@@ -11,6 +11,7 @@ class BondSummaryReport(models.AbstractModel):
         s_to_date = data['date_to']
         type_id = data['type']
         inv_currency_id = data['currency']
+        header_date=data['header_date']
 
         to_date= datetime.strptime(s_to_date , '%Y-%m-%d').date()
         
@@ -39,8 +40,8 @@ class BondSummaryReport(models.AbstractModel):
 
             master_table.append({
                 'bond': bd.name,
-                'deposit_date': bd.deposit_date,
-                'maturity_date': bd.maturity_date,
+                'deposit_date': bd.deposit_date.strftime("%d-%m-%Y"),
+                'maturity_date': bd.maturity_date.strftime("%d-%m-%Y"),
                 'list_price':b_amount,
                 'interest_rate': bd.interest_rate,
                 'expected_earning': b_expected_earning,
@@ -51,7 +52,7 @@ class BondSummaryReport(models.AbstractModel):
             'doc_ids': self.ids,
             'doc_model': 'mis.invrevaluation',
             'docs':master_table,
-            'to_date': to_date,
+            'to_date': header_date,
             'currency': currency,
         }
         return docargs
