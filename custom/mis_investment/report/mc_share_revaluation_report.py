@@ -53,7 +53,7 @@ class MCShareRevaluationReport(models.AbstractModel):
         strsql = """select COALESCE(sum(credit-debit),0.00) as dividend from 
                     account_move_line where account_id in (select id from account_account where code in ('491102'))
                     and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-                    where  account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
+                    where  parent_state='posted' and account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
 
         self._cr.execute(strsql)
         objdividend = self._cr.dictfetchall()
@@ -73,7 +73,7 @@ class MCShareRevaluationReport(models.AbstractModel):
         strsql = """select COALESCE(sum(debit-credit),0.00) as brokerage_expense from 
                     account_move_line where account_id in (select id from account_account where code in ('491199'))
                     and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-                    where  account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
+                    where  parent_state='posted' and account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
 
         self._cr.execute(strsql)
 
@@ -98,7 +98,7 @@ class MCShareRevaluationReport(models.AbstractModel):
         strsql ="""select COALESCE(sum(credit-debit),0.00) as totalprofit from 
         account_move_line where account_id in (select id from account_account where code in ('491103','491104','491105'))
         and id in (select account_move_line_id from account_analytic_tag_account_move_line_rel 
-        where account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
+        where parent_state='posted' and account_analytic_tag_id in ("""+analytictag+""")) and date BETWEEN '""" + str(from_date) +"' AND '""" + str(to_date) +"'"""
 
         self._cr.execute(strsql)
         objrealized_profit_loss = self._cr.dictfetchall()
