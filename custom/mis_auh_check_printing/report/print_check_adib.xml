@@ -15,7 +15,7 @@
                 <!-- Detail Invoice Printing -->
                 <t t-if="len(o.reconciled_invoice_ids)>0">
                      <div style="position: absolute;left:18mm;top: 71mm;font-size: 10pt;">
-                         <table width="100%">
+                         <table style="table-layout: fixed; width: 100%">
                             <tbody class="invoice_tbody">
                                 <t t-set="linecount" t-value="0"/>
                                 <t t-set="othrinvtot" t-value="0.0"/>
@@ -26,7 +26,7 @@
                                             <td style="width:31mm;">
                                                 <span t-field="inv.invoice_date"/>
                                             </td>
-                                            <td style="width:25mm;">
+                                            <td style="width:25mm;font-size: 9pt;">
                                                 <span t-field="inv.ref"/>
                                             </td>
                                             <td style="width:36mm;font-size: 9pt;">
@@ -67,8 +67,42 @@
                                             <td style="width:40mm;" class="text-right">
                                                 <t t-esc="othrinvtot"/> AED
                                             </td>
-                                        </tr>
+                                    </tr>
                                 </t>
+								<!-- Adavce Print -->
+								<t t-if="len(o.reconciled_invoice_ids)==0">
+									 <div style="position: absolute;left:18mm;top: 74mm;font-size: 10pt;">
+										 <table width="225mm">
+											<tbody class="invoice_tbody">
+												<t t-set="linecount" t-value="0"/>
+												<t t-set="othrinvtot" t-value="0.0"/>
+												<t t-set="linecount" t-value="linecount+1"/>
+												<t t-if="linecount&lt;12">
+													<tr>
+														<td style="width:31mm;">
+															&amp;nbsp;
+														</td>
+														<td style="width:25mm;">
+															&amp;nbsp;
+														</td>
+														<td style="width:36mm;">
+															&amp;nbsp;s
+														</td>
+														<td style="width:5mm;">
+														   &amp;nbsp;
+														</td>
+														<td style="width:80mm;">
+															<span t-field="o.communication"/>
+														</td>
+														<td style="width:40mm;" class="text-right">
+															<span t-field="o.amount"/>
+														</td>
+													</tr>
+												</t>
+											</tbody>
+										 </table>
+									 </div>
+								</t>
                             </tbody>
                          </table>
                      </div>
@@ -83,7 +117,7 @@
                     <span t-field="o.payment_date" t-field-options='{"format": "d/MM/y"}'/>
                 </div>
                 <!--amount-->
-                <div style="position: absolute;top: 268mm; left: 200mm;font-size: 12pt;">
+                <div style="position: absolute;top: 268mm; left: 195mm;font-size: 12pt;">
                     <span t-esc="'{0:,.2f}'.format(o.amount)"/>
                 </div>
                 <!--customer/payee name-->
