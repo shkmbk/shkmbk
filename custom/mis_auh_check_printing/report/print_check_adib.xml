@@ -69,44 +69,44 @@
                                             </td>
                                     </tr>
                                 </t>
-								<!-- Adavce Print -->
-								<t t-if="len(o.reconciled_invoice_ids)==0">
-									 <div style="position: absolute;left:18mm;top: 74mm;font-size: 10pt;">
-										 <table width="225mm">
-											<tbody class="invoice_tbody">
-												<t t-set="linecount" t-value="0"/>
-												<t t-set="othrinvtot" t-value="0.0"/>
-												<t t-set="linecount" t-value="linecount+1"/>
-												<t t-if="linecount&lt;12">
-													<tr>
-														<td style="width:31mm;">
-															&amp;nbsp;
-														</td>
-														<td style="width:25mm;">
-															&amp;nbsp;
-														</td>
-														<td style="width:36mm;">
-															&amp;nbsp;s
-														</td>
-														<td style="width:3mm;">
-														   &amp;nbsp;
-														</td>
-														<td style="width:80mm;">
-															<span t-field="o.communication"/>
-														</td>
-														<td style="width:40mm;" class="text-right">
-															<span t-field="o.amount"/>
-														</td>
-													</tr>
-												</t>
-											</tbody>
-										 </table>
-									 </div>
-								</t>
-                            </tbody>
+				            </tbody>
                          </table>
                      </div>
                 </t>
+				<!-- Adavce Print -->
+				<t t-if="len(o.reconciled_invoice_ids)==0">
+					 <div style="position: absolute;left:14mm;top: 71mm;font-size: 10pt;">
+						 <table style="table-layout: fixed; width: 100%">
+							<tbody class="invoice_tbody">
+								<t t-set="linecount" t-value="0"/>
+								<t t-set="othrinvtot" t-value="0.0"/>
+								<t t-set="linecount" t-value="linecount+1"/>
+								<t t-if="linecount&lt;12">
+									<tr>
+										<td style="width:31mm;">
+											&amp;nbsp;
+										</td>
+										<td style="width:25mm;">
+											&amp;nbsp;
+										</td>
+										<td style="width:36mm;">
+											&amp;nbsp;s
+										</td>
+										<td style="width:3mm;">
+										   &amp;nbsp;
+										</td>
+										<td style="width:80mm;">
+											<span t-field="o.communication"/>
+										</td>
+										<td style="width:40mm;" class="text-right">
+											<span t-field="o.amount"/>
+										</td>
+									</tr>
+								</t>
+							</tbody>
+						 </table>
+					 </div>
+				</t>
 				
                <!--Prepared User-->
 				<div style="position: absolute;top: 206mm; left: 14mm;font-size: 12pt;width:42mm; text-align:center;">
