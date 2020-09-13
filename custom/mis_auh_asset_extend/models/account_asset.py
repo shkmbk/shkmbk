@@ -80,7 +80,7 @@ class AccountAssetAsset(models.Model):
             code = self.name + '(' + self.asset_code + ')'
             tag_ids = self.env['account.analytic.tag'].create({
                 'name':code, 'analytic_tag_group': group_id,
-                ,'company_id': self.company_id.id,
+                'company_id': self.company_id.id,
                 })
             self.analytic_tag_ids = tag_ids.ids + self.analytic_tag_ids.ids
         return asset
