@@ -10,7 +10,7 @@ class AccountAssetAsset(models.Model):
 
     def _sumassetexpense(self):
         objJournal = self.env['account.move.line'].search([('analytic_tag_ids', 'in', self.analytic_tag_ids.ids),
-                                                           ('account_id', '!=', self.account_depreciation_id.id)
+                                                           ('account_id', '!=', self.account_depreciation_expense_id.id),('account_id.internal_group','=','expense')
                                                            ])
         sum=0.00
         for jor in objJournal:
@@ -60,6 +60,7 @@ class AccountAssetAsset(models.Model):
             code =  vals['name'] + '(' + vals['asset_code'] + ')'
             tag_ids = self.env['account.analytic.tag'].create({
                 'name':code, 'analytic_tag_group': group_id,
+                'company_id': self.company_id.id,
                 })
             asset.analytic_tag_ids = tag_ids.ids + asset.analytic_tag_ids.ids
         return asset
@@ -79,13 +80,14 @@ class AccountAssetAsset(models.Model):
             code = self.name + '(' + self.asset_code + ')'
             tag_ids = self.env['account.analytic.tag'].create({
                 'name':code, 'analytic_tag_group': group_id,
+                ,'company_id': self.company_id.id,
                 })
             self.analytic_tag_ids = tag_ids.ids + self.analytic_tag_ids.ids
         return asset
 
     def action_custom_exapense_show(self):
         journal_entry = []
-        journal_items = self.env['account.move.line'].search([('analytic_tag_ids','in',self.analytic_tag_ids.ids)])
+        journal_items = self.env['account.move.line'].search([('analytic_tag_ids','in',self.analytic_tag_ids.ids),('account_id.internal_group','=','expense'), ('account_id', '!=', self.account_depreciation_expense_id.id)])
         for j in journal_items:
             journal_entry.append(j.move_id.id)
         return {

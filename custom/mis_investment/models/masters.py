@@ -70,7 +70,7 @@ class MisProduct(models.Model):
                 pro_analytic_tag_ids=obj_analytic_tag_ids
             else:
                 pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
-                    'name': code, 'analytic_tag_group': group_id, })
+                    'name': code, 'analytic_tag_group': group_id, 'company_id': self.company_id.id,})
 #            pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
 #                'name': code, 'analytic_tag_group': group_id,})
             mproduct.invest_analytic_tag_ids = pro_analytic_tag_ids.ids + mproduct.invest_analytic_tag_ids.ids
@@ -118,10 +118,10 @@ class MisProduct(models.Model):
 
             if obj_analytic_tag_ids==True:
                 pro_analytic_tag_ids = obj_analytic_tag_ids.write({
-                    'name': code, 'analytic_tag_group': group_id,})
+                    'name': code, 'analytic_tag_group': group_id, 'company_id': self.company_id.id,})
             else:
                 pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
-                    'name': code, 'analytic_tag_group': group_id, })
+                    'name': code, 'analytic_tag_group': group_id, 'company_id': self.company_id.id,})
 
             self.invest_analytic_tag_ids = pro_analytic_tag_ids.ids
 
