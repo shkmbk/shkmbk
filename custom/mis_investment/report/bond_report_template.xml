@@ -16,6 +16,7 @@
                                 <th class="text-right"><strong>Amount</strong></th>
                                 <th class="text-right"><strong>Rate</strong></th>
                                 <th class="text-right"><strong>Total Interest</strong></th>
+								<th class="text-right"><strong>Maturity Value</strong></th>								
                                 <th class="text-right"><strong>Interest as on<br/><t t-esc="to_date"/></strong></th>
                             </tr>
                         </thead>
@@ -24,6 +25,7 @@
 							<t t-set="totdeposit" t-value="0.0"/>
                             <t t-set="totearing" t-value="0.0"/>
                             <t t-set="totearningasof" t-value="0.0"/>
+							<t t-set="totmaturity_value" t-value="0.0"/>
                             <t t-foreach="docs" t-as="line">
                                 <tr>
                                     <td name="slno">
@@ -51,6 +53,10 @@
                                          <t t-set="totearing" t-value="totearing+line['expected_earning']"/>
                                      </td>
                                      <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['maturity_value'])"/>
+                                         <t t-set="totmaturity_value" t-value="totmaturity_value+line['maturity_value']"/>
+                                     </td>									 
+                                     <td class="text-right">
                                          <span t-esc="'{0:,.2f}'.format(line['earningasof'])"/>
                                          <t t-set="totearningasof" t-value="totearningasof+line['earningasof']"/>
                                      </td>
@@ -69,6 +75,9 @@
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.2f}'.format((totearing))"/></b>
                                     </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((totmaturity_value))"/></b>
+                                    </td>									
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.2f}'.format((totearningasof))"/></b>
                                     </td>

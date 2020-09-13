@@ -19,9 +19,11 @@ class BondSummaryReport(models.AbstractModel):
         currency= cur.name
 
         if type_id:
-            bond_ids = self.env['product.product'].search([('investment_ok', '=', True), ('isdeposit', '=', True), ('maturity_date', '>', to_date), ('type_id', '=', type_id), ('categ_id', '=', 18)],order='maturity_date')
+            bond_ids = self.env['product.product'].search([('investment_ok', '=', True), ('isdeposit', '=', True), ('maturity_date', '>', to_date), ('type_id', '=', type_id), ('categ_id', '=', 18),
+                                ('inv_currency_id','=',inv_currency_id)],order='maturity_date')
         else:
-            bond_ids = self.env['product.product'].search([('investment_ok', '=', True), ('isdeposit', '=', True), ('maturity_date', '>', to_date), ('categ_id', '=', 18)],order='maturity_date')
+            bond_ids = self.env['product.product'].search([('investment_ok', '=', True), ('isdeposit', '=', True), ('maturity_date', '>', to_date), ('categ_id', '=', 18),
+                                                            ('inv_currency_id','=',inv_currency_id)],order='maturity_date')
         master_table =[]
 
         if not bond_ids:
@@ -45,6 +47,7 @@ class BondSummaryReport(models.AbstractModel):
                 'list_price':b_amount,
                 'interest_rate': bd.interest_rate,
                 'expected_earning': b_expected_earning,
+                'maturity_value': b_amount+b_expected_earning,
                 'earningasof': b_earningasof,
             })
 
