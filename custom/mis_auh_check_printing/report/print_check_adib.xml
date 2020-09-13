@@ -4,17 +4,17 @@
         <template id="print_adib_check">
             <div style="position: relative;">
                 <!--- Print Header-->
-                <div style="position: absolute;top: 21mm; left: 12mm;font-size: 12pt;font-weight: bold;width:90mm;">
+                <div style="position: absolute;top: 21mm; left: 10mm;font-size: 12pt;font-weight: bold;width:90mm;">
                     <span t-esc="o.partner_id.name"/>
                 </div>
                 <!--- payment Number-->
-                <div style="position: absolute;top: 41mm; left: 54mm;font-size: 12pt;font-weight: bold;">
+                <div style="position: absolute;top: 41mm; left: 50mm;font-size: 12pt;font-weight: bold;">
 					<span t-esc="o.name"/>
                 </div>				
 				
                 <!-- Detail Invoice Printing -->
                 <t t-if="len(o.reconciled_invoice_ids)>0">
-                     <div style="position: absolute;left:18mm;top: 71mm;font-size: 10pt;">
+                     <div style="position: absolute;left:14mm;top: 71mm;font-size: 10pt;">
                          <table style="table-layout: fixed; width: 100%">
                             <tbody class="invoice_tbody">
                                 <t t-set="linecount" t-value="0"/>
@@ -32,7 +32,7 @@
                                             <td style="width:36mm;font-size: 9pt;">
                                                 <span t-field="inv.name"/>
                                             </td>
-											<td style="width:5mm;">
+											<td style="width:3mm;">
                                                &amp;nbsp;
                                             </td>
                                             <td style="width:80mm;">
@@ -58,7 +58,7 @@
                                             <td style="width:36mm;">
                                                 &amp;nbsp;
                                             </td>
-                                            <td style="width:5mm;">
+                                            <td style="width:3mm;">
                                                 &amp;nbsp;
                                             </td>											
                                             <td style="width:80mm;">
@@ -88,7 +88,7 @@
 														<td style="width:36mm;">
 															&amp;nbsp;s
 														</td>
-														<td style="width:5mm;">
+														<td style="width:3mm;">
 														   &amp;nbsp;
 														</td>
 														<td style="width:80mm;">
