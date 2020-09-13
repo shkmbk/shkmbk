@@ -60,7 +60,7 @@ class AccountAssetAsset(models.Model):
             code =  vals['name'] + '(' + vals['asset_code'] + ')'
             tag_ids = self.env['account.analytic.tag'].create({
                 'name':code, 'analytic_tag_group': group_id,
-                'company_id': self.company_id.id,
+                'company_id': self.env.company.id,
                 })
             asset.analytic_tag_ids = tag_ids.ids + asset.analytic_tag_ids.ids
         return asset
@@ -80,7 +80,7 @@ class AccountAssetAsset(models.Model):
             code = self.name + '(' + self.asset_code + ')'
             tag_ids = self.env['account.analytic.tag'].create({
                 'name':code, 'analytic_tag_group': group_id,
-                'company_id': self.company_id.id,
+                'company_id': self.env.company.id,
                 })
             self.analytic_tag_ids = tag_ids.ids + self.analytic_tag_ids.ids
         return asset
