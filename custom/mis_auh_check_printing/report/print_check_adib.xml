@@ -116,14 +116,25 @@
                 <div style="position: absolute;top: 247mm; left: 195mm;font-size: 12pt;">
                     <span t-field="o.payment_date" t-field-options='{"format": "d/MM/y"}'/>
                 </div>
+               <!--A/C Payee-->
+                <div style="position: absolute;top: 255mm; left: 110mm;font-size: 14pt;font-weight: bold;">
+                    <t t-if="o.check_is_acpayee">
+						A/C PAYEE ONLY
+					</t>
+                </div>				
                 <!--amount-->
                 <div style="position: absolute;top: 268mm; left: 195mm;font-size: 12pt;">
                     <span t-esc="'{0:,.2f}'.format(o.amount)"/>
                 </div>
                 <!--customer/payee name-->
                 <div style="position: absolute;top: 277mm; left: 48mm;font-size: 12pt;width:150mm;">
-                    <span t-esc="o.partner_id.name"/>
-                </div>
+					<t t-if="not o.check_is_acpayee_name">
+						<span t-esc="o.partner_id.name"/>
+					</t>
+					<t t-if="o.check_is_acpayee">
+						<span t-esc="o.check_acpayee_name"/>
+					</t>					
+                </div>				
                 <!--amount in words-->
                 <div style="position: absolute;top: 286mm; left: 35mm;font-size: 12pt;width:180mm;">
                     <t t-esc="o.check_amount_in_words"/> Only
