@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, api, _
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 class account_payment(models.Model):
     _inherit = "account.payment"
+    
+    check_is_acpayee = fields.Boolean(string="Account Payee Stamp", default=False, track_visibility='onchange')
+    check_is_acpayee_name = fields.Boolean('Custom A/C Payee', default=False,track_visibility='onchange')
+    check_acpayee_name = fields.Char('A/C Payee',track_visibility='onchange')
+    
+    
 
     def do_print_checks(self):
         if self:

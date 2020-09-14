@@ -15,6 +15,7 @@ This module allows to print your payments on pre-printed check paper.
         'wizard/print_prenumbered_checks_views.xml',
         'report/print_check_adib.xml',
         'report/print_check_adcb.xml',
+        'views/mbk_payment.xml'
     ],
     'installable': True,
     'auto_install': True,
