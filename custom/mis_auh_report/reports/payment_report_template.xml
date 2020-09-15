@@ -109,9 +109,9 @@
                             <tr>
                                 <th><span>Invoice Date</span></th>
                                 <th><span>Invoice Number</span></th>
-                                <th class="text-riIght"><span>Original Amount</span></th>
+								<th><span>Bill Number</span></th>
+                                <th><span>Description</span></th>
                                 <th class="text-right"><span>Amount Paid</span></th>
-                                <th class="text-right"><span>Balance</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,10 +121,10 @@
                                 <tr>
                                 <t t-set="rowno" t-value="rowno+1"/>
                                 <td><span t-field="inv.invoice_date"/></td>
-                                <td><span t-field="inv.name"/></td>
-                                <td class="text-right"><span t-field="inv.amount_total"/></td>
+                                <td><span t-field="inv.ref"/></td>
+								<td><span t-field="inv.name"/></td>
+                                <td class="text-left"><span t-field="inv.narration"/></td>						
                                 <td class="text-right"><span t-esc="o._get_invoice_payment_amount(inv)" t-options="{'widget': 'monetary', 'display_currency': inv.currency_id}"/></td>
-                                <td class="text-right"><span t-field="inv.amount_residual"/></td>
                                 </tr>
 								<t t-if="rowno==18">
                                     <t t-set="rowno" t-value="0"/>
@@ -132,11 +132,11 @@
                                         <td colspan="5"  style="height:3cm;"/>
                                     </tr>
                                      <tr>
-                                        <th><span>Invoice Date</span></th>
-                                        <th><span>Invoice Number</span></th>
-                                        <th class="text-riIght"><span>Original Amount</span></th>
-                                        <th class="text-right"><span>Amount Paid</span></th>
-                                        <th class="text-right"><span>Balance</span></th>
+										<th><span>Invoice Date</span></th>
+										<th><span>Invoice Number</span></th>
+										<th><span>Bill Number</span></th>
+										<th class="text-riIght"><span>Description</span></th>
+										<th class="text-right"><span>Amount Paid</span></th>
                                     </tr>
                                  </t>
                             </t>
@@ -145,6 +145,9 @@
                     </table>
                     <!--p style="page-break-after:always;"/-->
                 </t>
+				<t t-if="len(o.reconciled_invoice_ids)==0">
+					<br/><br/><br/><br/>
+				</t>
             </div>
             <div class="row">
                 <t t-if="o.communication">
@@ -156,7 +159,7 @@
 			<div class="row">
               <div class="col-3" style="right;">
                   <p class="text-center" style="padding-left:5mm;">
-                      <br/><br/><br/><br/>
+                      <br/><br/><br/>
                       <span t-esc="o.write_uid.name"/>
                   </p>
                 <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
@@ -168,7 +171,7 @@
               </div>
               <div class="col-2" style="right;">
                   <p class="text-center" style="padding-left:5mm;">
-                      <br/><br/><br/><br/><br/>
+                      <br/><br/><br/><br/>
 
                   </p>
                 <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
@@ -180,7 +183,7 @@
               </div>
               <div class="col-3" style="left">
                   <p class="text-center" style="padding-left:5mm;">
-                      <br/><br/><br/><br/><br/>
+                      <br/><br/><br/><br/>
                   </p>
                 <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
                     Approved By
