@@ -14,4 +14,11 @@
             name="mbk_reports.report_farmstock_details"
             file="mbk_reports.report_farmstock_details"
             menu="False"/>
+    <report id="gratuity_report_pdf"
+            model="hr.employee"
+            string="Gratuity Report"
+            report_type="qweb-html"
+            name="mbk_reports.report_gratuity"
+            file="mbk_reports.report_gratuity"
+            menu="False"/>            
 </odoo>
