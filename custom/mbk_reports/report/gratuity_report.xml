@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_gratuity">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>GRATUITY REPORT AS ON  <t t-esc="header_date"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                 <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
+                                <th name="th_description" class="text-left"><strong>Employee</strong></th>
+                                <th class="text-left"><strong>Code</strong></th>
+                                <th class="text-center"><strong>Join Date</strong></th>
+                                <th class="text-right" ><strong>Basic Salary</strong></th>								
+                                <th class="text-right"><strong>Total Days</strong></th>
+                                <th class="text-right" ><strong>LOP Days</strong></th>
+                                <th class="text-right"><strong>Eligible Days</strong></th>
+                                <th class="text-right"><strong>Gratuity Days</strong></th>
+                                <th class="text-right"><strong>Gratuity Amount</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="rowno" t-value="1"/>
+                            <t t-set="tot_gratuity_amount" t-value="0.0"/>
+                            <t t-foreach="docs" t-as="line">
+                                <tr>
+                                    <td name="slno">
+                                        <span t-esc="rowno"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['emp_name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['emp_code']"/>
+                                    </td>
+                                     <td class="text-center">
+                                       <span t-esc="line['join_date']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['basic_salary'])"/>                                         
+                                     </td>									
+                                     <td class="text-right">
+                                       <span t-esc="'{0:,.2f}'.format(line['total_days'])"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['lop_days'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['eligible_days'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['gratuity_days'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['gratuity_amount'])"/>
+                                         <t t-set="tot_gratuity_amount" t-value="tot_gratuity_amount+(line['gratuity_amount'])"/>
+                                     </td>                                     
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="9" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b>TOTAL</b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format((tot_gratuity_amount))"/></b>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+

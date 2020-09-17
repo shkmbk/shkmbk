@@ -16,6 +16,8 @@ class Employee(models.Model):
     passport_expiry = fields.Date(string="Passport Expiry", size=14)
     payment_method = fields.Many2one('mis.hr.paymentmethod', string="Payment Method")
     full_name = fields.Char(string="Full Name", help="As per Passport/Bank Account")
+    op_eligible_days = fields.Float(string="Eligible Days", help="Opening Eligible Days for Gratuity")
+    op_leave_days = fields.Float(string="Annual Leave Days",help="Opening Annual Leave Days")
     
 
     def write(self, vals):
