@@ -35,6 +35,7 @@ class GratuityReport(models.AbstractModel):
 
    
     def _get_report_values(self, docids, data=None):
+        self.env['ir.rule'].clear_cache()
         ason_date = data['ason_date']
         employee_id =data['employee_id']
         hr_department_ids = data['hr_department_ids']
