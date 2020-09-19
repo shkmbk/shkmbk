@@ -6,3 +6,4 @@ from . import wizard_share_summary
 from . import wizard_share_details
 from . import wizard_farm_stock_summary
 from . import wizard_gratuity_report
+from . import wizard_annualleave_report

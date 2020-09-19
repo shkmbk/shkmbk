@@ -20,5 +20,12 @@
             report_type="qweb-html"
             name="mbk_reports.report_gratuity"
             file="mbk_reports.report_gratuity"
-            menu="False"/>            
+            menu="False"/>
+    <report id="annualleave_report_pdf"
+            model="hr.employee"
+            string="Annual Leave Report"
+            report_type="qweb-html"
+            name="mbk_reports.report_annualleave"
+            file="mbk_reports.report_annualleave"
+            menu="False"/>                        
 </odoo>
