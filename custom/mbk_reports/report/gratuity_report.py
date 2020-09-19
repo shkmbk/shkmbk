@@ -49,7 +49,7 @@ class GratuityReport(models.AbstractModel):
         if not self.env['res.users'].browse(self.env.uid).tz:
             raise UserError(_('Please Set a User Timezone'))
             
-        objemp = self.env['hr.contract'].search([('company_id', '=', self.env.company.id),('state', '=', 'open'),('employee_id.date_of_join', '<=', ason_date),self._get_analytic(analytic_account_id),
+        objemp = self.env['hr.contract'].search([('state', '=', 'open'),('employee_id.date_of_join', '<=', ason_date),self._get_analytic(analytic_account_id),
                                                     self._get_department(hr_department_ids), self._get_analytic_tags(analytic_tag_ids),self._get_employee(employee_id)])
 
         if not objemp:
