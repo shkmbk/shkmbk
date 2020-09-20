@@ -38,13 +38,23 @@
             groups="account.group_account_invoice"
         />
 
-        <report
-            id="action_account_journal_print"
-            model="account.move"
-            string="Journal Print"
-            report_type="qweb-pdf"
-            name="mis_auh_report.report_account_journal"
-            file="mis_auh_report.report_account_journal"
-          />
+	<report
+		id="action_account_journal_print"
+		model="account.move"
+		string="Journal Print"
+		report_type="qweb-pdf"
+		name="mis_auh_report.report_account_journal"
+		file="mis_auh_report.report_account_journal"
+	  />
+	  
+	<report
+		id="action_account_pettycash_print"
+		model="account.move"
+		string="Payment Print"
+		report_type="qweb-pdf"
+		name="mis_auh_report.report_account_pettycash"
+		file="mis_auh_report.report_account_pettycash"
+	  />	
+
 
  </odoo>
