@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_A4_landscape" model="report.paperformat">
+            <field name="name">Mis A4 Landscape format</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">35</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">30</field>
+            <field name="dpi">90</field>
+        </record>
+          <!--record id="mis_investment.report_revaluation_print" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mis_investment.paperformat_A4_landscape"/>
+          </record-->
+    </data>
+</odoo>
