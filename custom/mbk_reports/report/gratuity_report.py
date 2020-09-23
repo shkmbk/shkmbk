@@ -33,7 +33,6 @@ class GratuityReport(models.AbstractModel):
         else:
             return (1, '=', 1)                 
 
-   
     def _get_report_values(self, docids, data=None):
         self.env['ir.rule'].clear_cache()
         ason_date = data['ason_date']
@@ -101,7 +100,7 @@ class GratuityReport(models.AbstractModel):
                 op_lop_days=0
                 c_total_days=(to_date-join_date).days+1
 
-            objlopleave = self.env['hr.leave'].search([('employee_id','=',employee_id),('state','=','validate'),('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
+            objlopleave = self.env['hr.leave'].search([('employee_id','=',rec.employee_id),('state','=','validate'),('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
             c_lop=0.00
             for lop in objlopleave:
                 if lop.request_date_to<=to_date:
