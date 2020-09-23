@@ -105,15 +105,16 @@ class AnnualLeaveReport(models.AbstractModel):
                 op_lop_days=0
                 c_total_days=(to_date-join_date).days+1
 
-            objlopleave = self.env['hr.leave'].search([('employee_id','=',employee_id),('state','=','validate'),('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
+            #LOP Leaves in Currecnt Period
+            objlopleave = self.env['hr.leave'].search([('employee_id','=',rec.employee_id.id),('state','=','validate'),('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
             c_lop=0.00
             for lop in objlopleave:
                 if lop.request_date_to<=to_date:
                     c_lop+=lop.number_of_days
                 else:
                     c_lop+=(to_date-lop.request_date_from).days+1
-            #Leave Taken
-            objalleave = self.env['hr.leave'].search([('employee_id','=',employee_id),('state','=','validate'),('holiday_status_id','=',1),('request_date_from','<=',to_date)])
+            #Annual Leave Taken
+            objalleave = self.env['hr.leave'].search([('employee_id','=',rec.employee_id.id),('state','=','validate'),('holiday_status_id','=',1),('request_date_from','<=',to_date)])
             c_alt=0.00
             for al in objalleave:
                 if al.request_date_to<=to_date:
@@ -121,6 +122,15 @@ class AnnualLeaveReport(models.AbstractModel):
                 else:
                     c_alt+=(to_date-al.request_date_from).days+1
 
+            #Encashed Days
+            encashed_days= 0.0
+            objencash = self.env['mbk.encash'].search([('employee_id','=',rec.employee_id.id),('state','=','done'),('date_to','<=',to_date)])
+            
+            for en in objencash:
+                if en.encash_days:
+                    encashed_days += en.encash_days            
+            
+            total_leaves=encashed_days+c_alt
             lop_days=op_lop_days+c_lop
 
             if join_date<op_fy_date:                
@@ -129,12 +139,12 @@ class AnnualLeaveReport(models.AbstractModel):
                 eligible_days=c_total_days-c_lop
             c_eligible_days=c_total_days-c_lop
 
+            new_al_days=(c_eligible_days*30/365)
+            annualleave_days= round(op_al_days+new_al_days-total_leaves,2)
+
             if eligible_days>182:
-                new_al_days=(c_eligible_days*30/365)
-                annualleave_days= round(op_al_days+new_al_days-c_alt,2)
                 annualleave_amount= round(per_day*annualleave_days,2)
             else:
-                annualleave_days=0.00
                 annualleave_amount=0.00
 
                         
@@ -149,7 +159,7 @@ class AnnualLeaveReport(models.AbstractModel):
                             'opening_days':op_al_days,
                             'new_days':new_al_days,
                             'leave_taken':c_alt,
-                            'encash':0,
+                            'encash':encashed_days,
                             'balanceal_days' : annualleave_days,
                             'annualleave_amount' : annualleave_amount,
                         })
