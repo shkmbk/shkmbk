@@ -77,6 +77,11 @@ class MisCrossinvoiceBillWizard(models.TransientModel):
         for moveids in self.account_move_ids:
             objmoveline = self.env['account.move.line'].search([('move_id', '=', moveids.id), ('exclude_from_invoice_tab', '=', False)])
             for moveline in objmoveline:
+                #raise UserError(moveline.tax_ids.ids)
+                if moveline.tax_ids.ids:
+                    tax_ids=[2,]
+                else:
+                    tax_ids=moveline.tax_ids.ids
                 linecount+=1
                 values = dict({
                     'move_line_id': moveline.id,
@@ -84,7 +89,7 @@ class MisCrossinvoiceBillWizard(models.TransientModel):
                     'account_id': accountid,
                     'analytic_account_id': moveline.analytic_account_id.id,
                     'analytic_tag_ids': moveline.analytic_tag_ids.ids,
-                    'tax_ids':  moveline.tax_ids.ids,
+                    'tax_ids':  tax_ids,
                     'sub_total': moveline.price_subtotal,
                     'tax_amount': moveline.tax_amount,
                     'price_total': moveline.price_total,
