@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <report id="action_fd_summary_report"
+            model="mis.invrevaluation"
+            string="Fixed Deposit Summary"
+            report_type="qweb-html"
+            name="mis_investment.report_fd_summary_document"
+            file="mis_investment.report_fd_summary_document"
+            menu="False"/>
+    <report id="action_bond_summary_report"
+            model="mis.invrevaluation"
+            string="Bond Summary"
+            report_type="qweb-html"
+            name="mis_investment.report_bond_summary_document"
+            file="mis_investment.report_bond_summary_document"
+            menu="False"/>			
+    <report id="action_share_revalution_report"
+            model="mis.invrevaluation"
+            string="Revaluation Report"
+            report_type="qweb-html"
+            name="mis_investment.report_share_revaluation_document"
+            file="mis_investment.report_share_revaluation_document"
+            menu="False"/>
+    <report id="action_mc_share_revalution_report"
+            model="mis.invrevaluation"
+            string="Multi-Currency Revaluation Report"
+            report_type="qweb-html"
+            name="mis_investment.report_mc_share_revaluation_document"
+            file="mis_investment.report_mc_share_revaluation_document"
+            menu="False"/>				
+</odoo>
