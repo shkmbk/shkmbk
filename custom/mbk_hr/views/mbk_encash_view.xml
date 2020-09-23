@@ -32,6 +32,7 @@
                     <field name="number"/>
                     <field name="date_effective"/>                                                      
                     <field name="contract_id" domain="[('employee_id','=',employee_id),('date_start','&lt;=',date_to),('state','=','open')]" context="{'default_employee_id': employee_id}" required="1"/>                    
+                    <field name="name" readonly="True" force_save="1" invisible="1"/> 
                 </group>
                 <notebook>                    
                     <page string="Employee Information" name="employee_info">

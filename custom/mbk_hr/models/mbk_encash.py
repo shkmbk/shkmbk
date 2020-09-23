@@ -12,8 +12,7 @@ class MbkEncash(models.Model):
     _order = 'date_to desc'
 
     encash_no = fields.Char(string='Number', readonly=True,store=True, default='New')
-    name = fields.Char(string='Encash Name', readonly=True, required=True,
-        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
+    name = fields.Char(string='Name', readonly=True, store=True)
     number = fields.Char(string='Reference', readonly=True,required=True, copy=False,
         states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, readonly=True,
