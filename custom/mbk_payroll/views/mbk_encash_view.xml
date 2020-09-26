@@ -9,8 +9,7 @@
                 <button string="Confirm" name="action_encash_done" type="object" states="verify" class="oe_highlight" context="{'payslip_generate_pdf': True}"/>
                 <button string="Set to Draft" name="action_encash_draft" type="object" states="cancel"/>
                 <button string="Compute Sheet" name="compute_sheet" type="object" states="draft,verify" class="oe_highlight"/>
-                <button string="Cancel Encash" name="action_encash_cancel" type="object" states="draft,confirm,verify"/>
-                <button string="Print" name="action_print_encash" type="object"/>
+                <button string="Cancel Encash" name="action_encash_cancel" type="object" states="draft,confirm,verify"/>                
                 <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
             </header>
             <sheet>
@@ -40,17 +39,25 @@
                             <group string="Leave Encashment">
                                 <field name="employee_code" readonly="1" force_save="1"/>
                                 <field name="join_date" readonly="1" force_save="1"/>
+                                <field name="job_id" readonly="1" force_save="1"/>
+                                <field name="department_id" readonly="1" force_save="1"/>
+                                <field name="bank_name" readonly="1" force_save="1"/>
+                                <field name="iban_no" readonly="1" force_save="1"/>                                
                                 <field name="basic_salary" readonly="1" force_save="1"/>
                                 <field name="allowances" readonly="1" force_save="1"/>
                                 <field name="net_salary" readonly="1" force_save="1"/>
-                                <field name="available_days" readonly="1" force_save="1"/>                                
+                                <field name="ticket_allowance" readonly="1" force_save="1"/>
+                                <field name="al_provision_amount" invisible="1" readonly="1" force_save="1"/>
+                                <field name="al_provision_date" invisible="1" readonly="1" force_save="1"/>                                                          
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
                             <group name="calculation" string="Calcuation">
-                                <field name="al_provision_amount" readonly="1" force_save="1"/>
+                                <field name="available_days" readonly="1" force_save="1"/> 
                                 <field name="encash_days"/>
                                 <field name="balance_days" readonly="1" force_save="1"/>                                
                                 <field name="encash_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1"/>
+                                <field name="ticket_amount"/>
+                                <field name="net_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1"/>
                             </group>
                         </group>
                         <div colspan="4">
@@ -70,7 +77,7 @@
                                 <field name="available_days" readonly="1" force_save="1"/>
                             </group>      
                         </group>
-                    </page>                    
+                    </page>                                     
                 </notebook>
                 </sheet>
                 <div class="oe_chatter">

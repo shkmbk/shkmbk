@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  
+	<report
+		id="action_encash_print"
+		model="mbk.encash"
+		string="Leave Encashment"
+		report_type="qweb-pdf"
+		name="mbk_payroll.report_encash"
+		file="mbk_payroll.report_encash"
+	  />
+	  
+ </odoo>

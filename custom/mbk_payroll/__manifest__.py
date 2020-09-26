@@ -26,6 +26,8 @@
         'views/mbk_encash_view.xml',
         'security/ir.model.access.csv',
         'data/mbk_encash_sequence.xml',
+        'report/encash_report_templates.xml',
+        'report/report_list.xml',
     ],
     'demo': [],
     'license': 'AGPL-3',
