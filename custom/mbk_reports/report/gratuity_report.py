@@ -10,13 +10,13 @@ class GratuityReport(models.AbstractModel):
 
     
     @api.model
-    def _get_employee(self,employee_id):
+    def _get_employee(self, employee_id):
         if employee_id:
             return ('employee_id', '=', employee_id)
         else:
             return (1, '=', 1)
 
-    def _get_department(self,hr_department_ids):
+    def _get_department(self, hr_department_ids):
         if hr_department_ids:
             return ('department_id', 'in', hr_department_ids)
         else:
@@ -100,13 +100,13 @@ class GratuityReport(models.AbstractModel):
                 op_lop_days=0
                 c_total_days=(to_date-join_date).days+1
 
-            objlopleave = self.env['hr.leave'].search([('employee_id','=',rec.employee_id),('state','=','validate'),('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
+            objlopleave = self.env['hr.leave'].search([('employee_id', '=', rec.employee_id.id), ('state','=','validate'), ('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
             c_lop=0.00
             for lop in objlopleave:
                 if lop.request_date_to<=to_date:
-                    c_lop+=lop.number_of_days
+                    c_lop += lop.number_of_days
                 else:
-                    c_lop+=(to_date-lop.request_date_from).days+1
+                    c_lop += (to_date-lop.request_date_from).days+1
             lop_days=op_lop_days+c_lop
 
             if join_date<op_fy_date:                
@@ -117,10 +117,10 @@ class GratuityReport(models.AbstractModel):
             if eligible_days<365:
                 gratuity_days=0.00
                 gratuity_amount=0.00
-            elif eligible_days>=365 and eligible_days<1825:
-                gratuity_days=eligible_days*21/365
+            elif 365 <= eligible_days < 1825:
+                gratuity_days = eligible_days*21/365
             else:
-                gratuity_days=round(105+((eligible_days-1825)*30/365),2)
+                gratuity_days=round(105+((eligible_days-1825)*30/365), 2)
             
             gratuity_amount= round(per_day*gratuity_days,2)
 
