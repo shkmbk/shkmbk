@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_encash_document">
+    <template id="report_esob_document">
         <template  id="report_header_custom" inherit_id="report.external_layout_header">
             <t t-if="o and 'company_id' in o">
                   <t t-set="company" t-value="o.company_id"/>
@@ -46,7 +46,7 @@
                             <h2>
                                 <br/>
                                 <br/>
-                                <span>Leave Settlement</span>
+                                <span>Final Settlement</span>
                                 <br/>
                                 <br/>                                
                              </h2>
@@ -58,7 +58,7 @@
                                 <tr>
                                     <td align="left"><strong>Document No</strong></td>
                                     <td align="left"><strong>:&amp;nbsp;&amp;nbsp;</strong></td>
-                                    <td align="left"><span t-field="o.encash_no"/></td>
+                                    <td align="left"><span t-field="o.esob_no"/></td>
                                 </tr>
                                 <tr>
                                      <td align="left"><strong>Employee Name</strong></td>
@@ -125,19 +125,19 @@
                                      <td align="right"><span t-field="o.net_salary"/></td>
                                 </tr>
                                 <tr>
-                                     <td align="left"><strong>Net Entitled Leave days</strong></td>
+                                     <td align="left"><strong>Net Eligible days</strong></td>
                                      <td align="left"><strong>:  </strong></td>
-                                     <td align="right"><span t-field="o.available_days"/></td>
+                                     <td align="right"><span t-field="o.eligible_days"/></td>
                                 </tr>
                                 <tr>
-                                     <td align="left"><strong>Requested Days</strong></td>
+                                     <td align="left"><strong>Net Leave days</strong></td>
                                      <td align="left"><strong>:  </strong></td>
-                                     <td align="right"><span t-field="o.encash_days"/></td>
+                                     <td align="right"><span t-field="o.avl_encash_days"/></td>
                                 </tr>
                                 <tr>
-                                     <td align="left"><strong>Balance days</strong></td>
+                                     <td align="left"><strong>Net Gratuity days</strong></td>
                                      <td align="left"><strong>:  </strong></td>
-                                     <td align="right"><span t-field="o.balance_days"/></td>
+                                     <td align="right"><span t-field="o.avl_esob_days"/></td>
                                 </tr>                                                             
                             </table>
                         </td>
@@ -153,42 +153,32 @@
                             <th class="text-right"  width="30%"><strong>Amount</strong></th>
                         </tr>
                     </thead>
-                    <tbody class="invoice_tbody">
+                    <tbody class="invoice_body">
                         <t t-set="rowno" t-value="1"/>
-                        <tr>
-                            <td name="encash">
-                                <span t-esc="rowno"/>
-                                    <t t-set="rowno" t-value="rowno+1"/>
-                            </td>
-                            <td class="text-left">
-                                <span>Leave Encashment for </span><span t-field="o.encash_days"/><span> Days</span>
-                            </td>					
-                            <td  class="text-right">
-                                <span t-esc="'{0:,.2f}'.format(o.encash_amount)"/>
-                            </td>
-                        </tr>
-                        <t t-if="not o.ticket_amount==0">
+                        <t t-set="total_amount" t-value="0.00"/>
+                        <t t-foreach="o.line_ids" t-as="line">
                             <tr>
-                                <td name="encash">
+                                <td name="esob">
                                     <span t-esc="rowno"/>
-                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    <t t-set="rowno" t-value="rowno+1"/>
                                 </td>
                                 <td class="text-left">
-                                    <span>Ticket Allowance</span>
-                                </td>					
+                                   <span t-field="line.type_description"/>
+                                </td>
                                 <td  class="text-right">
-                                    <span t-esc="'{0:,.2f}'.format(o.ticket_amount)"/>
+                                    <span t-esc="'{0:,.2f}'.format(line.amount)"/>
+                                    <t t-set="total_amount" t-value="total_amount+line.amount"/>
                                 </td>
                             </tr>
                         </t>
-                        <tr>
-                            <td name="encash" colspan="2">
-                                <b>Total</b>
-                            </td>
-                            <td  class="text-right">
-                                <b><span t-esc="'{0:,.2f}'.format(o.net_amount)"/></b>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td name="encash" colspan="2">
+                                    <b>Total</b>
+                                </td>
+                                <td  class="text-right">
+                                    <b><span t-esc="'{0:,.2f}'.format(total_amount)"/></b>
+                                </td>
+                            </tr>
                     </tbody>
                 </table>           
 			
@@ -230,10 +220,10 @@
        </t>
     </template>
 
-    <template id="report_encash">
+    <template id="report_esob">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-call="mbk_payroll.report_encash_document" t-lang="lang"/>
+                <t t-call="mbk_payroll.report_esob_document" t-lang="lang"/>
             </t>
         </t>
     </template>

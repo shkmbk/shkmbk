@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_mbk_encash_form" model="ir.ui.view">
-        <field name="name">mbk.encash.form</field>
-        <field name="model">mbk.encash</field>
+    <record id="view_mbk_esob_form" model="ir.ui.view">
+        <field name="name">mbk.esob.form</field>
+        <field name="model">mbk.esob</field>
         <field name="arch" type="xml">
-            <form string="Employee Encash">
+            <form string="Employee ESOB">
             <header>
-                <button string="Confirm" name="action_encash_done" type="object" states="verify" class="oe_highlight" context="{'payslip_generate_pdf': True}"/>
-                <button string="Set to Draft" name="action_encash_draft" type="object" states="cancel"/>
+                <button string="Confirm" name="action_esob_done" type="object" states="verify" class="oe_highlight" context="{'payslip_generate_pdf': True}"/>
+                <button string="Set to Draft" name="action_esob_draft" type="object" states="cancel"/>
                 <button string="Compute Sheet" name="compute_sheet" type="object" states="draft,verify" class="oe_highlight"/>
-                <button string="Cancel Encash" name="action_encash_cancel" type="object" states="draft,confirm,verify"/>                
+                <button string="Cancel ESOB" name="action_esob_cancel" type="object" states="draft,confirm,verify"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
             </header>
             <sheet>
@@ -21,7 +21,7 @@
                 </div>
                 <group col="2">
                     <h2><field name="date_to"/></h2>
-                    <h2><field name="encash_no" readonly="True" force_save="1"/></h2>                    
+                    <h2><field name="esob_no" readonly="True" force_save="1"/></h2>
                 </group>
                 <div class="alert alert-warning" role="alert" attrs="{'invisible': [('warning_message','=',False)]}">
                     <field name="warning_message"/>
@@ -36,7 +36,7 @@
                 <notebook>                    
                     <page string="Employee Information" name="employee_info">
                         <group>
-                            <group string="Leave Encashment">
+                            <group string="Employee Encashment">
                                 <field name="employee_code" readonly="1" force_save="1"/>
                                 <field name="join_date" readonly="1" force_save="1"/>
                                 <field name="job_id" readonly="1" force_save="1"/>
@@ -52,9 +52,11 @@
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
                             <group name="calculation" string="Calcuation">
-                                <field name="available_days" readonly="1" force_save="1"/> 
+                                <field name="avl_encash_days" readonly="1" force_save="1"/>
+                                <field name="avl_esob_days" readonly="1" force_save="1"/>
                                 <field name="encash_days"/>
-                                <field name="balance_days" readonly="1" force_save="1"/>                                
+                                <field name="esob_days"/>
+                                <field name="esob_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1"/>
                                 <field name="encash_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1"/>
                                 <field name="ticket_amount"/>
                                 <field name="net_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1"/>
@@ -74,10 +76,35 @@
                                 <field name="new_days" readonly="1" force_save="1"/>
                                 <field name="leave_taken" readonly="1" force_save="1"/>
                                 <field name="encashed_days" readonly="1" force_save="1"/>
-                                <field name="available_days" readonly="1" force_save="1"/>
+                                <field name="avl_encash_days" readonly="1" force_save="1"/>
                             </group>      
                         </group>
-                    </page>                                     
+                    </page>
+					<page string="ESOB Summary" name="current_salary">
+                        <header>
+                            <button string="Allocate Sheet" name="allocate_sheet" type="object" states="draft,verify" class="oe_highlight"/>
+                            <field string="Payslip" name="payslip_ids" widget='many2many_tags' options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        </header>
+                        <group>
+                            <field name="line_ids" colspan="4" nolabel="1">
+                                <tree string="ESOB Settlement" editable="bottom" create="false" delete="false">
+                                    <field name="sequence"/>
+                                    <field name="type_name"/>
+                                    <field name="type_description"/>
+                                    <field name="amount" sum="Total Aount"/>
+                                </tree>
+                                <form string="ESOB Lines">
+                                    <group col="4">
+                                        <field name="sequence"/>
+                                        <field name="type_name"/>
+                                        <field name="sequence"/>
+                                        <field name="type_description"/>
+                                        <field name="amount"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                    </page>
                 </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -89,25 +116,25 @@
         </field>
     </record>
     <record id="mbk_encash_tree_view" model="ir.ui.view">
-        <field name="name">mbk.encash.tree</field>
-        <field name="model">mbk.encash</field>
+        <field name="name">mbk.esob.tree</field>
+        <field name="model">mbk.esob</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
                 <tree>
-                    <field name="encash_no"/>
+                    <field name="esob_no"/>
                     <field name="name"/>
                     <field name="number"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="encash_amount"/>                    
+                    <field name="net_amount"/>
                     <field name="state"/>
             </tree>
         </field>
     </record>
 
-    <record id="mbk_encash_action" model="ir.actions.act_window">
-        <field name="name">Leave Encashment</field>
-        <field name="res_model">mbk.encash</field>
+    <record id="mbk_esob_action" model="ir.actions.act_window">
+        <field name="name">Employee Settlement</field>
+        <field name="res_model">mbk.esob</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
                 <p>
@@ -117,9 +144,9 @@
     </record>
 
     <menuitem
-        id="mbk_menu_action_encash"
-        name="Leave Settlement"
-        action="mbk_encash_action"
+        id="mbk_menu_action_esob"
+        name="Final Settlement"
+        action="mbk_esob_action"
         parent="hr_payroll.menu_hr_payroll_work_entries_root"
-        sequence="60"/>    
+        sequence="61"/>
 </odoo>        

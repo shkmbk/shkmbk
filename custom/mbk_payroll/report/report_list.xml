@@ -10,4 +10,13 @@
 		file="mbk_payroll.report_encash"
 	  />
 	  
+	<report
+		id="action_esob_print"
+		model="mbk.esob"
+		string="Employee ESOB Settlement"
+		report_type="qweb-pdf"
+		name="mbk_payroll.report_esob"
+		file="mbk_payroll.report_esob"
+	  />
+	  
  </odoo>
