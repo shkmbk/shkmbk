@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -6,13 +6,13 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tools.misc import format_date
 
 
-class MbkEncash(models.Model):
-    _name = 'mbk.encash'
+class MbkESOB(models.Model):
+    _name = 'mbk.esob'
     _inherit = ['mail.thread.cc', 'mail.activity.mixin']
-    _description = 'Employee Leave Encashment'
+    _description = 'Employee End of Settlement'
     _order = 'date_to desc'
 
-    encash_no = fields.Char(string='Number', readonly=True, store=True, default='New')
+    esob_no = fields.Char(string='Number', readonly=True, store=True, default='New')
     name = fields.Char(string='Name', readonly=True, store=True)
     number = fields.Char(string='Reference', readonly=True, required=True, copy=False,
                          states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
@@ -42,14 +42,18 @@ class MbkEncash(models.Model):
                           states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     date_effective = fields.Date(string='Effective Date', readonly=True, store=True, required=True,
                                  states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
-    al_provision_amount = fields.Float(string='Provision Amount', readonly=True, store=True, default=False)
-    al_provision_date = fields.Date(string='Last Provision Booking Date', readonly=True, store=True, default=False)
+    al_provision_amount = fields.Float(string='Leave Provision Amount', readonly=True, store=True, default=False)
+    al_provision_date = fields.Date(string='Last Leave Provision Booking Date', readonly=True, store=True, default=False)
+    esob_provision_amount = fields.Float(string='ESOB Provision Amount', readonly=True, store=True, default=False)
+    esob_provision_date = fields.Date(string='Last ESOB Provision Booking Date', readonly=True, store=True, default=False)
     warning_message = fields.Char(readonly=True)
     encash_amount = fields.Float(string='Leave Salary', readonly=True, compute='compute_encash_amount', store=True,
                                  default=False)
+    esob_amount = fields.Float(string='ESOB Amount', readonly=True, compute='compute_esob_amount', store=True,
+                               default=False)
     ticket_allowance = fields.Float(string='Ticket Allowance', readonly=True, store=True, default=False)
     ticket_amount = fields.Float(string='Ticket Amount', default=False)
-    net_amount = fields.Float(string='Net Encash', compute='compute_net_amount', store=True, default=False)
+    net_amount = fields.Float(string='Net ESOB', compute='compute_net_amount', store=True, default=False)
     join_date = fields.Date(string='Date Of Join', readonly=True, store=True, default=False)
     basic_salary = fields.Float(string='Basic Salary', readonly=True, store=True, default=False)
     allowances = fields.Float(string='Allowance', readonly=True, store=True, default=False)
@@ -61,15 +65,20 @@ class MbkEncash(models.Model):
     new_days = fields.Float(string='New Leave Days', readonly=True, store=True, default=False)
     leave_taken = fields.Float(string='Leave Taken', readonly=True, store=True, default=False)
     encashed_days = fields.Float(string='Encashed Days', readonly=True, store=True, default=False)
-    available_days = fields.Float(string='Available Leave Days', readonly=True, store=True, default=False)
+    avl_encash_days = fields.Float(string='Available Leave Days', readonly=True, store=True, default=False)
+    avl_esob_days = fields.Float(string='Available ESOB Days', readonly=True, store=True, default=False)
     encash_days = fields.Float(string='Encashing Days', required=True, store=True, default=False,
                                track_visibility='onchange')
-    balance_days = fields.Float(string='Balance Days', readonly=True, compute='compute_al_balance', store=True,
-                                default=False)
+    esob_days = fields.Float(string='ESOB Days', required=True, store=True, default=False,
+                             track_visibility='onchange')
     job_id = fields.Many2one('hr.job', string='Designation', readonly=True, store=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True, store=True)
     bank_name = fields.Char(string='Bank', readonly=True, store=True)
     iban_no = fields.Char(string="IBAN Number", readonly=True, store=True)
+    payslip_ids = fields.Many2many('hr.payslip', string='Pay Slip', domain="[('employee_id', '=', employee_id)]")
+    line_ids = fields.One2many('mbk.esob.line', 'esob_id',
+                                           string='ESOB Settlement', copy=True, readonly=True,
+                                           states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
 
     def compute_sheet(self):
         employee_id = self.employee_id
@@ -79,7 +88,7 @@ class MbkEncash(models.Model):
         op_fy_date = datetime(2020, 6, 1).date()
         as_on_date = self.date_to
 
-        # Checking wheather contract end date mentioned
+        # Checking whether contract end date mentioned
         if contract_id.date_end:
             to_date = contract_id.date_end
         else:
@@ -94,7 +103,7 @@ class MbkEncash(models.Model):
         else:
             op_lop_days = 0
             c_total_days = (to_date - join_date).days + 1
-        # LOP Leaves in Currecnt Period
+        # LOP Leaves in Current Period
         objlopleave = self.env['hr.leave'].search(
             [('employee_id', '=', employee_id.id), ('state', '=', 'validate'), ('holiday_status_id.unpaid', '=', 1),
              ('request_date_from', '<=', to_date)])
@@ -118,11 +127,13 @@ class MbkEncash(models.Model):
         encashed_days = 0.0
         objencash = self.env['mbk.encash'].search([('employee_id', '=', employee_id.id), ('state', '!=', 'cancel')])
         for en in objencash:
-            if en.id != self.id:
-                encashed_days += en.encash_days
+            encashed_days += en.encash_days
+
         obj_esob = self.env['mbk.esob'].search([('employee_id', '=', employee_id.id), ('state', '!=', 'cancel')])
         for es in obj_esob:
-            encashed_days += es.encash_days
+            if es.id != self.id:
+                encashed_days += es.encash_days
+
         lop_days = op_lop_days + c_lop
 
         if join_date < op_fy_date:
@@ -136,6 +147,13 @@ class MbkEncash(models.Model):
             annualleave_days = round(op_al_days + new_al_days - (c_alt + encashed_days), 2)
         else:
             annualleave_days = 0.00
+        #ESOB Days Calculation
+        if eligible_days < 365:
+            gratuity_days = 0.00
+        elif 365 <= eligible_days < 1825:
+            gratuity_days = round(eligible_days*21/365, 2)
+        else:
+            gratuity_days = round(105+((eligible_days-1825)*30/365), 2)
 
         self.total_days = total_days
         self.eligible_days = eligible_days
@@ -144,7 +162,10 @@ class MbkEncash(models.Model):
         self.new_days = new_al_days
         self.leave_taken = c_alt
         self.encashed_days = encashed_days
-        self.available_days = annualleave_days
+        self.avl_encash_days = annualleave_days
+        self.avl_esob_days = gratuity_days
+        self.esob_days = gratuity_days
+        self.encash_days = annualleave_days
         self.write({'state': 'verify'})
 
         return True
@@ -152,35 +173,35 @@ class MbkEncash(models.Model):
     def button_cancel(self):
         self.state = 'cancel'
 
-    def action_encash_cancel(self):
+    def action_esob_cancel(self):
         if self.filtered(lambda slip: slip.state == 'done'):
             raise UserError(_("Cannot cancel a payslip that is done."))
         self.write({'state': 'cancel'})
 
-    def action_encash_draft(self):
+    def action_esob_draft(self):
         return self.write({'state': 'draft'})
 
-    def action_encash_done(self):
+    def action_esob_done(self):
         if self.encash_days <= 0:
             raise UserError('Enter valid Leave Encash Days')
 
-        if self.encash_no == 'New':
-            self.encash_no = self.env['ir.sequence'].with_context(force_company=self.company_id.id).next_by_code(
-                'mbk.encash') or _('New')
+        if self.esob_no == 'New':
+            self.esob_no = self.env['ir.sequence'].with_context(force_company=self.company_id.id).next_by_code(
+                'mbk.esob') or _('New')
         return self.write({'state': 'done'})
 
     @api.model
     def create(self, vals):
         vals['state'] = 'draft'
-        res = super(MbkEncash, self).create(vals)
+        res = super(MbkESOB, self).create(vals)
         return res
 
     def unlink(self):
-        for encash in self:
-            if encash.state not in ('draft', 'cancel') and not self._context.get('force_delete'):
+        for esob in self:
+            if esob.state not in ('draft', 'cancel') and not self._context.get('force_delete'):
                 raise UserError(_("You cannot delete an entry which has been posted."))
-            encash.trans_line.unlink()
-        return super(MbkEncash, self).unlink()
+            esob.trans_line.unlink()
+        return super(MbkESOB, self).unlink()
 
     @api.onchange('employee_id', 'date_to')
     def _onchange_employee(self):
@@ -215,25 +236,100 @@ class MbkEncash(models.Model):
         self.bank_name = employee.agent_id.name
         self.iban_no = employee.iban_number
 
-        encash_name = 'Leave Encash'
-        self.name = '%s - %s - %s' % (encash_name, self.employee_id.name or '', format_date(self.env, self.date_to, date_format="MMMM y"))
+        esob_name = 'ESOB'
+        self.name = '%s - %s - %s' % (esob_name, self.employee_id.name or '', format_date(self.env, self.date_to, date_format="MMMM y"))
 
         if date_to > al_provision_date:
             self.warning_message = _(
-                "This Encash computation can be erroneous! Provision entries not be generated after %s." %
+                "This ESOB computation can be erroneous! Provision entries not be generated after %s." %
                 (al_provision_date))
         else:
             self.warning_message = False
-
-    @api.depends('available_days', 'encash_days')
-    def compute_al_balance(self):
-        self.balance_days = self.available_days - self.encash_days
 
     @api.depends('encash_days', 'net_salary')
     def compute_encash_amount(self):
         perday_rate = self.net_salary * 12 / 365
         self.encash_amount = round(perday_rate * self.encash_days, 2)
+    @api.depends('esob_days', 'net_salary')
+    def compute_esob_amount(self):
+        perday_rate = self.basic_salary * 12 / 365
+        self.esob_amount = round(perday_rate * self.esob_days, 2)
 
     @api.depends('encash_amount', 'ticket_amount')
     def compute_net_amount(self):
-        self.net_amount = round(self.encash_amount + self.ticket_amount, 2)
+        self.net_amount = round(self.encash_amount + self.ticket_amount + self.esob_amount, 2)
+
+    def allocate_sheet(self):
+
+        # delete old esob lines
+        if self.state in ('draft', 'verify'):
+            self.line_ids.unlink()
+            obj_payslip = self.env['hr.payslip'].search([('employee_id', '=', self.employee_id.id), ('state', '!=', 'cancel'),('date', '=', self.date_effective)])
+            self.payslip_ids = obj_payslip.ids
+        seq = 0
+        if len(self.line_ids) == 0:
+            new_lines = self.env['mbk.esob.line']
+            if self.esob_amount > 0:
+                seq += 1
+                create_vals = {'esob_id': self.id,
+                               'sequence': seq,
+                               'type_name': 'ESOB',
+                               'type_description': 'Gratuity for '+str(round(self.esob_days, 2))+' days',
+                               'amount': self.esob_amount,
+                               }
+                new_lines.create(create_vals)
+            if self.encash_amount>0:
+                seq += 1
+                create_vals = {'esob_id': self.id,
+                               'sequence': seq,
+                               'type_name': 'Leave Salary',
+                               'type_description': 'Leave Salary for ' + str(round(self.encash_days, 2)) + ' days',
+                               'amount': self.encash_amount,
+                               }
+                new_lines.create(create_vals)
+
+            if self.payslip_ids:
+                for pid in self.payslip_ids:
+                    ps_amount = 0.00
+                    ps_net_amount = 0.00
+                    ps_esob_amount = 0.00
+                    ps_ded_amount = 0.00
+                    ps_period = pid.date_from.strftime("%d-%m-%Y")+' to ' + pid.date_to.strftime("%d-%m-%Y")
+                    for pl in pid.line_ids:
+                        if pl.code == 'NET':
+                            ps_net_amount += pl.amount
+                        if pl.code in ('AL', 'ESOB'):
+                            ps_esob_amount += pl.amount
+                        if pl.code in ('PD', 'SA'):
+                            ps_ded_amount += pl.amount
+                    seq += 1
+                    ps_amount = ps_net_amount-(ps_esob_amount+ps_ded_amount)
+                    create_vals = {'esob_id': self.id,
+                                   'sequence': seq,
+                                   'type_name': 'Monthly Salary',
+                                   'type_description': 'Monthly Salary for the period ' + ps_period,
+                                   'amount': ps_amount,
+                                   }
+                    new_lines.create(create_vals)
+                    if ps_ded_amount != 0.00:
+                        seq += 1
+                        create_vals = {'esob_id': self.id,
+                                       'sequence': seq,
+                                       'type_name': 'Deductions',
+                                       'type_description': 'Final & Penalty ' + ps_period,
+                                       'amount': ps_ded_amount,
+                                       }
+                        new_lines.create(create_vals)
+
+            return new_lines
+
+class MbkESOBLine(models.Model):
+    _name = 'mbk.esob.line'
+    _description = 'ESOB Line'
+    _order = 'esob_id, sequence'
+
+    esob_id = fields.Many2one('mbk.esob', string='ESOB', required=True, ondelete='cascade', index=True)
+    sequence = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
+    type_name = fields.Char(string='Type', readonly=True, store=True)
+    type_description = fields.Char(string='Type', store=True)
+    amount = fields.Float(string='Amount', readonly=True, store=True, default=False)
