@@ -124,11 +124,15 @@ class AnnualLeaveReport(models.AbstractModel):
 
             #Encashed Days
             encashed_days= 0.0
-            objencash = self.env['mbk.encash'].search([('employee_id','=',rec.employee_id.id),('state','=','done'),('date_to','<=',to_date)])
+            objencash = self.env['mbk.encash'].search([('employee_id', '=', rec.employee_id.id),('state', '=', 'done'), ('date_to', '<=', to_date)])
             
             for en in objencash:
                 if en.encash_days:
-                    encashed_days += en.encash_days            
+                    encashed_days += en.encash_days
+
+            obj_esob = self.env['mbk.esob'].search([('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'), ('date_to', '<=', to_date)])
+            for es in obj_esob:
+                encashed_days += es.encash_days
             
             total_leaves=encashed_days+c_alt
             lop_days=op_lop_days+c_lop
