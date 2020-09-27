@@ -145,7 +145,7 @@
 
     <menuitem
         id="mbk_menu_action_esob"
-        name="ESOB Settlement"
+        name="Final Settlement"
         action="mbk_esob_action"
         parent="hr_payroll.menu_hr_payroll_work_entries_root"
         sequence="61"/>

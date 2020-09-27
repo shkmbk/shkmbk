@@ -118,7 +118,7 @@
 
     <menuitem
         id="mbk_menu_action_encash"
-        name="Leave Encashment"
+        name="Leave Settlement"
         action="mbk_encash_action"
         parent="hr_payroll.menu_hr_payroll_work_entries_root"
         sequence="60"/>    
