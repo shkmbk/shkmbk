@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mbk_vat_return_wizard_form" model="ir.ui.view">
+            <field name="name">mbk.wizard.vat_return.form</field>
+            <field name="model">mbk.wizard.report.vat_return</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Generate VAT Return Summary">
+                    <group>
+                        <group>
+                            <field name="analytic_id"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Export VAT Summary" name="print_vat_return_xls" type="object" class="btn-primary"/>
+                        <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mbk_vat_return_action_view" model="ir.actions.act_window">
+            <field name="name">VAT Return Report</field>
+            <field name="res_model">mbk.wizard.report.vat_return</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mbk_vat_return_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="mbk_vat_return_wizard_submenu"
+                  name="VAT Return Report"
+                  parent="account_reports.account_reports_audit_reports_menu"
+                  action="mbk_vat_return_action_view"
+                  groups="account.group_account_manager"
+                  sequence="11"/>
+    </data>
+
+</odoo>
