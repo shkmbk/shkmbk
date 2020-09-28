@@ -27,5 +27,5 @@
             report_type="qweb-html"
             name="mbk_reports.report_annualleave"
             file="mbk_reports.report_annualleave"
-            menu="False"/>                        
+            menu="False"/>                     
 </odoo>
