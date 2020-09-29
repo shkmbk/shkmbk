@@ -27,5 +27,13 @@
             report_type="qweb-html"
             name="mbk_reports.report_annualleave"
             file="mbk_reports.report_annualleave"
-            menu="False"/>                     
+            menu="False"/>
+	<report
+		id="action_statement_print"
+		model="account.bank.statement"
+		string="Statement (MBK)"
+		report_type="qweb-pdf"
+		name="mbk_reports.statement_report"
+		file="mbk_reports.statement_report"
+	  />				
 </odoo>
