@@ -29,7 +29,8 @@
         'report/farmstock_details_template.xml',
         'report/gratuity_report.xml',
         'report/annualleave_report.xml',
-        'wizard/wizard_vat_return.xml'
+        'wizard/wizard_vat_return.xml',
+        'report/statement_report.xml',
     ],
     # only loaded in demonstration mode
     'demo': [],
