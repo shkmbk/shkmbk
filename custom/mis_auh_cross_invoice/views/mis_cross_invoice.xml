@@ -26,8 +26,8 @@
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="sales_journal_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="purchase_journal_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="sales_journal_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="purchase_journal_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="invoice_id" attrs="{'invisible': [('invoice_id', '=', False)]}"  readonly="1"/>
                             </group>
                         </group>
