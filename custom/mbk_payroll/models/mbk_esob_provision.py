@@ -135,16 +135,12 @@ class MbkESOBProvision(models.Model):
             else:
                 eligible_days = c_total_days - c_lop
 
-            if eligible_days < 365:
-                gratuity_days = 0.00
-            elif 365 <= eligible_days < 1825:
+            if eligible_days < 1825:
                 gratuity_days = eligible_days * 21 / 365
             else:
                 gratuity_days = round(105 + ((eligible_days - 1825) * 30 / 365), 2)
-            if eligible_days < 365:
-                gratuity_amount = 0.00
-            else:
-                gratuity_amount = round(per_day * gratuity_days, 2)
+
+            gratuity_amount = round(per_day * gratuity_days, 2)
             amount = round(gratuity_amount - cumulative_provision_booked, 2)
             booking_total_days = total_days - cumulative_total_days
             booking_eligible_days = eligible_days - cumulative_eligible_days
