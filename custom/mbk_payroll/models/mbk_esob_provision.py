@@ -25,7 +25,7 @@ class MbkESOBProvision(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', readonly=True,
                                   states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=1)
-    journal_id = fields.Many2one('account.journal', string='Journal', default=98, tracking=True, readonly=True,
+    journal_id = fields.Many2one('account.journal', string='Journal', default=100, tracking=True, readonly=True,
                                  states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -145,6 +145,7 @@ class MbkESOBProvision(models.Model):
             booking_total_days = total_days - cumulative_total_days
             booking_eligible_days = eligible_days - cumulative_eligible_days
             booking_lop_days = lop_days - cumulative_lop_days
+            booking_esob_days = round(gratuity_days-cumulative_days_booked, 3)
             total_amount += amount
             if amount > 0:
                 sl_no += 1
@@ -160,6 +161,7 @@ class MbkESOBProvision(models.Model):
                     'booking_total_days': booking_total_days,
                     'booking_eligible_days': booking_eligible_days,
                     'booking_lop_days': booking_lop_days,
+                    'booking_esob_days': booking_esob_days,
                     'last_booking_date': last_esob_pb,
                     'total_days': total_days,
                     'lop_days': lop_days,
@@ -190,8 +192,6 @@ class MbkESOBProvision(models.Model):
             move_line_vals = []
             master_table = []
             line_ids = []
-            obj_esob_expense_acid = self.env['account.account'].search([('code', '=', '624206')])
-            obj_esob_provision_acid = self.env['account.account'].search([('code', '=', '217201')])
 
             for rec in self.line_ids:
                 master_table.append({
@@ -225,7 +225,7 @@ class MbkESOBProvision(models.Model):
                                       'ref': 'ESOB Provision as on ' + str(self.date_to),
                                       'parent_state': 'draft',
                                       'company_id': self.company_id.id,
-                                      'account_id': obj_esob_expense_acid.id,
+                                      'account_id': self.journal_id.default_debit_account_id.id,
                                       'quantity': 1,
                                       'analytic_account_id': rec['analytic_account_id'],
                                       'analytic_tag_ids': rec['analytic_tag_ids'],
@@ -238,7 +238,7 @@ class MbkESOBProvision(models.Model):
                                       'ref': 'ESOB Provision as on ' + (self.date_to).strftime("%d-%m-%Y"),
                                       'parent_state': 'draft',
                                       'company_id': self.company_id.id,
-                                      'account_id': obj_esob_provision_acid.id,
+                                      'account_id': self.journal_id.default_credit_account_id.id.id,
                                       'quantity': 1,
                                       'analytic_account_id': rec['analytic_account_id'],
                                       'analytic_tag_ids': rec['analytic_tag_ids'],
@@ -300,6 +300,7 @@ class MbkESOBProvisionLine(models.Model):
     booking_total_days = fields.Float(string='Current Days', readonly=True, store=True, default=False)
     booking_eligible_days = fields.Float(string='Current Eligible Days', readonly=True, store=True, default=False)
     booking_lop_days = fields.Float(string='Current LOP Days', readonly=True, store=True, default=False)
+    booking_esob_days = fields.Float(string='Current ESOB Days', readonly=True, store=True, default=False)
     c_lop_days = fields.Float(string='Current LOP Days', readonly=True, store=True, default=False)
     total_days = fields.Float(string='Total Days', readonly=True, store=True, default=False)
     lop_days = fields.Float(string='LOP Days', readonly=True, store=True, default=False)
