@@ -238,7 +238,7 @@ class MbkESOBProvision(models.Model):
                                       'ref': 'ESOB Provision as on ' + (self.date_to).strftime("%d-%m-%Y"),
                                       'parent_state': 'draft',
                                       'company_id': self.company_id.id,
-                                      'account_id': self.journal_id.default_credit_account_id.id.id,
+                                      'account_id': self.journal_id.default_credit_account_id.id,
                                       'quantity': 1,
                                       'analytic_account_id': rec['analytic_account_id'],
                                       'analytic_tag_ids': rec['analytic_tag_ids'],
