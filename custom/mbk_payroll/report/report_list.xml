@@ -18,5 +18,14 @@
 		name="mbk_payroll.report_esob"
 		file="mbk_payroll.report_esob"
 	  />
+	<report
+		id="action_payslip_print"
+		model="hr.payslip"
+		string="Employee Payslip"
+		report_type="qweb-pdf"
+		name="mbk_payroll.payslip_report"
+		file="mbk_payroll.payslip_report"
+	  />	
+	  
 	  
  </odoo>

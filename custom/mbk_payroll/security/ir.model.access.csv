@@ -2,3 +2,5 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_mbk_encash,mbk.encash.group_manager,model_mbk_encash,hr_payroll.group_hr_payroll_manager,1,1,1,1
 access_mbk_esob,mbk.esob.group_manager,model_mbk_esob,hr_payroll.group_hr_payroll_manager,1,1,1,1
 access_mbk_esob_line,mbk.encash.group_manager,model_mbk_esob_line,hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_mbk_esob_provision,mbk.esob_provision.group_manager,model_mbk_esob_provision,hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_mbk_esob_provision.line,mbk.esob_provision.line.group_manager,model_mbk_esob_provision_line,hr_payroll.group_hr_payroll_manager,1,1,1,1

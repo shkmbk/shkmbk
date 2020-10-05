@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mbk_esob_provision_view" model="ir.ui.view">
+            <field name="name">ESOB Provision Booking</field>
+            <field name="model">mbk.esob_provision</field>
+            <field name="arch" type="xml">
+                <form name="ESOB Provision Booking">
+                    <header>
+                        <!-- Post -->
+                        <button name="action_post" string="Post" class="oe_highlight"
+                                type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <!-- Cancel -->
+                        <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                        <button name="button_draft" attrs="{'invisible':[('state', 'not in',('cancel'))]}" string="Set to Draft" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date_to"/>
+                                <field name="ref"/>
+                                <field name="date"/>
+                            </group>
+                            <group>
+                                <field name="analytic_account_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="employee_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="journal_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="account_move_id" attrs="{'invisible': [('account_move_id', '=', False)]}"  readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <button name="action_load_sheet" width="400" height="50" attrs="{'invisible':['|', ('state', 'not in',('draft'))]}" type="object"  string="Process" class="oe_highlight"/>
+                            </group>
+                            <group></group>
+                        </group>
+
+                        <notebook>
+                            <page string="ESOB Provision Booking Lines">
+                                <field name="line_ids"
+                                    attrs="{'readonly': [('state', 'in', ('posted', 'cancel'))]}">
+                                    <tree string="ESOB Provision Booking Lines" editable="bottom" create="0" delete="1">
+                                        <field name="esob_provision_id" options="{'no_create': True, 'no_edit': True}" invisible="1"/>
+                                        <field name="sl_no" readonly="1"/>
+                                        <field name="employee_code" readonly="1" optional="hide"/>
+                                        <field name="employee_id" readonly="1"/>
+                                        <field name="contract_id" readonly="1" options="{'no_create': True, 'no_edit': True}" invisible="1"/>
+                                        <field name="join_date" readonly="1" optional="hide"/>
+                                        <field name="basic_salary" optional="hide" readonly="1"/>
+                                        <field name="last_booking_date" readonly="1"/>
+                                        <field name="total_days" readonly="1" optional="hide"/>
+                                        <field name="lop_days" readonly="1" optional="hide"/>
+                                        <field name="eligible_days" readonly="1" optional="hide"/>
+                                        <field name="to_date" readonly="1" optional="hide"/>
+                                         <field name="remarks" optional="hide"/>
+                                        <field name="avl_esob_days" readonly="1"/>
+                                        <field name="avl_esob_amount" readonly="1" sum="Total"/>
+                                        <field name="booking_total_days" readonly="1"/>
+                                        <field name="booking_lop_days" readonly="1"/>
+                                        <field name="booking_eligible_days" readonly="1"/>
+                                        <field name="amount" readonly="1" sum="Total"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer">
+                                    <field name="amount" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+
+    </record>
+
+    <record id="mbk_esob_provision_tree_view" model="ir.ui.view">
+        <field name="name">mbk.esob_provision.tree</field>
+        <field name="model">mbk.esob_provision</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+             <tree>
+                 <field name="name"/>
+                 <field name="date"/>
+                 <field name="date_to"/>
+                 <field name="ref"/>
+                 <field name="amount"/>
+                 <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="mbk_esob_provision_action" model="ir.actions.act_window">
+        <field name="name">Create ESOB Provision Booking</field>
+        <field name="res_model">mbk.esob_provision</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new ESOB Provision Booking
+              </p>
+        </field>
+    </record>
+    <menuitem
+        id="mbk_menu_action_esob_provision"
+        name="ESOB Provision Booking"
+        action="mbk_esob_provision_action"
+        parent="hr_payroll.menu_hr_payroll_work_entries_root"
+        sequence='62'
+        />
+    </data>
+</odoo>

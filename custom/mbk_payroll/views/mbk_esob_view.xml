@@ -91,7 +91,7 @@
                                     <field name="sequence"/>
                                     <field name="type_name"/>
                                     <field name="type_description"/>
-                                    <field name="amount" sum="Total Aount"/>
+                                    <field name="amount" sum="Total Amount"/>
                                 </tree>
                                 <form string="ESOB Lines">
                                     <group col="4">
