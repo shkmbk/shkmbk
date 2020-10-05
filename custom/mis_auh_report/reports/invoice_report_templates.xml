@@ -297,8 +297,9 @@
                   </p>
 
                 <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
-
-                    Approved By
+                    <span t-if="o.type == 'out_invoice'">For Private Office</span>
+                    <span t-if="o.type == 'out_invoice'">Accounts Department</span>
+                    <span t-if="not o.type == 'out_invoice'">Approved By</span>
                 </p>
               </div>
         </div>
