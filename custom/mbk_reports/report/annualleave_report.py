@@ -37,14 +37,14 @@ class AnnualLeaveReport(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         self.env['ir.rule'].clear_cache()
         ason_date = data['ason_date']
-        employee_id =data['employee_id']
+        employee_id = data['employee_id']
         hr_department_ids = data['hr_department_ids']
-        category_ids=data['category_ids']
-        analytic_account_id=data['analytic_account_id']
+        category_ids = data['category_ids']
+        analytic_account_id = data['analytic_account_id']
         analytic_tag_ids = data['analytic_tag_ids']
         header_date = data['header_date']
 
-        as_on_date= datetime.strptime(ason_date, '%Y-%m-%d').date()
+        as_on_date = datetime.strptime(ason_date, '%Y-%m-%d').date()
         
 
         if not self.env['res.users'].browse(self.env.uid).tz:
@@ -72,38 +72,44 @@ class AnnualLeaveReport(models.AbstractModel):
         
         op_fy_date = datetime(2020, 6, 1).date()
         
-        master_table =[]
-        annualleave_days=0.0
-        annualleave_amount=0.0
-        basic_salary=0.00
-        per_day=0.00
-        eligible_days=0.00
+        master_table = []
+        annualleave_days = 0.0
+        annualleave_amount = 0.0
+        basic_salary = 0.00
+        per_day = 0.00
+        eligible_days = 0.00
 
         for rec in objemp:       
-            join_date=rec.employee_id.date_of_join
-            basic_salary=rec.wage
-            allowances=rec.x_other_allowance
-            net_salary=basic_salary+allowances
-            per_day=net_salary*12/365
-            op_al_days=rec.employee_id.op_leave_days
+            join_date = rec.employee_id.date_of_join
+            contract = rec.employee_id._get_contracts(as_on_date, as_on_date)
+            if contract:
+                basic_salary = contract.wage
+                allowances = contract.x_other_allowance
+            else:
+                basic_salary = rec.wage
+                allowances = rec.x_other_allowance
+
+            net_salary = basic_salary+allowances
+            per_day = net_salary*12/365
+            op_al_days = rec.employee_id.op_leave_days
 
             #Checking wheather contract end date mentioned
             if rec.date_end:
-                to_date=rec.date_end
+                to_date = rec.date_end
             else:                
-                to_date=as_on_date
+                to_date = as_on_date
 
-            total_days=(to_date-join_date).days+1
-            op_eligible_days=rec.employee_id.op_eligible_days
+            total_days = (to_date-join_date).days+1
+            op_eligible_days = rec.employee_id.op_eligible_days
 
 
 
             if join_date<op_fy_date:
-                op_lop_days=(op_fy_date-join_date).days-op_eligible_days
-                c_total_days=(to_date-op_fy_date).days+1
+                op_lop_days = (op_fy_date-join_date).days-op_eligible_days
+                c_total_days = (to_date-op_fy_date).days+1
             else:
-                op_lop_days=0
-                c_total_days=(to_date-join_date).days+1
+                op_lop_days = 0
+                c_total_days = (to_date-join_date).days+1
 
             #LOP Leaves in Currecnt Period
             objlopleave = self.env['hr.leave'].search([('employee_id','=',rec.employee_id.id),('state','=','validate'),('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
