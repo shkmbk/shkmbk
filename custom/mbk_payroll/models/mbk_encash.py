@@ -70,6 +70,7 @@ class MbkEncash(models.Model):
     department_id = fields.Many2one('hr.department', string='Department', readonly=True, store=True)
     bank_name = fields.Char(string='Bank', readonly=True, store=True)
     iban_no = fields.Char(string="IBAN Number", readonly=True, store=True)
+    payslip_ids = fields.Many2many('hr.payslip', string='Pay Slip', domain="[('employee_id', '=', employee_id)]")
 
     def compute_sheet(self):
         employee_id = self.employee_id
