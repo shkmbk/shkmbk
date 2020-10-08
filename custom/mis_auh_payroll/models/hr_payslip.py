@@ -31,6 +31,7 @@ class MisHrPayslip(models.Model):
             month_days = (end_date - mstartdate).days + 1
             for payslip in rec:
                 if not payslip.worked_days_line_ids:
+                    payslip.paid_allowance = 0
                     return allowance_amount
                 total_allowance = 0
                 is_paid = False
@@ -57,6 +58,7 @@ class MisHrPayslip(models.Model):
 
             for payslip in rec:
                 if not payslip.worked_days_line_ids:
+                    payslip.paid_fot = 0
                     return fot_amount
                 total_fot = 0
                 is_paid = False
@@ -69,7 +71,7 @@ class MisHrPayslip(models.Model):
         rec = self.env['hr.payslip'].browse(payslip)
         obj_esob = self.env['mbk.esob'].search(
             [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
-             ('date_effective', '=', rec.date)])
+             ('date_effective', '>=', rec.date_from), ('date_effective', '<=', rec.date_to)])
         if obj_esob:
             result = obj_esob.esob_amount
         else:
@@ -80,10 +82,10 @@ class MisHrPayslip(models.Model):
         rec = self.env['hr.payslip'].browse(payslip)
         objencash = self.env['mbk.encash'].search(
             [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
-             ('date_effective', '=', rec.date)])
+             ('date_effective', '>=', rec.date_from), ('date_effective', '<=', rec.date_to)])
         obj_esob = self.env['mbk.esob'].search(
             [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
-             ('date_effective', '=', rec.date)])
+             ('date_effective', '>=', rec.date_from), ('date_effective', '<=', rec.date_to)])
         if objencash:
             result = objencash.encash_amount
         else:
@@ -96,10 +98,10 @@ class MisHrPayslip(models.Model):
         rec = self.env['hr.payslip'].browse(payslip)
         objencash = self.env['mbk.encash'].search(
             [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
-             ('date_effective', '=', rec.date)])
+             ('date_effective', '>=', rec.date_from), ('date_effective', '<=', rec.date_to)])
         obj_esob = self.env['mbk.esob'].search(
             [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
-             ('date_effective', '=', rec.date)])
+             ('date_effective', '>=', rec.date_from), ('date_effective', '<=', rec.date_to)])
         if objencash:
             result = objencash.ticket_amount
         else:
