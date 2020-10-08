@@ -15,12 +15,12 @@ class MisHrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
     paid_allowance = fields.Monetary(compute='_compute_allowance')
-    paid_fot=fields.Monetary(compute='_compute_fot')
+    paid_fot = fields.Monetary(compute='_compute_fot')
 
     def _compute_allowance(self):
         for rec in self:
             contract = rec.contract_id
-            allowance_amount = contract.x_other_allowance
+            allowance_amount = contract.x_other_allowance+contract.x_house_rent
             unpaid_work_entry_types = rec.struct_id.unpaid_work_entry_type_ids
             stdate = rec.date_from
             startmonth = stdate.month
@@ -44,15 +44,15 @@ class MisHrPayslip(models.Model):
             contract = rec.contract_id
             fot_amount = contract.x_fixed_ot
             unpaid_work_entry_types = rec.struct_id.unpaid_work_entry_type_ids
-            stdate=rec.date_from
-            startmonth=stdate.month
+            stdate = rec.date_from
+            startmonth = stdate.month
             startyear = stdate.year
 
 
             mstartdate=datetime(startyear, startmonth , 1)
             end_date = mstartdate +  relativedelta(months=1)
             end_date = end_date + relativedelta(days=-1)
-            month_days=(end_date - mstartdate).days+1      
+            month_days = (end_date - mstartdate).days+1
            
 
             for payslip in rec:
@@ -64,6 +64,50 @@ class MisHrPayslip(models.Model):
                     is_paid = line.work_entry_type_id not in unpaid_work_entry_types
                     total_fot+= line.number_of_days * fot_amount / month_days if is_paid else 0
                 payslip.paid_fot = total_fot
+
+    def get_esob(self, payslip):
+        rec = self.env['hr.payslip'].browse(payslip)
+        obj_esob = self.env['mbk.esob'].search(
+            [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
+             ('date_effective', '=', rec.date)])
+        if obj_esob:
+            result = obj_esob.esob_amount
+        else:
+            result = 0.00
+        return [result]
+
+    def get_ls(self, payslip):
+        rec = self.env['hr.payslip'].browse(payslip)
+        objencash = self.env['mbk.encash'].search(
+            [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
+             ('date_effective', '=', rec.date)])
+        obj_esob = self.env['mbk.esob'].search(
+            [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
+             ('date_effective', '=', rec.date)])
+        if objencash:
+            result = objencash.encash_amount
+        else:
+            result = 0.00
+        if obj_esob:
+            result += obj_esob.encash_amount
+        return [result]
+
+    def get_ticket_alw(self, payslip):
+        rec = self.env['hr.payslip'].browse(payslip)
+        objencash = self.env['mbk.encash'].search(
+            [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
+             ('date_effective', '=', rec.date)])
+        obj_esob = self.env['mbk.esob'].search(
+            [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
+             ('date_effective', '=', rec.date)])
+        if objencash:
+            result = objencash.ticket_amount
+        else:
+            result = 0.00
+        if obj_esob:
+            result += obj_esob.ticket_amount
+        return [result]
+
 
     def _get_paid_amount(self):
         self.ensure_one()
