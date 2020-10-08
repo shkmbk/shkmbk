@@ -54,7 +54,7 @@ class AnnualLeaveReport(models.AbstractModel):
                                                     self._get_department(hr_department_ids), self._get_analytic_tags(analytic_tag_ids),self._get_employee(employee_id)])
 
         if not objemp:
-            raise UserError('There are no stock found for selected parameters')
+            raise UserError('There are no employee found for selected parameters')
             #raise UserError(self._getdomainfilter(from_date,to_date,employee_id,analytic_id))
 
         user = self.env['res.users'].browse(self.env.uid)
@@ -81,7 +81,7 @@ class AnnualLeaveReport(models.AbstractModel):
 
         for rec in objemp:       
             join_date = rec.employee_id.date_of_join
-            contract = rec.employee_id._get_contracts(as_on_date, as_on_date)
+            contract = self.env['hr.contract'].search([('employee_id', '=', rec.employee_id.id), ('date_start', '<=', as_on_date), ('date_end', '>=', as_on_date)])
             if contract:
                 basic_salary = contract.wage
                 allowances = contract.x_other_allowance
@@ -112,7 +112,7 @@ class AnnualLeaveReport(models.AbstractModel):
                 c_total_days = (to_date-join_date).days+1
 
             #LOP Leaves in Currecnt Period
-            objlopleave = self.env['hr.leave'].search([('employee_id','=',rec.employee_id.id),('state','=','validate'),('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
+            objlopleave = self.env['hr.leave'].search([('employee_id', '=', rec.employee_id.id),('state', '=', 'validate'),('holiday_status_id.unpaid','=',1),('request_date_from','<=',to_date)])
             c_lop=0.00
             for lop in objlopleave:
                 if lop.request_date_to<=to_date:
@@ -149,19 +149,19 @@ class AnnualLeaveReport(models.AbstractModel):
                 eligible_days=c_total_days-c_lop
             c_eligible_days=c_total_days-c_lop
 
-            new_al_days=(c_eligible_days*30/365)
-            annualleave_days= round(op_al_days+new_al_days-total_leaves,2)
+            new_al_days = (c_eligible_days*30/365)
+            annualleave_days = round(op_al_days+new_al_days-total_leaves,2)
 
             if eligible_days>182:
-                annualleave_amount= round(per_day*annualleave_days,2)
+                annualleave_amount = round(per_day*annualleave_days,2)
             else:
-                annualleave_amount=0.00
+                annualleave_amount = 0.00
 
                         
             master_table.append({
                             'emp_name': rec.employee_id.name,
                             'emp_code': rec.employee_id.registration_number,
-                            'join_date':join_date.strftime("%d-%m-%Y"),
+                            'join_date': join_date.strftime("%d-%m-%Y"),
                             'net_salary': net_salary,
                             'total_days': total_days,
                             'lop_days': lop_days,

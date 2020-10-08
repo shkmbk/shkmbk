@@ -155,23 +155,39 @@
                     </thead>
                     <tbody class="invoice_tbody">
                         <t t-set="rowno" t-value="1"/>
-                        <tr>
-                            <td name="encash">
-                                <span t-esc="rowno"/>
-                                    <t t-set="rowno" t-value="rowno+1"/>
-                            </td>
-                            <td class="text-left">
-                                <span>Leave Encashment for </span><span t-field="o.encash_days"/><span> Days</span>
-                            </td>					
-                            <td  class="text-right">
-                                <span t-esc="'{0:,.2f}'.format(o.encash_amount)"/>
-                            </td>
-                        </tr>
-                        <t t-if="not o.ticket_amount==0">
+                        <t t-if="not o.ls_amount==0">
                             <tr>
                                 <td name="encash">
                                     <span t-esc="rowno"/>
                                         <t t-set="rowno" t-value="rowno+1"/>
+                                </td>
+                                <td class="text-left">
+                                    <span>Leave Salary (</span><span t-field="o.leave_ids.request_date_from"/>-<span t-field="o.leave_ids.request_date_to"/>) for <span t-field="o.leave_ids.number_of_days"/><span> Days</span>
+                                </td>
+                                <td  class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(o.ls_amount)"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-if="not o.encash_amount==0">
+                            <tr>
+                                <td name="encash">
+                                    <span t-esc="rowno"/>
+                                    <t t-set="rowno" t-value="rowno+1"/>
+                                </td>
+                                <td class="text-left">
+                                    <span>Leave Encashment for </span><span t-field="o.encash_days"/><span> Days</span>
+                                </td>
+                                <td  class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(o.encash_amount)"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-if="not o.ticket_amount==0">
+                            <tr>
+                                <td name="encash">
+                                    <span t-esc="rowno"/>
+                                    <t t-set="rowno" t-value="rowno+1"/>
                                 </td>
                                 <td class="text-left">
                                     <span>Ticket Allowance</span>

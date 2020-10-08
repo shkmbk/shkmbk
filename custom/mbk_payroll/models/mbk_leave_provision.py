@@ -81,7 +81,7 @@ class MbkLeaveProvision(models.Model):
         total_amount = 0.00
         for rec in obj_emp:
             join_date = rec.employee_id.date_of_join
-            contract = rec.employee_id._get_contracts(as_on_date, as_on_date)
+            contract = self.env['hr.contract'].search([('employee_id', '=', rec.employee_id.id), ('date_start', '<=', as_on_date), ('date_end', '>=', as_on_date)])
             if contract:
                 basic_salary = contract.wage
                 allowances = contract.x_other_allowance

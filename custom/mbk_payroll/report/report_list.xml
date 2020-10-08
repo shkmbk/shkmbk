@@ -4,7 +4,7 @@
 	<report
 		id="action_encash_print"
 		model="mbk.encash"
-		string="Leave Encashment"
+		string="Leave Settlement"
 		report_type="qweb-pdf"
 		name="mbk_payroll.report_encash"
 		file="mbk_payroll.report_encash"
