@@ -51,11 +51,15 @@
                                 <field name="al_provision_date" invisible="1" readonly="1" force_save="1"/>                                                          
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
-                            <group name="calculation" string="Calcuation">
+                            <group name="calculation" string="Calculation">
                                 <field name="available_days" readonly="1" force_save="1"/> 
                                 <field name="encash_days"/>
-                                <field name="balance_days" readonly="1" force_save="1"/>                                
-                                <field name="encash_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1"/>
+                                <field name="leave_ids"/>
+                                <field name="leave_days"/>
+                                <field name="balance_days" readonly="1" force_save="1"/>
+                                <field name="encash_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1" attrs="{'invisible': ['|',('encash_days', '=', 0), ('leave_ids', '=', False)]}"/>
+                                <field name="ls_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1" attrs="{'invisible': ['|',('encash_days', '=', 0), ('leave_ids', '=', False)]}"/>
+                                <field name="net_leave_salary" class="oe_subtotal_footer_separator" readonly="1" force_save="1"/>
                                 <field name="ticket_amount"/>
                                 <field name="net_amount" class="oe_subtotal_footer_separator" readonly="1" force_save="1"/>
                             </group>
@@ -106,7 +110,7 @@
     </record>
 
     <record id="mbk_encash_action" model="ir.actions.act_window">
-        <field name="name">Leave Encashment</field>
+        <field name="name">Leave Settlement</field>
         <field name="res_model">mbk.encash</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">

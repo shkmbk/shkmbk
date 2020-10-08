@@ -81,7 +81,16 @@ class MbkESOBProvision(models.Model):
         total_amount = 0.00
         for rec in obj_emp:
             join_date = rec.employee_id.date_of_join
-            basic_salary = rec.wage
+            contract = self.env['hr.contract'].search(
+                [('employee_id', '=', rec.employee_id.id), ('date_start', '<=', as_on_date),
+                 ('date_end', '>=', as_on_date)])
+            if contract:
+                basic_salary = contract.wage
+                contract_id = contract.id
+            else:
+                basic_salary = rec.wage
+                contract_id = rec.id
+
             per_day = basic_salary * 12 / 365
             # Checking weather contract end date mentioned
             if rec.date_end:
@@ -168,7 +177,7 @@ class MbkESOBProvision(models.Model):
                     'eligible_days': eligible_days,
                     'avl_esob_days': gratuity_days,
                     'avl_esob_amount': gratuity_amount,
-                    'contract_id': rec.id
+                    'contract_id': contract_id
                 }
                 new_lines.create(values)
         self.amount = total_amount

@@ -43,7 +43,7 @@ class GratuityReport(models.AbstractModel):
         analytic_tag_ids = data['analytic_tag_ids']
         header_date = data['header_date']
 
-        as_on_date= datetime.strptime(ason_date, '%Y-%m-%d').date()
+        as_on_date = datetime.strptime(ason_date, '%Y-%m-%d').date()
         
 
         if not self.env['res.users'].browse(self.env.uid).tz:
@@ -53,7 +53,7 @@ class GratuityReport(models.AbstractModel):
                                                     self._get_department(hr_department_ids), self._get_analytic_tags(analytic_tag_ids),self._get_employee(employee_id)])
 
         if not objemp:
-            raise UserError('There are no stock found for selected parameters')
+            raise UserError('There are no Employee found for selected parameters')
             #raise UserError(self._getdomainfilter(from_date,to_date,employee_id,analytic_id))
 
         user = self.env['res.users'].browse(self.env.uid)
@@ -79,17 +79,24 @@ class GratuityReport(models.AbstractModel):
         eligible_days=0.00
 
         for rec in objemp:       
-            join_date=rec.employee_id.date_of_join
-            basic_salary=rec.wage
-            per_day=basic_salary*12/365
+            join_date = rec.employee_id.date_of_join
+            contract = self.env['hr.contract'].search(
+                [('employee_id', '=', rec.employee_id.id), ('date_start', '<=', as_on_date),
+                 ('date_end', '>=', as_on_date)])
+            if contract:
+                basic_salary = contract.wage
+            else:
+                basic_salary = rec.wage
+
+            per_day = basic_salary*12/365
             #Checking wheather contract end date mentioned
             if rec.date_end:
-                to_date=rec.date_end
+                to_date = rec.date_end
             else:                
-                to_date=as_on_date
+                to_date = as_on_date
 
-            total_days=(to_date-join_date).days+1
-            op_eligible_days=rec.employee_id.op_eligible_days
+            total_days = (to_date-join_date).days+1
+            op_eligible_days = rec.employee_id.op_eligible_days
 
 
 

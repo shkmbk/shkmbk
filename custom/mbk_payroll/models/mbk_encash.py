@@ -45,11 +45,13 @@ class MbkEncash(models.Model):
     al_provision_amount = fields.Float(string='Provision Amount', readonly=True, store=True, default=False)
     al_provision_date = fields.Date(string='Last Provision Booking Date', readonly=True, store=True, default=False)
     warning_message = fields.Char(readonly=True)
-    encash_amount = fields.Float(string='Leave Salary', readonly=True, compute='compute_encash_amount', store=True,
+    encash_amount = fields.Float(string='Leave Encashment', readonly=True, compute='compute_encash_amount', store=True,
                                  default=False)
+    ls_amount = fields.Float(string='Leave Salary', readonly=True, compute='compute_ls_amount', store=True, default=False)
+    net_leave_salary = fields.Float(string='Total Leave Salary', readonly=True, compute='compute_net_ls_amount', store=True, default=False)
     ticket_allowance = fields.Float(string='Ticket Allowance', readonly=True, store=True, default=False)
     ticket_amount = fields.Float(string='Ticket Amount', default=False)
-    net_amount = fields.Float(string='Net Encash', compute='compute_net_amount', store=True, default=False)
+    net_amount = fields.Float(string='Net Amount', compute='compute_net_amount', store=True, default=False)
     join_date = fields.Date(string='Date Of Join', readonly=True, store=True, default=False)
     basic_salary = fields.Float(string='Basic Salary', readonly=True, store=True, default=False)
     allowances = fields.Float(string='Allowance', readonly=True, store=True, default=False)
@@ -64,13 +66,17 @@ class MbkEncash(models.Model):
     available_days = fields.Float(string='Available Leave Days', readonly=True, store=True, default=False)
     encash_days = fields.Float(string='Encashing Days', required=True, store=True, default=False,
                                track_visibility='onchange')
+    leave_days = fields.Float(string='Total Leave Days', store=True, readonly=True, default=False,
+                              compute='compute_leave_days')
     balance_days = fields.Float(string='Balance Days', readonly=True, compute='compute_al_balance', store=True,
                                 default=False)
     job_id = fields.Many2one('hr.job', string='Designation', readonly=True, store=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True, store=True)
     bank_name = fields.Char(string='Bank', readonly=True, store=True)
     iban_no = fields.Char(string="IBAN Number", readonly=True, store=True)
-    payslip_ids = fields.Many2many('hr.payslip', string='Pay Slip', domain="[('employee_id', '=', employee_id)]")
+    payslip_ids = fields.Many2one('hr.payslip', string='Pay Slip', domain="[('employee_id', '=', employee_id)]")
+    leave_ids = fields.Many2one('hr.leave', string='Leave Entries',
+                                domain="[('employee_id', '=', employee_id),('state', '=', 'validate'),('holiday_status_id', '=', 1), ('request_date_from', '>', date_to)]")
 
     def compute_sheet(self):
         employee_id = self.employee_id
@@ -217,7 +223,8 @@ class MbkEncash(models.Model):
         self.iban_no = employee.iban_number
 
         encash_name = 'Leave Encash'
-        self.name = '%s - %s - %s' % (encash_name, self.employee_id.name or '', format_date(self.env, self.date_to, date_format="MMMM y"))
+        self.name = '%s - %s - %s' % (
+        encash_name, self.employee_id.name or '', format_date(self.env, self.date_to, date_format="MMMM y"))
 
         if date_to > al_provision_date:
             self.warning_message = _(
@@ -226,15 +233,36 @@ class MbkEncash(models.Model):
         else:
             self.warning_message = False
 
-    @api.depends('available_days', 'encash_days')
+    @api.depends('available_days', 'leave_days')
     def compute_al_balance(self):
-        self.balance_days = self.available_days - self.encash_days
+        self.balance_days = self.available_days - self.leave_days
 
     @api.depends('encash_days', 'net_salary')
     def compute_encash_amount(self):
         perday_rate = self.net_salary * 12 / 365
         self.encash_amount = round(perday_rate * self.encash_days, 2)
 
-    @api.depends('encash_amount', 'ticket_amount')
+    @api.depends('leave_ids', 'net_salary')
+    def compute_ls_amount(self):
+        perday_rate = self.net_salary * 12 / 365
+        ls_amount = 0.00
+        if self.leave_ids:
+            ls_amount = round(perday_rate * self.leave_ids.number_of_days, 2)
+        self.ls_amount = ls_amount
+
+    @api.depends('encash_amount', 'ls_amount')
+    def compute_net_ls_amount(self):
+        self.net_leave_salary = round(self.encash_amount + self.ls_amount, 2)
+
+    @api.depends('net_leave_salary', 'ticket_amount')
     def compute_net_amount(self):
-        self.net_amount = round(self.encash_amount + self.ticket_amount, 2)
+        self.net_amount = round(self.net_leave_salary + self.ticket_amount, 2)
+
+    @api.depends('encash_days', 'leave_ids')
+    def compute_leave_days(self):
+        no_days = 0.00
+        if self.leave_ids:
+            no_days = self.leave_ids.number_of_days
+        self.leave_days = no_days + self.encash_days
+
+
