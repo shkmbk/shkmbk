@@ -115,7 +115,7 @@
             </form>
         </field>
     </record>
-    <record id="mbk_encash_tree_view" model="ir.ui.view">
+    <record id="mbk_esob_tree_view" model="ir.ui.view">
         <field name="name">mbk.esob.tree</field>
         <field name="model">mbk.esob</field>
         <field name="priority">10</field>
