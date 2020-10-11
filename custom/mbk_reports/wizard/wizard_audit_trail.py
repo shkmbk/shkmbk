@@ -28,7 +28,7 @@ class Mbk_Audit_Trail_Wizard(models.TransientModel):
                 'to_date': self.to_date,
                 'user_id': self.user_id.id,
                 'is_include_auto': self.is_include_auto,
-                'header_period': self.from_date.strftime("%d/%m/%Y") + ' - ' + self.to_date.strftime("%d/%m/%Y")}
+                'header_period': '('+self.from_date.strftime("%d/%m/%Y") + ' - ' + self.to_date.strftime("%d/%m/%Y")+')'}
         report = self.env.ref('mbk_reports.audit_trail_report_pdf')
         return report.report_action(self, data=data)
 
