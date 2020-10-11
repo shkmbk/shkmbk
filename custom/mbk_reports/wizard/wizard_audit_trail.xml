@@ -38,7 +38,7 @@
 
         <menuitem id="mbk_audit_trail_report_wizard_submenu"
                   name="Audit Trail Report"
-                  parent="account.account_reports_management_menu"
+                  parent="account_reports.account_reports_audit_reports_menu"
                   action="mbk_audit_trail_report_action_view"
                   groups="account.group_account_manager"
                   sequence="21"/>
