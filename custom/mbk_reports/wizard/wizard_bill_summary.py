@@ -11,6 +11,7 @@ import pytz
 
 class MbkBillSummary(models.TransientModel):
     _name = 'mbk.wizard.report.billsummary'
+    _description = "Bill Summary Report Wizard"
 
     @api.model
     def get_default_date_model(self):

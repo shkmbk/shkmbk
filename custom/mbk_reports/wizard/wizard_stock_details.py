@@ -11,6 +11,7 @@ import pytz
 
 class MbkStockDetailsW(models.TransientModel):
     _name = 'mbk.wizard.report.stockdetails'
+    _description = "Stock Details Report Wizard"
 
     @api.model
     def get_default_date_model(self):

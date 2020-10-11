@@ -23,7 +23,8 @@
         'wizard/wizard_share_details.xml',
         'wizard/wizard_gratuity_report.xml',
         'wizard/wizard_annualleave_report.xml',
-        'wizard/wizard_farm_stock_summary.xml',        
+        'wizard/wizard_farm_stock_summary.xml',
+        'wizard/wizard_audit_trail.xml',
         'report/report_menu.xml',
         'report/stock_details_template.xml',
         'report/farmstock_details_template.xml',
@@ -31,6 +32,7 @@
         'report/annualleave_report.xml',
         'wizard/wizard_vat_return.xml',
         'report/statement_report.xml',
+        'report/audit_trail_report.xml',
     ],
     # only loaded in demonstration mode
     'demo': [],

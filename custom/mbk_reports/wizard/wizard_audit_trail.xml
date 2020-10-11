@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="mbk_audit_trail_report_form" model="ir.ui.view">
+            <field name="name">mbk.wizard.audit_trail_report.form</field>
+            <field name="model">mbk.wizard.report.audit_trail</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Audit Trail Report">
+                    <group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                        </group>
+                        <group>
+                            <field name='user_id' options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        </group>
+                        <group>
+                        <field name="is_include_auto"/>
+                    </group>
+                    </group>
+                    <footer>
+                        <button string="View Audit Trail Report" name="print_audit_trail_report_pdf" type="object" class="btn-primary"/>
+                        <button string="Cancel" name="cancel" type="object" special="cancel" class="btn-cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mbk_audit_trail_report_action_view" model="ir.actions.act_window">
+            <field name="name">Audit Trail Report</field>
+            <field name="res_model">mbk.wizard.report.audit_trail</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mbk_audit_trail_report_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="mbk_audit_trail_report_wizard_submenu"
+                  name="Audit Trail Report"
+                  parent="account.account_reports_management_menu"
+                  action="mbk_audit_trail_report_action_view"
+                  groups="account.group_account_manager"
+                  sequence="21"/>
+    </data>
+
+</odoo>

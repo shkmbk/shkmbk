@@ -35,5 +35,12 @@
 		report_type="qweb-pdf"
 		name="mbk_reports.statement_report"
 		file="mbk_reports.statement_report"
-	  />				
+	  />
+    <report id="audit_trail_report_pdf"
+            model="hr.employee"
+            string="Audit Trail Report"
+            report_type="qweb-html"
+            name="mbk_reports.report_audit_trail"
+            file="mbk_reports.report_audit_trail"
+            menu="False"/>
 </odoo>

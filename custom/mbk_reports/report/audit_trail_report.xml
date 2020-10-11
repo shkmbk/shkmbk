@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_audit_trail">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>AUDIT TRAIL REPORT <t t-esc="header_period"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 12px;">
+                        <thead>
+                            <tr>
+                                <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
+                                <th class="text-left" width="9%"><strong>Document Group</strong></th>
+                                <th class="text-left" width="11%"><strong>Document Type</strong></th>
+                                <th class="text-left" width="10%"><strong>Document No</strong></th>
+                                <th class="text-center" width="7%"><strong>Date</strong></th>
+                                <th class="text-left" width="18%"><strong>Partner</strong></th>
+                                <th class="text-right" width="5%"><strong>Amount</strong></th>
+                                <th class="text-left" width="5%"><strong>Status</strong></th>
+                                <th class="text-left" width="8%"><strong>Create User</strong></th>
+                                <th class="text-left" width="8%"><strong>Update User</strong></th>
+                                <th class="text-left" width="9%"><strong>Created Time</strong></th>
+                                <th class="text-left" width="9%"><strong>Updated Time</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="rowno" t-value="1"/>
+                            <t t-set="tot_amount" t-value="0.0"/>
+                            <t t-foreach="docs" t-as="line">
+                                <tr>
+                                    <td name="slno">
+                                        <t t-set="wurl" t-value="line['wurl']"/>
+                                        <a t-attf-href="{{ wurl }}" target="_blank"><span t-esc="rowno"/></a>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['doc_group']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['doc_type']"/>
+                                    </td>
+                                    <td class="text-left">
+                                       <span t-esc="line['doc_no']"/>
+                                    </td>
+                                    <td class="text-center">
+                                         <span t-esc="line['doc_date']"/>
+                                    </td>
+                                    <td class="text-left">
+                                         <span t-esc="line['partner_id']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(line['amount'])"/>
+                                        <t t-set="tot_amount" t-value="tot_amount+(line['amount'])"/>
+                                    </td>
+                                    <td class="text-left">
+                                         <span t-esc="line['status']"/>
+                                     </td>
+                                    <td class="text-left">
+                                         <span t-esc="line['create_user']"/>
+                                     </td>
+                                    <td class="text-left">
+                                         <span t-esc="line['update_user']"/>
+                                     </td>
+                                    <td class="text-left">
+                                         <span t-esc="line['create_time']"/>
+                                     </td>
+                                    <td class="text-left">
+                                         <span t-esc="line['update_time']"/>
+                                     </td>
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="6" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b>TOTAL</b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount)"/></b>
+                                    </td>
+                                    <td colspan="5" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b></b>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+
