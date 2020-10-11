@@ -152,7 +152,7 @@ class AnnualLeaveReport(models.AbstractModel):
             new_al_days = (c_eligible_days*30/365)
             annualleave_days = round(op_al_days+new_al_days-total_leaves,2)
             annualleave_amount = round(per_day * annualleave_days, 2)
-            
+
             master_table.append({
                             'emp_name': rec.employee_id.name,
                             'emp_code': rec.employee_id.registration_number,
