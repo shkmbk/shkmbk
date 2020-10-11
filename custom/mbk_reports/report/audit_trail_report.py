@@ -107,7 +107,7 @@ class Audit_Trail_Report(models.AbstractModel):
                 'doc_date': rec.date.strftime("%d-%m-%Y"),
                 'ref': '',
                 'ref_date': rec.date.strftime("%d-%m-%Y"),
-                'partner_id': rec.journal_id.id,
+                'partner_id': rec.journal_id.name,
                 'amount': rec.balance_end-rec.balance_start,
                 'status': rec.state,
                 'narration': '',
