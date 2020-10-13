@@ -90,7 +90,7 @@ class MbkEncash(models.Model):
         as_on_date = self.date_to
 
         # Checking wheather contract end date mentioned
-        if contract_id.date_end:
+        if contract_id.date_end and rec.date_end < as_on_date:
             to_date = contract_id.date_end
         else:
             to_date = as_on_date
