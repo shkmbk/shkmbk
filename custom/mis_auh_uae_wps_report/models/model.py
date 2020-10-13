@@ -43,6 +43,13 @@ class Employee(models.Model):
                     vals['salary_card_number'] = vals['salary_card_number'].zfill(16)
         return super(Employee, self).create(vals)
 
+    @api.depends('name')
+    def generate_employee_code(self):
+        if not self.registration_number or self.registration_number == '':
+            obj_emp = self.env['hr.employee'].search([('registration_number', '!=', False)], limit=1, order='registration_number desc')
+            e_code = "00000" + str(int(obj_emp.registration_number[1:])+1)
+            self.registration_number = 'E' + e_code[-5:]
+
 class MisAuhPaymentMethod(models.Model):
     _name = 'mis.hr.paymentmethod'
     _inherit = ['mail.thread', 'mail.activity.mixin']

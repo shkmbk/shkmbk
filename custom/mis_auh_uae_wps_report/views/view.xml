@@ -30,6 +30,9 @@
                 <xpath expr="//page[@name='personal_information']//field[@name='passport_id']" position="after">
                         <field name="passport_expiry" string="Passport Expiry"/>
                 </xpath>
+                <xpath expr="//field[@name='registration_number']" position="after">
+                    <button string="Generate Employee Code" class="btn btn-link" type="object" name="generate_employee_code" attrs="{'invisible': [('registration_number', '!=', False)]}"/>
+                </xpath>
                 <xpath expr="//page[@name='hr_settings']//field[@name='pin']" position="before">
                         <field name="op_eligible_days" string="Eligible Days"/>
 						<field name="op_leave_days" string="Annual Leave"/>
