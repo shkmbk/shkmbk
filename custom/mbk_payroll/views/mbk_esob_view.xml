@@ -77,7 +77,19 @@
                                 <field name="leave_taken" readonly="1" force_save="1"/>
                                 <field name="encashed_days" readonly="1" force_save="1"/>
                                 <field name="avl_encash_days" readonly="1" force_save="1"/>
-                            </group>      
+                            </group>
+                            <group>
+                                <group string="Leave Provision">
+                                    <field name="al_provision_date" readonly="1" force_save="1"/>
+                                    <field name="al_provision_days" readonly="1" force_save="1"/>
+                                    <field name="al_provision_amount" readonly="1" force_save="1"/>
+                                </group>
+                                <group string="ESOB Provision">
+                                    <field name="esob_provision_date" readonly="1" force_save="1"/>
+                                    <field name="esob_provision_days" readonly="1" force_save="1"/>
+                                    <field name="esob_provision_amount" readonly="1" force_save="1"/>
+                                </group>
+                            </group>
                         </group>
                     </page>
 					<page string="ESOB Summary" name="current_salary">

@@ -42,10 +42,12 @@ class MbkESOB(models.Model):
                           states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     date_effective = fields.Date(string='Effective Date', readonly=True, store=True, required=True,
                                  states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
-    al_provision_amount = fields.Float(string='Leave Provision Amount', readonly=True, store=True, default=False)
-    al_provision_date = fields.Date(string='Last Leave Provision Booking Date', readonly=True, store=True, default=False)
-    esob_provision_amount = fields.Float(string='ESOB Provision Amount', readonly=True, store=True, default=False)
-    esob_provision_date = fields.Date(string='Last ESOB Provision Booking Date', readonly=True, store=True, default=False)
+    al_provision_days = fields.Float(string='Provision Days', readonly=True, store=True, default=False)
+    al_provision_amount = fields.Float(string='Provision Amount', readonly=True, store=True, default=False)
+    al_provision_date = fields.Date(string='Provision', readonly=True, store=True, default=False)
+    esob_provision_amount = fields.Float(string='Provision Amount', readonly=True, store=True, default=False)
+    esob_provision_date = fields.Date(string='Provision Date', readonly=True, store=True, default=False)
+    esob_provision_days = fields.Float(string='Provision Amount', readonly=True, store=True, default=False)
     warning_message = fields.Char(readonly=True)
     encash_amount = fields.Float(string='Leave Salary', readonly=True, compute='compute_encash_amount', store=True,
                                  default=False)
@@ -67,10 +69,8 @@ class MbkESOB(models.Model):
     encashed_days = fields.Float(string='Encashed Days', readonly=True, store=True, default=False)
     avl_encash_days = fields.Float(string='Available Leave Days', readonly=True, store=True, default=False)
     avl_esob_days = fields.Float(string='Available ESOB Days', readonly=True, store=True, default=False)
-    encash_days = fields.Float(string='Encashing Days', required=True, store=True, default=False,
-                               track_visibility='onchange')
-    esob_days = fields.Float(string='ESOB Days', required=True, store=True, default=False,
-                             track_visibility='onchange')
+    encash_days = fields.Float(string='Encashing Days', required=True, store=True, default=False)
+    esob_days = fields.Float(string='ESOB Days', required=True, store=True, default=False)
     job_id = fields.Many2one('hr.job', string='Designation', readonly=True, store=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True, store=True)
     bank_name = fields.Char(string='Bank', readonly=True, store=True)
@@ -125,14 +125,17 @@ class MbkESOB(models.Model):
                 c_alt += (to_date - al.request_date_from).days + 1
         # Encashed Days
         encashed_days = 0.0
+        encashed_amount = 0.00
         objencash = self.env['mbk.encash'].search([('employee_id', '=', employee_id.id), ('state', '!=', 'cancel')])
         for en in objencash:
             encashed_days += en.encash_days
+            encashed_amount += en.net_leave_salary
 
         obj_esob = self.env['mbk.esob'].search([('employee_id', '=', employee_id.id), ('state', '!=', 'cancel')])
         for es in obj_esob:
             if es.id != self.id:
                 encashed_days += es.encash_days
+                encashed_amount += en.net_leave_salary
 
         lop_days = op_lop_days + c_lop
 
@@ -154,6 +157,27 @@ class MbkESOB(models.Model):
             gratuity_days = round(eligible_days*21/365, 2)
         else:
             gratuity_days = round(105+((eligible_days-1825)*30/365), 2)
+        # Provision Details
+        obj_last_leave_p = self.env['mbk.leave_provision.line'].search(
+            [('employee_id', '=', employee_id.id), ('leave_provision_id.state', '=', 'posted'),
+             ('to_date', '>=', as_on_date)],
+            order='to_date', limit=1)
+        if obj_last_leave_p:
+            self.al_provision_date = obj_last_leave_p.to_date
+            self.al_provision_days = obj_last_leave_p.avl_leave_days
+            self.al_provision_amount = obj_last_leave_p.avl_leave_amount
+        else:
+            raise UserError('Leave Provision booking is not found for the employee. Please book provision before settlement')
+        obj_last_esob_p = self.env['mbk.esob_provision.line'].search(
+            [('employee_id', '=', employee_id.id), ('esob_provision_id.state', '=', 'posted'),
+             ('to_date', '=', as_on_date)],
+            order='to_date', limit=1)
+        if obj_last_esob_p:
+            self.esob_provision_date = obj_last_esob_p.to_date
+            self.esob_provision_days = obj_last_esob_p.avl_esob_days
+            self.esob_provision_amount = obj_last_esob_p.avl_esob_amount
+        else:
+            raise UserError('ESOB Provision booking is not found for the employee. Please book provision before settlement')
 
         self.total_days = total_days
         self.eligible_days = eligible_days
@@ -248,8 +272,10 @@ class MbkESOB(models.Model):
 
     @api.depends('encash_days', 'net_salary')
     def compute_encash_amount(self):
-        perday_rate = self.net_salary * 12 / 365
-        self.encash_amount = round(perday_rate * self.encash_days, 2)
+        if self.al_provision_days or self.al_provision_days != 0:
+            perday_rate = (self.al_provision_amount / self.al_provision_days)
+            self.encash_amount = round(perday_rate * self.encash_days, 2)
+
     @api.depends('esob_days', 'net_salary')
     def compute_esob_amount(self):
         perday_rate = self.basic_salary * 12 / 365
