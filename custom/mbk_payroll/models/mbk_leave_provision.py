@@ -234,7 +234,7 @@ class MbkLeaveProvision(models.Model):
         return self.write({'state': 'draft'})
 
     def action_post(self):
-        if self.name == 'New' and len(self.line_ids) > 0:
+        if not self.account_move_id and len(self.line_ids) > 0:
             isheader = True
             total_amount = self.amount
             move_line_vals = []
