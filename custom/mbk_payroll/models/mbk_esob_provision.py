@@ -93,7 +93,7 @@ class MbkESOBProvision(models.Model):
 
             per_day = basic_salary * 12 / 365
             # Checking weather contract end date mentioned
-            if rec.date_end:
+            if rec.date_end and as_on_date > rec.date_end:
                 to_date = rec.date_end
             else:
                 to_date = as_on_date
