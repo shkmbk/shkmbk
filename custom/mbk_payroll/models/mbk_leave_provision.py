@@ -118,7 +118,6 @@ class MbkLeaveProvision(models.Model):
                 cumulative_lop_days = 0.00
             else:
                 cumulative_provision_booked = obj_last_leave_p.avl_leave_amount
-                cumulative_days_booked = obj_last_leave_p.avl_leave_days
                 cumulative_eligible_days = obj_last_leave_p.eligible_days
                 cumulative_total_days = obj_last_leave_p.total_days
                 cumulative_lop_days = obj_last_leave_p.lop_days
@@ -159,34 +158,30 @@ class MbkLeaveProvision(models.Model):
 
             # Encashed Days
             encashed_days = 0.0
+            encashed_amount = 0.00
             objencash = self.env['mbk.encash'].search(
                 [('employee_id', '=', rec.employee_id.id), ('state', '=', 'done'), ('date_to', '<=', to_date)])
 
             for en in objencash:
                 if en.encash_days:
                     encashed_days += en.encash_days
+                    encashed_amount += en.net_leave_salary
 
             obj_esob = self.env['mbk.esob'].search(
                 [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'), ('date_to', '<=', to_date)])
             for es in obj_esob:
                 encashed_days += es.encash_days
+                encashed_amount += es.encash_amount
 
             total_leaves = encashed_days + c_alt
-            # Computing total redeemed leave salary provision
-            obj_payslip_line = self.env['hr.payslip.line'].search([('employee_id', '=', rec.employee_id.id), ('slip_id.state', '=', 'done'), ('code', '=', 'AL')])
-            ps_leave_amount = 0.00
-            for pid in obj_payslip_line:
-                ps_leave_amount += pid.amount
+
             # Computing total booked Leave Salary provision
             obj_ls_provision = self.env['mbk.leave_provision.line'].search(
-                [('employee_id', '=', rec.employee_id.id), ('leave_provision_id.state', '=', 'posted')])
+                [('employee_id', '=', rec.employee_id.id), ('leave_provision_id.state', '=', 'posted'), ('to_date', '<=', to_date)])
             lsp_booked = 0.00
             for lsp in obj_ls_provision:
                 lsp_booked += lsp.amount
-
-
-
-            net_leave_salary = ps_leave_amount-lsp_booked
+                cumulative_days_booked += lsp.booking_leave_days
 
             c_eligible_days = c_total_days - c_lop
             new_al_days = (c_eligible_days * 30 / 365)
@@ -194,10 +189,10 @@ class MbkLeaveProvision(models.Model):
             booking_total_days = total_days - cumulative_total_days
             booking_eligible_days = eligible_days - cumulative_eligible_days
             booking_lop_days = lop_days - cumulative_lop_days
-            booking_leave_days = round(total_al_days-cumulative_days_booked, 3)
+            booking_leave_days = round(total_al_days-cumulative_days_booked, 2)
             amount = round(per_day * booking_leave_days, 2)
             annualleave_days = round(op_al_days + new_al_days - total_leaves, 2)
-            annualleave_amount = round(per_day*annualleave_days, 2)
+            annualleave_amount = lsp_booked + amount - encashed_amount
 
             total_amount += amount
             if amount > 0:

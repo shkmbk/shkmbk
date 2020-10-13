@@ -43,12 +43,15 @@ class MbkEncash(models.Model):
     date_effective = fields.Date(string='Effective Date', readonly=True, store=True, required=True,
                                  states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     al_provision_amount = fields.Float(string='Provision Amount', readonly=True, store=True, default=False)
-    al_provision_date = fields.Date(string='Last Provision Booking Date', readonly=True, store=True, default=False)
+    al_provision_days = fields.Float(string='Provision Days', readonly=True, store=True, default=False)
+    al_provision_date = fields.Date(string='Provision Date', readonly=True, store=True, default=False)
     warning_message = fields.Char(readonly=True)
     encash_amount = fields.Float(string='Leave Encashment', readonly=True, compute='compute_encash_amount', store=True,
                                  default=False)
-    ls_amount = fields.Float(string='Leave Salary', readonly=True, compute='compute_ls_amount', store=True, default=False)
-    net_leave_salary = fields.Float(string='Total Leave Salary', readonly=True, compute='compute_net_ls_amount', store=True, default=False)
+    ls_amount = fields.Float(string='Leave Salary', readonly=True, compute='compute_ls_amount', store=True,
+                             default=False)
+    net_leave_salary = fields.Float(string='Total Leave Salary', readonly=True, compute='compute_net_ls_amount',
+                                    store=True, default=False)
     ticket_allowance = fields.Float(string='Ticket Allowance', readonly=True, store=True, default=False)
     ticket_amount = fields.Float(string='Ticket Amount', default=False)
     net_amount = fields.Float(string='Net Amount', compute='compute_net_amount', store=True, default=False)
@@ -101,7 +104,7 @@ class MbkEncash(models.Model):
         else:
             op_lop_days = 0
             c_total_days = (to_date - join_date).days + 1
-        # LOP Leaves in Currecnt Period
+        # LOP Leaves in Current Period
         objlopleave = self.env['hr.leave'].search(
             [('employee_id', '=', employee_id.id), ('state', '=', 'validate'), ('holiday_status_id.unpaid', '=', 1),
              ('request_date_from', '<=', to_date)])
@@ -143,6 +146,17 @@ class MbkEncash(models.Model):
             annualleave_days = round(op_al_days + new_al_days - (c_alt + encashed_days), 2)
         else:
             annualleave_days = 0.00
+        # Provision Details
+        obj_last_leave_p = self.env['mbk.leave_provision.line'].search(
+            [('employee_id', '=', employee_id.id), ('leave_provision_id.state', '=', 'posted'),
+             ('to_date', '>=', as_on_date)],
+            order='to_date', limit=1)
+        if obj_last_leave_p:
+            self.al_provision_date = obj_last_leave_p.to_date
+            self.al_provision_days = obj_last_leave_p.avl_leave_days
+            self.al_provision_amount = obj_last_leave_p.avl_leave_amount
+        else:
+            raise UserError('Provision booking is not found for the employee. Please process provision')
 
         self.total_days = total_days
         self.eligible_days = eligible_days
@@ -224,7 +238,7 @@ class MbkEncash(models.Model):
 
         encash_name = 'Leave Encash'
         self.name = '%s - %s - %s' % (
-        encash_name, self.employee_id.name or '', format_date(self.env, self.date_to, date_format="MMMM y"))
+            encash_name, self.employee_id.name or '', format_date(self.env, self.date_to, date_format="MMMM y"))
 
         if date_to > al_provision_date:
             self.warning_message = _(
@@ -239,16 +253,18 @@ class MbkEncash(models.Model):
 
     @api.depends('encash_days', 'net_salary')
     def compute_encash_amount(self):
-        perday_rate = self.net_salary * 12 / 365
-        self.encash_amount = round(perday_rate * self.encash_days, 2)
+        if self.al_provision_days or self.al_provision_days != 0:
+            perday_rate = (self.al_provision_amount/self.al_provision_days)
+            self.encash_amount = round(perday_rate * self.encash_days, 2)
 
     @api.depends('leave_ids', 'net_salary')
     def compute_ls_amount(self):
-        perday_rate = self.net_salary * 12 / 365
-        ls_amount = 0.00
-        if self.leave_ids:
-            ls_amount = round(perday_rate * self.leave_ids.number_of_days, 2)
-        self.ls_amount = ls_amount
+        if self.al_provision_days or self.al_provision_days != 0:
+            perday_rate = (self.al_provision_amount / self.al_provision_days)
+            ls_amount = 0.00
+            if self.leave_ids:
+                ls_amount = round(perday_rate * self.leave_ids.number_of_days, 2)
+            self.ls_amount = ls_amount
 
     @api.depends('encash_amount', 'ls_amount')
     def compute_net_ls_amount(self):
@@ -264,5 +280,3 @@ class MbkEncash(models.Model):
         if self.leave_ids:
             no_days = self.leave_ids.number_of_days
         self.leave_days = no_days + self.encash_days
-
-
