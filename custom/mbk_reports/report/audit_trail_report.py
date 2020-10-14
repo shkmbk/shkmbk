@@ -62,7 +62,7 @@ class Audit_Trail_Report(models.AbstractModel):
                 'doc_group': 'Sales',
                 'doc_type': 'Sales Order',
                 'doc_no': rec.name,
-                'doc_date': rec.date.strftime("%d-%m-%Y"),
+                'doc_date': rec.date_order.strftime("%d-%m-%Y"),
                 'ref': rec.client_order_ref,
                 'ref_date': rec.date.strftime("%d-%m-%Y"),
                 'partner_id': rec.partner_id.name,
