@@ -45,7 +45,7 @@ class MisProduct(models.Model):
 
     def action_fd_expiry_notification(self):
         for rec in self:
-            display_msg = rec.categ_id.name + """ """ + rec.name + """ will expire on """ + rec.maturity_date.strftime(
+            display_msg = rec.categ_id.name + """ """ + rec.name + """ will mature on """ + rec.maturity_date.strftime(
                 "%d-%m-%Y") + """,
                            <br/>
                            Principal Amount: """ + str(rec.list_price) + """<br/>
@@ -55,7 +55,7 @@ class MisProduct(models.Model):
                            Interest Rate: """ + str(rec.interest_rate)
             rec.message_post(body=display_msg, partner_ids=[3, 368], author_id=2, message_type='notification',
                              subtype='mail.mt_comment')
-            
+
     @api.model
     def create(self, vals):
         mproduct = super(MisProduct, self).create(vals)
