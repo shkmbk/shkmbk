@@ -33,7 +33,7 @@ class FDSummaryReport(models.AbstractModel):
             'doc_ids': self.ids,
             'doc_model': 'mis.invrevaluation',
             'docs': fixeddeposit_ids,
-            'to_date': to_date.strftime("%d-%m-%Y"),
+            'to_date': to_date,
             'subtable': subtable,
         }
         return docargs
