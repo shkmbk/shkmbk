@@ -26,7 +26,7 @@
                              <span class="o_stat_value">
                                     <field name="sum_invest_expense" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                              </span>
-                             <span class="o_stat_text">Expenses</span>
+                             <span class="o_stat_text">P&amp;L</span>
                          </div>
                     </button>
                 </xpath>

@@ -8,10 +8,10 @@ class MisProduct(models.Model):
 
     def _suminvestexpense(self):
         objJournal = self.env['account.move.line'].search(
-            [('analytic_tag_ids', 'in', self.invest_analytic_tag_ids.ids)])
+            [('analytic_tag_ids', 'in', self.invest_analytic_tag_ids.ids), ('parent_state', '=', 'posted'), ('account_id.internal_group', 'in', ['expense', 'income'])])
         sum = 0.00
         for jor in objJournal:
-            sum += jor.balance
+            sum += (jor.credit-jor.debit)
         self.sum_invest_expense = sum
 
     investment_ok = fields.Boolean(string="Can be Investment", track_visibility='onchange')
@@ -24,7 +24,7 @@ class MisProduct(models.Model):
     geographic_id = fields.Many2one('mis.inv.geographic', string="Geographic")
     responsibility_id = fields.Many2one('res.partner', string="Responsibility")
     invest_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
-    sum_invest_expense = fields.Float(string="Total Expenses", compute='_suminvestexpense')
+    sum_invest_expense = fields.Float(string="P&L", compute='_suminvestexpense')
     bank_journal = fields.Many2one('account.journal', string="Bank Account", domain=" [('type', '=', 'bank')]")
     interest_rate = fields.Float(string="Interest Rate")
     day_in_a_year = fields.Integer(string="No of Days in Year")
@@ -91,13 +91,13 @@ class MisProduct(models.Model):
     def action_custom_exapense_show(self):
         journal_entry = []
         journal_items = self.env['account.move.line'].search(
-            [('analytic_tag_ids', 'in', self.invest_analytic_tag_ids.ids)])
+            [('analytic_tag_ids', 'in', self.invest_analytic_tag_ids.ids), ('parent_state', '=', 'posted'), ('account_id.internal_group', 'in', ['expense', 'income'])])
         for j in journal_items:
-            journal_entry.append(j.move_id.id)
+            journal_entry.append(j.id)
         return {
-            'name': _('Journal Entries'),
+            'name': _('Journal Items'),
             'view_mode': 'tree,form',
-            'res_model': 'account.move',
+            'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', journal_entry)],
