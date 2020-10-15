@@ -9,8 +9,9 @@
                         <thead>
                             <tr>
                                 <th name="th_description" class="text-left" width="2%"><strong>Sl No</strong></th>
-                                <th name="th_description" class="text-left" width="30%"><strong>Bank</strong></th>
+                                <th class="text-left" ><strong>Bank</strong></th>
                                 <th class="text-left"><strong>Deposit No</strong></th>
+                                <th class="text-left"><strong>Type</strong></th>
                                 <th class="text-left"><strong>FD Date</strong></th>
                                 <th class="text-left"><strong>Maturity Date</strong></th>
                                 <th class="text-right"><strong>Amount</strong></th>
@@ -41,6 +42,9 @@
                                         <span t-field="line.name"/>
                                     </td>
                                     <td>
+                                        <span t-field="line.type_id.name"/>
+                                    </td>
+                                    <td>
                                         <span t-field="line.deposit_date"/>
                                     </td>
                                     <td>
@@ -64,7 +68,7 @@
                                 </tr>
                             </t>
                                 <tr style="width:100%;height:30px;background-color:#d3d3d3;">
-                                    <td colspan="5" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                    <td colspan="6" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
                                       <b>TOTAL</b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
