@@ -4,7 +4,7 @@
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <div class="page">
-                    <center><h4>FIXED DEPOSIT BALANCE &amp; ACCRUED INTEREST AS ON <t t-esc="to_date"/></h4></center>
+                    <center><h4>FIXED DEPOSIT BALANCE &amp; ACCRUED INTEREST AS ON <t t-esc="header_date"/></h4></center>
                     <table class="table table-sm o_main_table" style="font-size: 13px;">
                         <thead>
                             <tr>
@@ -17,8 +17,7 @@
                                 <th class="text-right"><strong>Amount</strong></th>
                                 <th class="text-right"><strong>Rate</strong></th>
                                 <th class="text-right"><strong>Total Interest</strong></th>
-                                <th class="text-right"><strong>Interest as on<br/><t t-esc="to_date"/></strong></th>
-
+                                <th class="text-right"><strong>Interest as on<br/><t t-esc="header_date"/></strong></th>
                             </tr>
                         </thead>
                         <tbody>
