@@ -73,19 +73,16 @@ class MisProduct(models.Model):
             if intrate < 0 or intrate > 100:
                 raise UserError('Interest Rete should be between 0-100')
             code = vals['name']
+            if not mproduct.invest_analytic_tag_ids:
+                obj_analytic_tag_ids = self.env['account.analytic.tag'].search([
+                    ('name', '=', code), ('analytic_tag_group', '=', group_id)],limit=1)
 
-            obj_analytic_tag_ids = self.env['account.analytic.tag'].search([
-                ('name', '=', code), ('analytic_tag_group', '=', group_id)])
-
-            pro_analytic_tag_ids = obj_analytic_tag_ids
-            if obj_analytic_tag_ids == True:
-                pro_analytic_tag_ids = obj_analytic_tag_ids
-            else:
-                pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
-                    'name': code, 'analytic_tag_group': group_id, 'company_id': self.env.company.id, })
-            #            pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
-            #                'name': code, 'analytic_tag_group': group_id,})
-            mproduct.invest_analytic_tag_ids = pro_analytic_tag_ids.ids + mproduct.invest_analytic_tag_ids.ids
+                if obj_analytic_tag_ids == True:
+                    pro_analytic_tag_ids = obj_analytic_tag_ids
+                else:
+                    pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
+                        'name': code, 'analytic_tag_group': group_id, 'company_id': self.env.company.id, })
+                mproduct.invest_analytic_tag_ids = pro_analytic_tag_ids.ids
         return mproduct
 
     def action_custom_exapense_show(self):
@@ -124,18 +121,19 @@ class MisProduct(models.Model):
                 group_tag = self.env['mis.analytic.tag.group'].create({'name': group_name})
                 group_id = group_tag.id
             code = self.name
+            
+            if not self.invest_analytic_tag_ids:
+                obj_analytic_tag_ids = self.env['account.analytic.tag'].search([
+                    ('name', '=', productname), ('analytic_tag_group', '=', group_id)])
 
-            obj_analytic_tag_ids = self.env['account.analytic.tag'].search([
-                ('name', '=', productname), ('analytic_tag_group', '=', group_id)])
+                if obj_analytic_tag_ids == True:
+                    pro_analytic_tag_ids = obj_analytic_tag_ids.write({
+                        'name': code, 'analytic_tag_group': group_id, 'company_id': self.env.company.id, })
+                else:
+                    pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
+                        'name': code, 'analytic_tag_group': group_id, 'company_id': self.env.company.id, })
 
-            if obj_analytic_tag_ids == True:
-                pro_analytic_tag_ids = obj_analytic_tag_ids.write({
-                    'name': code, 'analytic_tag_group': group_id, 'company_id': self.env.company.id, })
-            else:
-                pro_analytic_tag_ids = self.env['account.analytic.tag'].create({
-                    'name': code, 'analytic_tag_group': group_id, 'company_id': self.env.company.id, })
-
-            self.invest_analytic_tag_ids = pro_analytic_tag_ids.ids
+                self.invest_analytic_tag_ids = pro_analytic_tag_ids.ids
 
         return mproduct
 

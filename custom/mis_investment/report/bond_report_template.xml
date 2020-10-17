@@ -5,7 +5,7 @@
             <t t-call="web.external_layout">
                 <div class="page">
                     <right>Currency: <t t-esc="currency"/></right>
-                    <center><h4>BOND SUMMARY AS ON <t t-esc="to_date"/></h4></center>
+                    <center><h4>TREASURY BILL SUMMARY AS ON <t t-esc="to_date"/></h4></center>
                     <table class="table table-sm o_main_table" style="font-size: 13px;">
                         <thead>
                             <tr>
