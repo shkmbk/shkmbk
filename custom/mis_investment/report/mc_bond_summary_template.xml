@@ -41,7 +41,7 @@
                                         <span t-field="line['bond_rec'].name"/>
                                     </td>
                                     <td>
-                                         <span t-field="line.maturity_date"/>
+                                         <span t-field="line['bond_rec'].maturity_date"/>
                                     </td>
                                      <td class="text-right">
                                          <span t-esc="'{0:,.2f}'.format(line.interest_rate)"/>%
