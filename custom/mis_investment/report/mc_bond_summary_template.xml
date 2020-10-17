@@ -44,7 +44,7 @@
                                          <span t-field="line['bond_rec'].maturity_date"/>
                                     </td>
                                      <td class="text-right">
-                                         <span t-esc="'{0:,.2f}'.format(line.interest_rate)"/>%
+                                         <span t-esc="'{0:,.2f}'.format(line['bond_rec'].interest_rate)"/>%
                                      </td>
                                     <td class="text-right">
                                         <span t-esc="'{0:,.2f}'.format(line['qty'])"/>
