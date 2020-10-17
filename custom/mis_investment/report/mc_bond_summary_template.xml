@@ -70,8 +70,8 @@
                                          <t t-set="totexpense" t-value="totexpense+(line['expense'])"/>
                                      </td>
                                     <td class="text-right">
-                                         <span t-esc="'{0:,.2f}'.format(line[net_profit_loss])"/>
-                                         <t t-set="totnetprofit" t-value="totnetprofit+line[net_profit_loss]"/>
+                                         <span t-esc="'{0:,.2f}'.format(line['net_profit_loss'])"/>
+                                         <t t-set="totnetprofit" t-value="totnetprofit+line['net_profit_loss']"/>
                                      </td>
                                 </tr>
                             </t>
