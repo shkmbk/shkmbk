@@ -129,9 +129,9 @@ class MCShareRevaluationReport(models.AbstractModel):
             last_valudation_date= tmpdate.strftime("%d-%m-%Y")
             reval_id=objlastvaluation.id
         if classification_id:
-            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'),('inv_currency_id', '=', inv_currency_id), ('classification_id', '=', classification_id)])
+            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'),('inv_currency_id', '=', inv_currency_id), ('classification_id', '=', classification_id), ('categ_id', '=', 5)])
         else:
-            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'),('inv_currency_id', '=', inv_currency_id)])            
+            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'),('inv_currency_id', '=', inv_currency_id), ('categ_id', '=', 5)])
 
         for shr in objshare:
             qty = self.get_total_qty(shr.id, dtfilter)

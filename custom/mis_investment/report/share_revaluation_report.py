@@ -119,15 +119,15 @@ class FDSummaryReport(models.AbstractModel):
         reval_id=0
         master_table =[]
 
-        objlastvaluation = self.env['mis.invrevaluation'].search([('trans_date', '<=' ,to_date),('state','=','posted')], order='trans_date desc', limit=1)
+        objlastvaluation = self.env['mis.invrevaluation'].search([('trans_date', '<=', to_date),('state', '=', 'posted')], order='trans_date desc', limit=1)
         if objlastvaluation:
             tmpdate= objlastvaluation.trans_date
             last_valudation_date= tmpdate.strftime("%d-%m-%Y")
             reval_id=objlastvaluation.id
         if classification_id:
-            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'), ('classification_id', '=', classification_id)])
+            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'), ('classification_id', '=', classification_id), ('categ_id', '=', 5)])
         else:
-            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product')])            
+            objshare = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'), ('categ_id', '=', 5)])
 
         for shr in objshare:
             qty = self.get_total_qty(shr.id, dtfilter)
