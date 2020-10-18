@@ -122,7 +122,7 @@ class MisInvestmentRevaluation(models.Model):
 
     def action_loaddetail(self):
         if len(self.trans_line)==0:
-            objpro = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product')])
+            objpro = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'), ('categ_id', '=', 5)])
             new_lines = self.env['mis.invrevaluation.line']
             for rec in objpro:
                 totqty=self.get_total_qty(rec.id)
