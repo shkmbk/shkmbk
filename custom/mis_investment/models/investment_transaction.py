@@ -8,6 +8,7 @@ class MisInvestmentRevaluation(models.Model):
     _name = 'mis.invrevaluation'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description ='Share Valuation'
+    _order = 'trans_date desc'
 
     state = fields.Selection([
         ('draft', 'New'),
