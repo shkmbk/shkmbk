@@ -17,7 +17,7 @@ class MisInvestmentRevaluation(models.Model):
     ], string='Status', readonly=True, index=True, copy=False, default='draft', tracking=True)
 
     name = fields.Char('Name')
-    ref = fields.Char('Referenec', required=True)
+    ref = fields.Char('Reference')
     trans_date = fields.Date('Date')
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True,
                                  default=lambda self: self.env.company.id)
@@ -30,7 +30,7 @@ class MisInvestmentRevaluation(models.Model):
         objstock = self.env['stock.valuation.layer'].search(
             [('product_id', '=', productid), ('create_date', '<', dtfilter)])
 
-        totqty=0.0
+        totqty = 0.0
         for gr in objstock:
             totqty+=gr.quantity
         return totqty
@@ -122,7 +122,13 @@ class MisInvestmentRevaluation(models.Model):
 
 
     def action_loaddetail(self):
-        if len(self.trans_line)==0:
+        if not self.ref:
+            self.ref = 'Share Revaluation as on ' + (self.trans_date).strftime("%d-%m-%Y")
+        # delete old leave provision lines
+        if self.state in ('draft'):
+            self.trans_line.unlink()
+
+        if len(self.trans_line) == 0:
             objpro = self.env['product.product'].search([('investment_ok', '=', True), ('type', '=', 'product'), ('categ_id', '=', 5)])
             new_lines = self.env['mis.invrevaluation.line']
             for rec in objpro:
