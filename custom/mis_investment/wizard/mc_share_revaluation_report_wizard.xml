@@ -3,7 +3,7 @@
     <data>
         <record id="mis_mc_revaluation_report_view" model="ir.ui.view">
             <field name="name">Multicurrency Share Revaluation Report</field>
-            <field name="model">mis.auh.mcrevaluation.wizard</field>
+            <field name="model">mis.auh.mcbond_summary.wizard</field>
             <field name="arch" type="xml">
                  <form name="Report Options">
                      <group>
