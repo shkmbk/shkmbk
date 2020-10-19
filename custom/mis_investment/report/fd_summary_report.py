@@ -20,7 +20,7 @@ class FDSummaryReport(models.AbstractModel):
         self._cr.execute("""select id, (maturity_date::date - deposit_date::date) as totaldays, 
         ('""" + str(to_date) + """'::date-deposit_date::date)+1 as totalason,expected_earning
         from product_template where investment_ok=true and maturity_date>='"""+str(to_date)+"""'
-        and isdeposit = true""")
+        and isdeposit = true and categ_id=15""")
         objrec = self._cr.dictfetchall()
         subtable = {}
         for line in objrec:
