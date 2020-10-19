@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="mis_mc_revaluation_report_view" model="ir.ui.view">
+        <record id="mis_mc_bond_summary_report_view" model="ir.ui.view">
             <field name="name">Bond Summary Report</field>
             <field name="model">mis.auh.mc_bond_summary.wizard</field>
             <field name="arch" type="xml">
