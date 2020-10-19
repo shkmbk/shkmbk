@@ -74,8 +74,10 @@ class MbkBudget(models.Model):
     def compute_sheet(self):
         if self.net_fund_position < 0:
             net_fund_position = abs(self.net_fund_position)
-            mod = 100000
-            net_fund_position = (net_fund_position-(net_fund_position % mod)) + mod
+            mod = 1000
+            mod_value = (net_fund_position % mod)
+            if mod_value > 0:
+                net_fund_position = (net_fund_position-mod_value) + mod
             required_fund_budget = net_fund_position
         else:
             required_fund_budget = 0.00
@@ -200,7 +202,7 @@ class MBKBudgetInFlow(models.Model):
     mbk_budget_id = fields.Many2one('mbk.budget', string='Budget', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
     mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True)
-    name = fields.Char(string='Description', compute='_default_description', store=True)
+    name = fields.Char(string='Description', store=True)
     budget_amount = fields.Float(string='Budget')
     actual_amount = fields.Float(string='Actual')
     variance_amount = fields.Float(string='Variance', readonly=True, compute='_calculate_variance',
@@ -211,7 +213,7 @@ class MBKBudgetInFlow(models.Model):
         for rec in self:
             rec.variance_amount = rec.budget_amount - rec.actual_amount
 
-    @api.depends('mbk_project_id')
+    @api.onchange('mbk_project_id')
     def _default_description(self):
         for rec in self:
             if rec.mbk_project_id and not rec.name:
@@ -226,7 +228,7 @@ class MBKBudgetOutFlow(models.Model):
     mbk_budget_id = fields.Many2one('mbk.budget', string='Budget', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
     mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True)
-    name = fields.Char(string='Description', compute='_default_description', store=True)
+    name = fields.Char(string='Description', store=True)
     budget_amount = fields.Float(string='Budget')
     actual_amount = fields.Float(string='Actual')
     variance_amount = fields.Float(string='Variance', readonly=True, compute='_calculate_variance',
@@ -237,7 +239,7 @@ class MBKBudgetOutFlow(models.Model):
         for rec in self:
             rec.variance_amount = rec.budget_amount - rec.actual_amount
 
-    @api.depends('mbk_project_id')
+    @api.onchange('mbk_project_id')
     def _default_description(self):
         for rec in self:
             if rec.mbk_project_id and not rec.name:
