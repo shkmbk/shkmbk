@@ -17,26 +17,26 @@
                         <div class="oe_button_box" name="button_box"/>
                         <div class="oe_title oe_inline">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/></h1>
                         </div>
                         <group>
                             <group>
                                 <field name="budget_no" />
-                                <field name="date" options="{'datepicker': {'warn_future': true}}"/>
+                                <field name="date" options="{'datepicker': {'warn_future': true}}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <label for="date_from" string="Period"/>
                                 <div>
-                                    <field name="date_from" class="oe_inline"/> - <field name="date_to" class="oe_inline"/>
+                                    <field name="date_from" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/> - <field name="date_to" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </div>
                                 <field name="currency_id" invisible="1"/>
                             </group>
                             <group>
                                 <label for="balance_start"/>
                                 <div>
-                                    <field class="oe_inline" name="balance_start"/>
+                                    <field class="oe_inline" name="balance_start" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 </div>
                                 <label for="balance_end_real"/>
                                 <div>
-                                    <field class="oe_inline" name="balance_end_real"/>
+                                    <field class="oe_inline" name="balance_end_real" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 </div>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" invisible="1"/>
@@ -45,7 +45,7 @@
                         <notebook>
                             <page string="Fund Flow">
                                 <separator string="Fund In Flow"/>
-                                <field name="in_line_ids">
+                                <field name="in_line_ids" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
                                     <tree string="Fund In Flow" editable="bottom">
                                         <field name="mbk_project_id"/>
                                         <field name="name"/>
@@ -56,7 +56,7 @@
                                     </tree>
                                 </field>
                                 <separator string="Fund Out Flow"/>
-                                <field name="out_line_ids" colspan="4" nolabel="1">
+                                <field name="out_line_ids" colspan="4" nolabel="1" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
                                     <tree string="Fund Out Flow" editable="bottom">
                                         <field name="mbk_project_id"/>
                                         <field name="name"/>
