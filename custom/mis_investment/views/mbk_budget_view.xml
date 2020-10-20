@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Budget">
                     <header>
-                        <button string="Confirm" name="action_budget_done" type="object" states="verify" class="oe_highlight" context="{'payslip_generate_pdf': True}"/>
+                        <button string="Finalize" name="action_budget_done" type="object" states="verify" class="oe_highlight" context="{'payslip_generate_pdf': True}"/>
                         <button string="Set to Draft" name="action_budget_draft" type="object" states="cancel"/>
                         <button string="Compute Sheet" name="compute_sheet" type="object" states="draft,verify" class="oe_highlight"/>
                         <button string="Cancel Budget" name="action_budget_cancel" type="object" states="draft,confirm,verify"/>
@@ -95,8 +95,9 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
              <tree>
-                 <field name="name"/>
                  <field name="date"/>
+                 <field name="budget_no"/>
+                 <field name="name"/>
                  <field name="date_to"/>
                  <field name="balance_start"/>
                  <field name="balance_end"/>

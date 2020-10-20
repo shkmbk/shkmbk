@@ -40,11 +40,11 @@ class FFBudgetReport(models.AbstractModel):
             required_fund_variance = rec.required_fund_variance
             available_fund = balance_start
             fund_requirement = 0.00
-            closing_balance = 0.00
-            if rec.state == 'done':
-                closing_balance = balance_end_real
-            else:
-                closing_balance = balance_end
+            closing_balance = balance_end
+            # if rec.state == 'done':
+            #     closing_balance = balance_end_real
+            # else:
+            #     closing_balance = balance_end
 
             particulars_0 = 'Opening Balance'
             particulars_1 = 'Available Fund'

@@ -2,7 +2,7 @@ from odoo import models, fields, api
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, Warning
 from odoo.tools.misc import format_date
 from dateutil.relativedelta import relativedelta
 
@@ -16,9 +16,13 @@ class MbkBudget(models.Model):
     @api.model
     def _default_opening_balance(self):
         #Search last bank statement and set current opening balance as closing balance of previous one
-        obj_last_budget = self.env['mbk.budget'].search([('state', '=', 'done')], order='date_to desc', limit=1)
+        obj_last_budget = self.env['mbk.budget'].search([('state', 'in', ['done', 'verify'])], order='date_to desc', limit=1)
         if obj_last_budget:
-            return obj_last_budget.balance_end_real
+            if obj_last_budget.state == 'done':
+                return obj_last_budget.balance_end_real
+            else:
+                return obj_last_budget.balance_end
+
         return 0
 
     budget_no = fields.Char(string='Number', readonly=True, store=True, default='New')
@@ -27,7 +31,7 @@ class MbkBudget(models.Model):
     #                    states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('verify', 'Running'),
+        ('verify', 'Active'),
         ('done', 'Done'),
         ('cancel', 'Rejected'),
     ], string='Status', index=True, readonly=True, copy=False, track_visibility='onchange', default='draft',
@@ -72,6 +76,8 @@ class MbkBudget(models.Model):
     currency_id = fields.Many2one('res.currency', String='Currency', Default=131, store=True)
 
     def compute_sheet(self):
+        if not self.in_line_ids and not self.out_line_ids:
+            raise UserError("Please enter budget Inflow & Outflow before computation.")
         if self.net_fund_position < 0:
             net_fund_position = abs(self.net_fund_position)
             mod = 1000
@@ -82,6 +88,11 @@ class MbkBudget(models.Model):
         else:
             required_fund_budget = 0.00
         self.required_fund_budget = required_fund_budget
+
+        if self.budget_no == 'New':
+            self.budget_no = self.env['ir.sequence'].with_context(force_company=self.company_id.id).next_by_code(
+                'mbk.budget') or _('New')
+
         self.state = 'verify'
         return True
 
@@ -90,24 +101,29 @@ class MbkBudget(models.Model):
 
     def action_budget_cancel(self):
         if self.filtered(lambda slip: slip.state == 'done'):
-            raise UserError(_("Cannot cancel a budget that is done."))
+            raise UserError("Cannot cancel a budget that is done.")
         self.write({'state': 'cancel'})
 
     def action_budget_draft(self):
         return self.write({'state': 'draft'})
 
     def action_budget_done(self):
-        if self.required_fund_actual:
+        if self.net_fund_actual == self.balance_start:
+            raise UserError('Enter actual inflow & Outflow before finalization')
+        if not self.required_fund_actual or self.required_fund_actual == 0:
             if self.required_fund_budget > 0:
                 raise UserError('Enter Approved Fund Details')
-
-        if self.budget_no == 'New':
-            self.budget_no = self.env['ir.sequence'].with_context(force_company=self.company_id.id).next_by_code(
-                'mbk.budget') or _('New')
+        if self.balance_end != self.balance_end_real:
+            difference = self.balance_end - self.balance_end_real
+            if abs(difference/(1 if self.balance_end == 0 else self.balance_end)) > .5:
+                raise Warning('%f difference found in budgeted and actual fund balance.' % difference)
         return self.write({'state': 'done'})
 
     @api.model
     def create(self, vals):
+        obj_last_budget = self.env['mbk.budget'].search([('state', '=', 'draft')])
+        if obj_last_budget:
+            raise UserError('Enter finalize the previous draft budget')
         vals['state'] = 'draft'
         res = super(MbkBudget, self).create(vals)
         return res
@@ -115,7 +131,7 @@ class MbkBudget(models.Model):
     def unlink(self):
         for budget in self:
             if budget.state not in ('draft', 'cancel') and not self._context.get('force_delete'):
-                raise UserError(_("You cannot delete an entry which has been posted."))
+                raise UserError("You cannot delete an entry which has been posted.")
             budget.trans_line.unlink()
         return super(MbkBudget, self).unlink()
 
@@ -201,7 +217,7 @@ class MBKBudgetInFlow(models.Model):
 
     mbk_budget_id = fields.Many2one('mbk.budget', string='Budget', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
-    mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True)
+    mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True, domain="[('is_inflow', '=', True)]")
     name = fields.Char(string='Description', store=True)
     budget_amount = fields.Float(string='Budget')
     actual_amount = fields.Float(string='Actual')
@@ -227,7 +243,7 @@ class MBKBudgetOutFlow(models.Model):
 
     mbk_budget_id = fields.Many2one('mbk.budget', string='Budget', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
-    mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True)
+    mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True, domain="[('is_outflow', '=', True)]")
     name = fields.Char(string='Description', store=True)
     budget_amount = fields.Float(string='Budget')
     actual_amount = fields.Float(string='Actual')
@@ -253,7 +269,7 @@ class MBKProjects(models.Model):
 
     name = fields.Char(string="Projects", track_visibility='onchange')
     description = fields.Char(string="Description")
-    is_inflow = fields.Boolean(string="In FLow")
+    is_inflow = fields.Boolean(string="In Flow")
     is_outflow = fields.Boolean(string="Out Flow")
 
     _sql_constraints = [
