@@ -271,6 +271,7 @@ class MBKProjects(models.Model):
     description = fields.Char(string="Description")
     is_inflow = fields.Boolean(string="In Flow")
     is_outflow = fields.Boolean(string="Out Flow")
+    is_project = fields.Boolean(string="Project")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Type already exists !"),

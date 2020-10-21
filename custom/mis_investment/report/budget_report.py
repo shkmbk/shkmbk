@@ -15,7 +15,7 @@ class FFBudgetReport(models.AbstractModel):
         year_to = date(year, 12, 31)
         obj_budget = self.env['mbk.budget'].search(
             [('state', '=', ['verify', 'done']), ('date_to', '>=', year_from), ('date_to', '<=', year_to)],
-            order='date_to')
+            order='date_to, id')
         if not obj_budget:
             raise UserError('No records found in selected parameter')
 
@@ -38,8 +38,10 @@ class FFBudgetReport(models.AbstractModel):
             required_fund_budget = rec.required_fund_budget
             required_fund_actual = rec.required_fund_actual
             required_fund_variance = rec.required_fund_variance
-            available_fund = balance_start
+            available_fund = 0.00
             fund_requirement = 0.00
+            fund_expense = 0.00
+            project_fund_allocated = 0.00
             closing_balance = balance_end
             # if rec.state == 'done':
             #     closing_balance = balance_end_real
@@ -52,6 +54,7 @@ class FFBudgetReport(models.AbstractModel):
             particulars_3 = 'Net Fund Position'
             particulars_4 = 'Required Funds'
             particulars_5 = 'Closing Balance'
+            particulars_6 = 'Fund allocated to project'
 
             existing_lines = (
                 line_id for line_id in master_table if
@@ -90,47 +93,8 @@ class FFBudgetReport(models.AbstractModel):
                 main_line['december'] += balance_start if month_id == 12 else 0.00
 
             for in_flow in rec.in_line_ids:
-                january = 0.00
-                february = 0.00
-                march = 0.00
-                april = 0.00
-                may = 0.00
-                june = 0.00
-                july = 0.00
-                august = 0.00
-                september = 0.00
-                october = 0.00
-                november = 0.00
-                december = 0.00
-                
-                particulars = in_flow.mbk_project_id.name                
+                particulars = in_flow.mbk_project_id.name
                 available_fund += in_flow.budget_amount
-                
-                if month_id == 1:
-                    january += in_flow.budget_amount
-                if month_id == 2:
-                    february += in_flow.budget_amount
-                if month_id == 3:
-                    march += in_flow.budget_amount
-                if month_id == 4:
-                    april += in_flow.budget_amount
-                if month_id == 5:
-                    may += in_flow.budget_amount
-                if month_id == 6:
-                    june += in_flow.budget_amount
-                if month_id == 7:
-                    july += in_flow.budget_amount
-                if month_id == 8:
-                    august += in_flow.budget_amount
-                if month_id == 9:
-                    september += in_flow.budget_amount
-                if month_id == 10:
-                    october += in_flow.budget_amount
-                if month_id == 11:
-                    november += in_flow.budget_amount
-                if month_id == 12:
-                    december += in_flow.budget_amount
-
                 existing_lines = (
                     line_id for line_id in in_flow_table if
                     line_id['particulars'] == particulars)
@@ -139,34 +103,35 @@ class FFBudgetReport(models.AbstractModel):
                 if not main_line:
                     main_line = {
                         'particulars': particulars,
-                        'january': january,
-                        'february': february,
-                        'march': march,
-                        'april': april,
-                        'may': may,
-                        'june': june,
-                        'july': july,
-                        'august': august,
-                        'september': september,
-                        'october': october,
-                        'november': november,
-                        'december': december,
+                        'january': in_flow.budget_amount if month_id == 1 else 0.00,
+                        'february': in_flow.budget_amount if month_id == 2 else 0.00,
+                        'march': in_flow.budget_amount if month_id == 3 else 0.00,
+                        'april': in_flow.budget_amount if month_id == 4 else 0.00,
+                        'may': in_flow.budget_amount if month_id == 5 else 0.00,
+                        'june': in_flow.budget_amount if month_id == 6 else 0.00,
+                        'july': in_flow.budget_amount if month_id == 7 else 0.00,
+                        'august': in_flow.budget_amount if month_id == 8 else 0.00,
+                        'september': in_flow.budget_amount if month_id == 9 else 0.00,
+                        'october': in_flow.budget_amount if month_id == 10 else 0.00,
+                        'november': in_flow.budget_amount if month_id == 11 else 0.00,
+                        'december': in_flow.budget_amount if month_id == 12 else 0.00,
                     }
                     in_flow_table.append(main_line)
                 else:
-                    main_line['january'] += january
-                    main_line['february'] += february
-                    main_line['march'] += march
-                    main_line['april'] += april
-                    main_line['may'] += may
-                    main_line['june'] += june
-                    main_line['july'] += july
-                    main_line['august'] += august
-                    main_line['september'] += september
-                    main_line['october'] += october
-                    main_line['november'] += november
-                    main_line['december'] += december
-            # Available Fund                    
+                    main_line['january'] += in_flow.budget_amount if month_id == 1 else 0.00
+                    main_line['february'] += in_flow.budget_amount if month_id == 2 else 0.00
+                    main_line['march'] += in_flow.budget_amount if month_id == 3 else 0.00
+                    main_line['april'] += in_flow.budget_amount if month_id == 4 else 0.00
+                    main_line['may'] += in_flow.budget_amount if month_id == 5 else 0.00
+                    main_line['june'] += in_flow.budget_amount if month_id == 6 else 0.00
+                    main_line['july'] += in_flow.budget_amount if month_id == 7 else 0.00
+                    main_line['august'] += in_flow.budget_amount if month_id == 8 else 0.00
+                    main_line['september'] += in_flow.budget_amount if month_id == 9 else 0.00
+                    main_line['october'] += in_flow.budget_amount if month_id == 10 else 0.00
+                    main_line['november'] += in_flow.budget_amount if month_id == 11 else 0.00
+                    main_line['december'] += in_flow.budget_amount if month_id == 12 else 0.00
+            # Available Fund
+
             existing_lines = (
                 line_id for line_id in master_table if
                 line_id['particulars'] == particulars_1)
@@ -204,81 +169,87 @@ class FFBudgetReport(models.AbstractModel):
                 main_line['december'] += available_fund if month_id == 12 else 0.00
 
             for out_flow in rec.out_line_ids:
-                january = 0.00
-                february = 0.00
-                march = 0.00
-                april = 0.00
-                may = 0.00
-                june = 0.00
-                july = 0.00
-                august = 0.00
-                september = 0.00
-                october = 0.00
-                november = 0.00
-                december = 0.00
-                particulars = out_flow.mbk_project_id.name
-                fund_requirement += out_flow.budget_amount
 
-                if month_id == 1:
-                    january += out_flow.budget_amount
-                if month_id == 2:
-                    february += out_flow.budget_amount
-                if month_id == 3:
-                    march += out_flow.budget_amount
-                if month_id == 4:
-                    april += out_flow.budget_amount
-                if month_id == 5:
-                    may += out_flow.budget_amount
-                if month_id == 6:
-                    june += out_flow.budget_amount
-                if month_id == 7:
-                    july += out_flow.budget_amount
-                if month_id == 8:
-                    august += out_flow.budget_amount
-                if month_id == 9:
-                    september += out_flow.budget_amount
-                if month_id == 10:
-                    october += out_flow.budget_amount
-                if month_id == 11:
-                    november += out_flow.budget_amount
-                if month_id == 12:
-                    december += out_flow.budget_amount
+                if out_flow.mbk_project_id.is_project:
+                    particulars = out_flow.mbk_project_id.name
+                    fund_requirement += out_flow.budget_amount
 
-                existing_lines = (
-                    line_id for line_id in out_flow_table if
-                    line_id['particulars'] == particulars)
-                main_line = next(existing_lines, False)
+                    existing_lines = (
+                        line_id for line_id in out_flow_table if
+                        line_id['particulars'] == particulars)
+                    main_line = next(existing_lines, False)
 
-                if not main_line:
-                    main_line = {
-                        'particulars': particulars,
-                        'january': january,
-                        'february': february,
-                        'march': march,
-                        'april': april,
-                        'may': may,
-                        'june': june,
-                        'july': july,
-                        'august': august,
-                        'september': september,
-                        'october': october,
-                        'november': november,
-                        'december': december,
-                    }
-                    out_flow_table.append(main_line)
+                    if not main_line:
+                        main_line = {
+                            'particulars': particulars,
+                            'january': out_flow.budget_amount if month_id == 1 else 0.00,
+                            'february': out_flow.budget_amount if month_id == 2 else 0.00,
+                            'march': out_flow.budget_amount if month_id == 3 else 0.00,
+                            'april': out_flow.budget_amount if month_id == 4 else 0.00,
+                            'may': out_flow.budget_amount if month_id == 5 else 0.00,
+                            'june': out_flow.budget_amount if month_id == 6 else 0.00,
+                            'july': out_flow.budget_amount if month_id == 7 else 0.00,
+                            'august': out_flow.budget_amount if month_id == 8 else 0.00,
+                            'september': out_flow.budget_amount if month_id == 9 else 0.00,
+                            'october': out_flow.budget_amount if month_id == 10 else 0.00,
+                            'november': out_flow.budget_amount if month_id == 11 else 0.00,
+                            'december': out_flow.budget_amount if month_id == 12 else 0.00,
+                        }
+                        out_flow_table.append(main_line)
+                    else:
+                        main_line['january'] += out_flow.budget_amount if month_id == 1 else 0.00
+                        main_line['february'] += out_flow.budget_amount if month_id == 2 else 0.00
+                        main_line['march'] += out_flow.budget_amount if month_id == 3 else 0.00
+                        main_line['april'] += out_flow.budget_amount if month_id == 4 else 0.00
+                        main_line['may'] += out_flow.budget_amount if month_id == 5 else 0.00
+                        main_line['june'] += out_flow.budget_amount if month_id == 6 else 0.00
+                        main_line['july'] += out_flow.budget_amount if month_id == 7 else 0.00
+                        main_line['august'] += out_flow.budget_amount if month_id == 8 else 0.00
+                        main_line['september'] += out_flow.budget_amount if month_id == 9 else 0.00
+                        main_line['october'] += out_flow.budget_amount if month_id == 10 else 0.00
+                        main_line['november'] += out_flow.budget_amount if month_id == 11 else 0.00
+                        main_line['december'] += out_flow.budget_amount if month_id == 12 else 0.00
                 else:
-                    main_line['january'] += january
-                    main_line['february'] += february
-                    main_line['march'] += march
-                    main_line['april'] += april
-                    main_line['may'] += may
-                    main_line['june'] += june
-                    main_line['july'] += july
-                    main_line['august'] += august
-                    main_line['september'] += september
-                    main_line['october'] += october
-                    main_line['november'] += november
-                    main_line['december'] += december
+                    fund_expense += out_flow.budget_amount
+
+            # Fund allocated to Project
+            fund_allocated = available_fund+balance_start - fund_expense
+            existing_lines = (
+                line_id for line_id in master_table if
+                line_id['particulars'] == particulars_6)
+            main_line = next(existing_lines, False)
+
+            if not main_line:
+                main_line = {
+                    'particulars': particulars_6,
+                    'january': fund_allocated if month_id == 1 else 0.00,
+                    'february': fund_allocated if month_id == 2 else 0.00,
+                    'march': fund_allocated if month_id == 3 else 0.00,
+                    'april': fund_allocated if month_id == 4 else 0.00,
+                    'may': fund_allocated if month_id == 5 else 0.00,
+                    'june': fund_allocated if month_id == 6 else 0.00,
+                    'july': fund_allocated if month_id == 7 else 0.00,
+                    'august': fund_allocated if month_id == 8 else 0.00,
+                    'september': fund_allocated if month_id == 9 else 0.00,
+                    'october': fund_allocated if month_id == 10 else 0.00,
+                    'november': fund_allocated if month_id == 11 else 0.00,
+                    'december': fund_allocated if month_id == 12 else 0.00,
+                }
+                master_table.append(main_line)
+            else:
+                main_line['january'] += fund_allocated if month_id == 1 else 0.00
+                main_line['february'] += fund_allocated if month_id == 2 else 0.00
+                main_line['march'] += fund_allocated if month_id == 3 else 0.00
+                main_line['april'] += fund_allocated if month_id == 4 else 0.00
+                main_line['may'] += fund_allocated if month_id == 5 else 0.00
+                main_line['june'] += fund_allocated if month_id == 6 else 0.00
+                main_line['july'] += fund_allocated if month_id == 7 else 0.00
+                main_line['august'] += fund_allocated if month_id == 8 else 0.00
+                main_line['september'] += fund_allocated if month_id == 9 else 0.00
+                main_line['october'] += fund_allocated if month_id == 10 else 0.00
+                main_line['november'] += fund_allocated if month_id == 11 else 0.00
+                main_line['december'] += fund_allocated if month_id == 12 else 0.00
+
             # Total Fund Requirement
             existing_lines = (
                 line_id for line_id in master_table if

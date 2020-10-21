@@ -26,6 +26,7 @@
                     <field name="description"/>
                     <field name="is_inflow"/>
                     <field name="is_outflow"/>
+                    <field name="is_project"/>
                 </tree>
             </field>
         </record>
