@@ -213,7 +213,7 @@ class MbkBudget(models.Model):
 class MBKBudgetInFlow(models.Model):
     _name = 'mbk.budget.in_flow'
     _description = 'Fund In Flow'
-    _order = 'mbk_budget_id, sl_no'
+    _order = 'mbk_budget_id, sl_no, id'
 
     mbk_budget_id = fields.Many2one('mbk.budget', string='Budget', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
@@ -239,7 +239,7 @@ class MBKBudgetInFlow(models.Model):
 class MBKBudgetOutFlow(models.Model):
     _name = 'mbk.budget.out_flow'
     _description = 'Fund Out Flow'
-    _order = 'mbk_budget_id, sl_no'
+    _order = 'mbk_budget_id, sl_no, id'
 
     mbk_budget_id = fields.Many2one('mbk.budget', string='Budget', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
