@@ -157,7 +157,7 @@
                                     </td>
                                 </tr>
                             
-                                <tr>
+                                <tr style="width:100%;height:30px;background-color:#add8e6;">
                                     <td>
                                         <b><span t-esc="docs[2]['particulars']"/></b>
                                     </td>
