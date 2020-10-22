@@ -42,7 +42,7 @@
                                         <b><span t-esc="'{0:,.0f}'.format(docs[1]['april'])"/></b>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[1]['june'])"/></b>
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[1]['may'])"/></b>
                                     </td>
                                     <td class="text-right">
                                         <b><span t-esc="'{0:,.0f}'.format(docs[1]['june'])"/></b>
@@ -85,7 +85,7 @@
                                         <span t-esc="'{0:,.0f}'.format(line['april'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="'{0:,.0f}'.format(line['june'])"/>
+                                        <span t-esc="'{0:,.0f}'.format(line['may'])"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(line['june'])"/>
@@ -132,7 +132,7 @@
                                         <span t-esc="'{0:,.0f}'.format(docs[0]['april'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="'{0:,.0f}'.format(docs[0]['june'])"/>
+                                        <span t-esc="'{0:,.0f}'.format(docs[0]['may'])"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(docs[0]['june'])"/>
@@ -174,7 +174,7 @@
                                         <b><span t-esc="'{0:,.0f}'.format(docs[2]['april'])"/></b>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['june'])"/></b>
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['may'])"/></b>
                                     </td>
                                     <td class="text-right">
                                         <b><span t-esc="'{0:,.0f}'.format(docs[2]['june'])"/></b>
@@ -215,7 +215,7 @@
                                         <b><span t-esc="'{0:,.0f}'.format(docs[3]['april'])"/></b>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[3]['june'])"/></b>
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[3]['may'])"/></b>
                                     </td>
                                     <td class="text-right">
                                         <b><span t-esc="'{0:,.0f}'.format(docs[3]['june'])"/></b>
@@ -258,7 +258,7 @@
                                         <span t-esc="'{0:,.0f}'.format(line['april'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="'{0:,.0f}'.format(line['june'])"/>
+                                        <span t-esc="'{0:,.0f}'.format(line['may'])"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(line['june'])"/>
@@ -305,7 +305,7 @@
                                         <b><span t-esc="'{0:,.0f}'.format(docs[4]['april'])"/></b>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[4]['june'])"/></b>
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[4]['may'])"/></b>
                                     </td>
                                     <td class="text-right">
                                         <b><span t-esc="'{0:,.0f}'.format(docs[4]['june'])"/></b>
@@ -343,10 +343,10 @@
                                         <b> <span t-esc="'{0:,.0f}'.format(docs[5]['march'])"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
-                                        <b> <span t-esc="'{0:,.0f}'.format(docs[5]['may'])"/></b>
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[5]['april'])"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
-                                        <b> <span t-esc="'{0:,.0f}'.format(docs[5]['january'])"/></b>
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[5]['may'])"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b> <span t-esc="'{0:,.0f}'.format(docs[5]['june'])"/></b>
@@ -385,10 +385,10 @@
                                         <b> <span t-esc="'{0:,.0f}'.format(docs[6]['march'])"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
-                                        <b> <span t-esc="'{0:,.0f}'.format(docs[6]['may'])"/></b>
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[6]['april'])"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
-                                        <b> <span t-esc="'{0:,.0f}'.format(docs[6]['january'])"/></b>
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[6]['may'])"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b> <span t-esc="'{0:,.0f}'.format(docs[6]['june'])"/></b>
