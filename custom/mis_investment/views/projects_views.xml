@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="mbk_inv_projects_form_view" model="ir.ui.view">
+            <field name="name">mbk.inv.projects.form</field>
+            <field name="model">mbk.inv.projects</field>
+            <field name="arch" type="xml">
+                <form string="Projects">
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="is_inflow"/>
+                        <field name="is_outflow"/>
+                        <field name="is_project"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="mbk_inv_projects_tree_view" model="ir.ui.view">
+            <field name="name">mbk.inv.projects.tree</field>
+            <field name="model">mbk.inv.projects</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree  editable="bottom" create="1" delete="1"   string="Projects">
+                    <field name="name" required="1"/>
+                    <field name="description"/>
+                    <field name="is_inflow"/>
+                    <field name="is_outflow"/>
+                    <field name="is_project"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mbk_inv_projects_action" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">mbk.inv.projects</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                 <p>
+                    Add a new Projects
+                  </p>
+            </field>
+        </record>
+
+        <menuitem id="mbk_menu_action_inv_projects"
+            action="mbk_inv_projects_action"
+            parent="mis_inv_configuration_menu"
+            sequence="1"/>
+    </data>
+</odoo>

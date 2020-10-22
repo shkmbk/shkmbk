@@ -27,7 +27,7 @@ class FDSummaryReport(models.AbstractModel):
             if line['totaldays']>0:
                 subtable[line['id']] = (line['expected_earning']*(line['totalason']/line['totaldays']))
             else:
-                subtable[line['id']]=0
+                subtable[line['id']] = 0
 
         docargs = {
             'doc_ids': self.ids,
