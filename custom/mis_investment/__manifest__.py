@@ -46,7 +46,6 @@
         'report/fd_report_template.xml',
         'report/bond_report_template.xml',
         'report/budget_template.xml',
-        'security/ir.model.access.csv',
         'wizard/bond_summaryreport_wizard.xml',
         'wizard/budget_report_wizard.xml',
     ],
