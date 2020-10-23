@@ -25,6 +25,7 @@
     'data': [
         'data/investment_data.xml',
         'data/budget_data.xml',
+        'security/ir.model.access.csv',
         'views/investment_view.xml',
         'views/investment_transaction_view.xml',
         'views/mbk_budget_view.xml',
