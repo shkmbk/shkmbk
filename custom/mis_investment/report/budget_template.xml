@@ -156,8 +156,49 @@
                                         <span t-esc="'{0:,.0f}'.format(docs[0]['december'])"/>
                                     </td>
                                 </tr>
-                            
-                                <tr style="width:100%;height:30px;background-color:#add8e6;">
+                                <tr style="width:100%;height:30px;background-color:#add8e6">
+                                    <td>
+                                        <b>Fund Allocated to Project</b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['january']-docs[0]['january'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['february']-docs[0]['february'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['march']-docs[0]['march'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['april']-docs[0]['april'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['may']-docs[0]['may'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['june']-docs[0]['june'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['july']-docs[0]['july'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['august']-docs[0]['august'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['september']-docs[0]['september'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['october']-docs[0]['october'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['november']-docs[0]['november'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['december']-docs[0]['december'])"/></b>
+                                    </td>
+                                </tr>
+
+                                <tr style="width:100%;height:30px;background-color:#a6ffb3;">
                                     <td>
                                         <b><span t-esc="docs[2]['particulars']"/></b>
                                     </td>
@@ -196,47 +237,6 @@
                                     </td>
                                     <td class="text-right">
                                         <b><span t-esc="'{0:,.0f}'.format(docs[2]['december'])"/></b>
-                                    </td>
-                                </tr>
-                                <tr style="width:100%;height:30px;background-color:#a6ffb3">
-                                    <td>
-                                        <b>Fund Available for Projects</b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['january']+docs[0]['january'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['february']+docs[0]['february'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['march']+docs[0]['march'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['april']+docs[0]['april'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['may']+docs[0]['may'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['june']+docs[0]['june'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['july']+docs[0]['july'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['august']+docs[0]['august'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['september']+docs[0]['september'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['october']+docs[0]['october'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['november']+docs[0]['november'])"/></b>
-                                    </td>
-                                    <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['december']+docs[0]['december'])"/></b>
                                     </td>
                                 </tr>
                                 <tr style="width:100%;height:30px;background-color:#ffcccb;">

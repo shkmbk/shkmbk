@@ -54,7 +54,7 @@ class FFBudgetReport(models.AbstractModel):
             particulars_3 = 'Net Fund Position'
             particulars_4 = 'Required Funds'
             particulars_5 = 'Closing Balance'
-            particulars_6 = 'Fund allocated to project'
+            particulars_6 = 'Fund Available for Projects'
 
             existing_lines = (
                 line_id for line_id in master_table if
