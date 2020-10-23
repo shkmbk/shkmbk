@@ -1,34 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_budget_document">
-       <template  id="report_header_custom" inherit_id="report.external_layout_header">
-            <t t-if="o and 'company_id' in o">
-                  <t t-set="company" t-value="o.company_id"/>
-             </t>
-              <t t-if="not o or not 'company_id' in o">
-                  <t t-set="company" t-value="res_company"/>
-              </t>
-            <xpath expr="//div[@class='header']" position="replace">
-                <div class="header">
-                    <div class="row">
-                        <div class="col-3 mb4">
-                            <img src='/web/binary/company_logo' alt="Logo" style="max-height: 75px;"/>
-                        </div>
-                    </div>
-                </div>
-            </xpath>
-        </template>
-        <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
-            <xpath expr="//div[@class='footer']" position="replace">
-                <div class="footer">
-                    <div class="row">
-                        <div  class="col-1 text-right">
-                           Page: <span class="page"/> / <span class="topage"/>
-                        </div>
-                    </div>
-                </div>
-            </xpath>
-        </template>
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <div class="page">
