@@ -27,19 +27,24 @@
                                 <div>
                                     <field name="date_from" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/> - <field name="date_to" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </div>
+                                <field name="balance_start" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="currency_id" invisible="1"/>
                             </group>
                             <group>
-                                <label for="balance_start"/>
-                                <div>
-                                    <field class="oe_inline" name="balance_start" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <label for="balance_start_real" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <div class="o_row">
+                                    <field class="oe_inline" name="balance_start_real" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))], 'invisible': [('state', '=', 'draft')]}"/>
+                                    <button string="Get Balance" class="btn btn-link" type="object" name="get_opening_balance" attrs="{'invisible': [('state', 'in', ['done', 'draft'])]}"/>
                                 </div>
-                                <label for="balance_end_real"/>
+                                <label for="balance_end_real" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))], 'invisible': [('state', '=', 'draft')]}"/>
                                 <div>
-                                    <field class="oe_inline" name="balance_end_real" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                    <field class="oe_inline" name="balance_end_real" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))], 'invisible': [('state', '=', 'draft')]}"/>
                                 </div>
+                                <field name="balance_end_variance" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" invisible="1"/>
+                                <field name="inflow_budget" invisible="1"/>
+                                <field name="outflow_budget" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -69,10 +74,8 @@
                                 <group class="oe_subtotal_footer">
                                     <field name="net_fund_position" class="oe_subtotal_footer_separator"/>
                                     <field name="net_fund_actual" invisible="True" class="oe_subtotal_footer_separator"/>
-                                    <field name="net_fund_variance" invisible="True" class="oe_subtotal_footer_separator"/>
                                     <field name="required_fund_budget" class="oe_subtotal_footer_separator"/>
-                                    <field name="required_fund_actual" states="verify" class="oe_subtotal_footer_separator"/>
-                                    <field name="required_fund_variance" invisible="True" class="oe_subtotal_footer_separator"/>
+                                    <field name="required_fund_actual" states="verify,done" class="oe_subtotal_footer_separator"/>
                                     <field name="balance_end" class="oe_subtotal_footer_separator"/>
                                 </group>
                                 <!-- Internal note -->
@@ -100,6 +103,8 @@
                  <field name="name"/>
                  <field name="date_to"/>
                  <field name="balance_start"/>
+                 <field name="inflow_budget"/>
+                 <field name="outflow_budget"/>
                  <field name="net_fund_position"/>
                  <field name="required_fund_budget"/>
                  <field name="balance_end"/>

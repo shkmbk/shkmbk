@@ -42,4 +42,11 @@
             name="mis_investment.report_budget_document"
             file="mis_investment.report_budget_document"
             menu="False"/>
+        <report id="action_budget_variation_report"
+            model="mis.invrevaluation"
+            string="Fund Flow Budget Variation Report"
+            report_type="qweb-html"
+            name="mis_investment.report_budget_variation_document"
+            file="mis_investment.report_budget_variation_document"
+            menu="False"/>
 </odoo>

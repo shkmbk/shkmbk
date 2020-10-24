@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_budget_variation_document">
+        <template  id="report_header_custom" inherit_id="report.external_layout_header">
+            <t t-if="o and 'company_id' in o">
+                  <t t-set="company" t-value="o.company_id"/>
+             </t>
+              <t t-if="not o or not 'company_id' in o">
+                  <t t-set="company" t-value="res_company"/>
+              </t>
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="/mis_auh_report/static/src/img/header.jpg"
+                                         style="margin:auto;width:100%;display:block;"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
+            <xpath expr="//div[@class='footer']" position="replace">
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-11">
+                            <img src="/mis_auh_report/static/src/img/footer.jpg" style="margin:auto;width:100%"/>
+                        </div>
+                        <div  class="col-1 text-right">
+                          <br/>
+                                Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>FUND FLOW BUDGET VARIATION <t t-esc="month"/> <t t-esc="year"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-left"><strong>Particulars</strong></th>
+                                <th class="text-right"><strong>Budget</strong></th>
+                                <th class="text-right"><strong>Actual</strong></th>
+                                <th class="text-right"><strong>Variation</strong></th>
+                                <th class="text-right" ><strong>Variation %</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="rowno" t-value="1"/>
+                                <tr style="width:100%;height:30px;background-color:#90EE90;">
+                                    <td style="vertical-align:middle;text-align:left;">
+                                      <b>Cash Inflows - Profit Share from Subsidiaries</b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[1]['budget'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[1]['actual'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[1]['variation'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="not docs[1]['budget']==0">
+                                            <b><span t-esc="'{0:,.0f}'.format(docs[1]['variation']*100/docs[1]['budget'])"/></b>
+                                        </t>
+                                    </td>
+                                </tr>
+                            <t t-foreach="in_flow_table" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="line['particulars']"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['budget'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['actual'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['variation'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="not line['budget']==0">
+                                            <b><span t-esc="'{0:,.0f}'.format(line['variation']*100/line['budget'])"/></b>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:15px;">
+                                    <td colspan="13" style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                      <b></b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-esc="docs[0]['particulars']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(docs[0]['budget'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(docs[0]['actual'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(docs[0]['variation'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="not docs[0]['budget']==0">
+                                            <b><span t-esc="'{0:,.0f}'.format(docs[0]['variation']*100/docs[0]['budget'])"/></b>
+                                        </t>
+                                    </td>
+
+                                </tr>
+                                <tr style="width:100%;height:30px;background-color:#add8e6">
+                                    <td>
+                                        <b>Fund Allocated to Project</b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['budget']-docs[0]['budget'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['actual']-docs[0]['actual'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['variation']-docs[0]['variation'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="not docs[2]['budget']-docs[0]['budget']==0">
+                                            <b><span t-esc="'{0:,.0f}'.format((docs[2]['variation']-docs[0]['variation'])*100/(docs[2]['budget']-docs[0]['budget']))"/></b>
+                                        </t>
+                                    </td>
+                                </tr>
+
+                                <tr style="width:100%;height:30px;background-color:#a6ffb3;">
+                                    <td>
+                                        <b><span t-esc="docs[2]['particulars']"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['budget'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['actual'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['variation'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="not docs[2]['budget']==0">
+                                            <b><span t-esc="'{0:,.0f}'.format((docs[2]['variation']*100)/docs[2]['budget'])"/></b>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr style="width:100%;height:30px;background-color:#ffcccb;">
+                                    <td style="vertical-align:middle;text-align:left;">
+                                      <b>Cash Out Flow - Project Payments/ Investments</b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[3]['budget'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[3]['actual'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[3]['variation'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                         <t t-if="not docs[3]['budget']==0">
+                                            <b><span t-esc="'{0:,.0f}'.format(docs[3]['variation']*100/docs[3]['budget'])"/></b>
+                                         </t>
+                                    </td>
+                                </tr>
+                            <t t-foreach="out_flow_table" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="line['particulars']"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['budget'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['actual'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['variation'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-if="not line['budget']==0">
+                                            <span t-esc="'{0:,.0f}'.format(line['variation']*100/line['budget'])"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:15px;">
+                                    <td colspan="13" style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                      <b></b>
+                                    </td>
+                                </tr>
+                                <tr style="width:100%;height:30px;">
+                                    <td style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                        <b><span t-esc="docs[4]['particulars']"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[4]['budget'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[4]['actual'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[4]['variation'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                         <t t-if="not docs[4]['budget']==0">
+                                            <b><span t-esc="'{0:,.0f}'.format(docs[4]['variation']*100/docs[4]['budget'])"/></b>
+                                         </t>
+                                    </td>
+                                </tr>
+                                <tr style="width:100%;height:30px;color: #FF0000;font-size: 16px;">
+                                    <td colspan="1" style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                      <b><span t-esc="docs[5]['particulars']"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[5]['budget'])"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[5]['actual'])"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[5]['variation'])"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                         <t t-if="not docs[5]['budget']==0">
+                                            <b> <span t-esc="'{0:,.0f}'.format(docs[5]['variation']*100/docs[5]['budget'])"/></b>
+                                         </t>
+                                    </td>
+                                </tr>                           
+                             
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="1" style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                      <b><span t-esc="docs[6]['particulars']"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[6]['budget'])"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[6]['actual'])"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b> <span t-esc="'{0:,.0f}'.format(docs[6]['variation'])"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <t t-if="not docs[6]['budget']==0">
+                                            <b> <span t-esc="'{0:,.0f}'.format(docs[6]['variation']*100/docs[6]['budget'])"/></b>
+                                        </t>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+

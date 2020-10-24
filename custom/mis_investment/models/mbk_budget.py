@@ -15,18 +15,18 @@ class MbkBudget(models.Model):
 
     @api.model
     def _default_opening_balance(self):
-        #Search last bank statement and set current opening balance as closing balance of previous one
-        obj_last_budget = self.env['mbk.budget'].search([('state', 'in', ['done', 'verify'])], order='date_to desc', limit=1)
+        # Search last bank statement and set current opening balance as closing balance of previous one
+        obj_last_budget = self.env['mbk.budget'].search([('state', 'in', ['done', 'verify'])], order='date_to desc',
+                                                        limit=1)
         if obj_last_budget:
             if obj_last_budget.state == 'done':
                 return obj_last_budget.balance_end_real
             else:
                 return obj_last_budget.balance_end
-
         return 0
 
-    budget_no = fields.Char(string='Number', readonly=True, store=True, default='New')
-    name = fields.Char(string='Name', store=True)
+    budget_no = fields.Char(string='Number', readonly=True, store=True, copy=False, default='New')
+    name = fields.Char(string='Name', copy=False, store=True)
     # number = fields.Char(string='Reference', readonly=True, required=True, copy=False,
     #                    states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     state = fields.Selection([
@@ -43,22 +43,25 @@ class MbkBudget(models.Model):
                        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     date = fields.Date('Date', default=fields.Date.to_string(date.today()),
                        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]}, readonly=True,
+                       copy=False,
                        help="Keep empty to use the period of the validation(budget) date.")
     company_id = fields.Many2one('res.company', 'Company', readonly=True, copy=False, required=True,
                                  default=lambda self: self.env.company)
-    date_from = fields.Date(string='From', readonly=True, required=True,
+    date_from = fields.Date(string='From', readonly=True, required=True, copy=False,
                             default=lambda self: fields.Date.to_string(date.today().replace(day=1)),
                             states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
-    date_to = fields.Date(string='To', readonly=True, required=True,
+    date_to = fields.Date(string='To', readonly=True, required=True, copy=False,
                           default=lambda self: fields.Date.to_string(
                               (datetime.now() + relativedelta(months=+1, day=1, days=-1)).date()),
                           states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
-    balance_start = fields.Float(string='Starting Balance',
-                                 states={'done': [('readonly', True)]}, default=_default_opening_balance)
-    balance_end_real = fields.Float('Ending Balance', compute='_compute_end_real', store=True,
-                                    states={'done': [('readonly', True)]})
-    balance_end = fields.Float('Computed Balance', compute='_compute_end_balance', store=True,
-                               help='Balance as calculated based on Opening Balance and transaction lines')
+    balance_start = fields.Float(string='Opening Balance', help="Budget starting balance",
+                                 states={'done': [('readonly', True)]}, default=_default_opening_balance, copy=False)
+    balance_start_real = fields.Float(string='Starting Balance', help="Actual starting balance",
+                                      states={'done': [('readonly', True)]}, default=0.00, copy=False)
+    balance_end_real = fields.Float('Ending Balance', help="Actual ending balance", compute='_compute_end_real', store=True, copy=False, readonly=True)
+    balance_end_variance = fields.Float('Net Variance', compute='_compute_end_variance', store=True, copy=False, readonly=True)
+    balance_end = fields.Float('Closing Balance', compute='_compute_end_balance', store=True, copy=False,
+                               help='Budget Closing Balance as calculated based on Opening Balance and transaction lines')
     in_line_ids = fields.One2many('mbk.budget.in_flow', 'mbk_budget_id', string='Fund In Flow lines',
                                   states={'done': [('readonly', True)]}, copy=True)
     out_line_ids = fields.One2many('mbk.budget.out_flow', 'mbk_budget_id', string='Fund Out Flow lines',
@@ -67,12 +70,16 @@ class MbkBudget(models.Model):
                                         store=True, default=False)
     net_fund_actual = fields.Monetary(string='Net Fund Actual', readonly=True, compute='_compute_net_fund_actual',
                                       store=True, default=False)
-    net_fund_variance = fields.Monetary(string='Net Fund Variance', readonly=True, compute='_compute_net_fund_actual',
-                                        store=True, default=False)
+    inflow_budget = fields.Monetary(string='Budget Inflow', readonly=True, compute='_compute_net_fund',
+                                    store=True, default=False)
+    outflow_budget = fields.Monetary(string='Budget Outflow', readonly=True, compute='_compute_net_fund',
+                                     store=True, default=False)
+    inflow_actual = fields.Monetary(string='Actual Inflow', readonly=True, compute='_compute_net_fund_actual',
+                                    store=True, default=False)
+    outflow_actual = fields.Monetary(string='Actual Outflow', readonly=True, compute='_compute_net_fund_actual',
+                                     store=True, default=False)
     required_fund_budget = fields.Monetary(string='Required Fund')
     required_fund_actual = fields.Monetary(string='Approved Fund')
-    required_fund_variance = fields.Monetary(string='Fund Variance', readonly=True, compute='_compute_end_real',
-                                             store=True, default=False)
     currency_id = fields.Many2one('res.currency', String='Currency', Default=131, store=True)
 
     def compute_sheet(self):
@@ -83,7 +90,7 @@ class MbkBudget(models.Model):
             mod = 1000
             mod_value = (net_fund_position % mod)
             if mod_value > 0:
-                net_fund_position = (net_fund_position-mod_value) + mod
+                net_fund_position = (net_fund_position - mod_value) + mod
             required_fund_budget = net_fund_position
         else:
             required_fund_budget = 0.00
@@ -113,17 +120,14 @@ class MbkBudget(models.Model):
         if not self.required_fund_actual or self.required_fund_actual == 0:
             if self.required_fund_budget > 0:
                 raise UserError('Enter Approved Fund Details')
-        if self.balance_end != self.balance_end_real:
-            difference = self.balance_end - self.balance_end_real
-            if abs(difference/(1 if self.balance_end == 0 else self.balance_end)) > .5:
-                raise Warning('%f difference found in budgeted and actual fund balance.' % difference)
+
         return self.write({'state': 'done'})
 
     @api.model
     def create(self, vals):
         obj_last_budget = self.env['mbk.budget'].search([('state', '=', 'draft')])
         if obj_last_budget:
-            raise UserError('Enter finalize the previous draft budget')
+            raise UserError('Finalize the previous budget')
         vals['state'] = 'draft'
         res = super(MbkBudget, self).create(vals)
         return res
@@ -135,49 +139,51 @@ class MbkBudget(models.Model):
             budget.trans_line.unlink()
         return super(MbkBudget, self).unlink()
 
-    @api.depends('in_line_ids.budget_amount', 'out_line_ids.budget_amount')
+    @api.depends('balance_start', 'in_line_ids.budget_amount', 'out_line_ids.budget_amount')
     def _compute_net_fund(self):
         for budget in self:
-            net_fund_position = 0.0
-            net_fund_actual = 0.00
+            inflow_budget = 0.00
+            outflow_budget = 0.00
+            balance_start = 0.00
 
             if budget.balance_start:
-                net_fund_position += budget.balance_start
-                net_fund_actual = net_fund_position
+                balance_start = budget.balance_start
+
             for line in budget.in_line_ids:
-                net_fund_position += line.budget_amount
-                net_fund_actual += line.actual_amount
+                inflow_budget += line.budget_amount
 
             for line in budget.out_line_ids:
-                net_fund_position -= line.budget_amount
-                net_fund_actual -= line.actual_amount
-            net_fund_variance = net_fund_position - net_fund_actual
+                outflow_budget += line.budget_amount
 
+            net_fund_position = balance_start + inflow_budget - outflow_budget
             budget.update({
+                'inflow_budget': inflow_budget,
+                'outflow_budget': outflow_budget,
                 'net_fund_position': net_fund_position,
-                'net_fund_actual': net_fund_actual,
-                'net_fund_variance': net_fund_variance,
-
             })
 
-    @api.depends('in_line_ids.actual_amount', 'out_line_ids.actual_amount')
+    @api.depends('balance_start_real', 'in_line_ids.actual_amount', 'out_line_ids.actual_amount')
     def _compute_net_fund_actual(self):
         for budget in self:
-            net_fund_actual = 0.00
-            if budget.balance_start:
-                net_fund_actual += budget.balance_start
+            balance_start_real = 0.00
+            inflow_actual = 0.00
+            outflow_actual = 0.00
+
+            if budget.balance_start_real:
+                balance_start_real = budget.balance_start_real
 
             for line in budget.in_line_ids:
-                net_fund_actual += line.actual_amount
+                inflow_actual += line.actual_amount
 
             for line in budget.out_line_ids:
-                net_fund_actual -= line.actual_amount
+                outflow_actual += line.actual_amount
 
-            net_fund_variance = budget.net_fund_position - net_fund_actual
+            net_fund_actual = balance_start_real + inflow_actual - outflow_actual
 
             budget.update({
+                'inflow_actual': inflow_actual,
+                'outflow_actual': outflow_actual,
                 'net_fund_actual': net_fund_actual,
-                'net_fund_variance': net_fund_variance,
             })
 
     @api.depends('net_fund_position', 'required_fund_budget')
@@ -202,13 +208,29 @@ class MbkBudget(models.Model):
                 required_fund_actual = 0.00
 
             balance_end_real = budget.net_fund_actual + required_fund_actual
-            required_fund_variance = budget.balance_end_real - budget.required_fund_budget
 
             budget.update({
                 'balance_end_real': balance_end_real,
-                'required_fund_variance': required_fund_variance,
             })
 
+    @api.depends('balance_end_real', 'balance_end')
+    def _compute_end_variance(self):
+        for budget in self:
+            balance_end_variance = budget.balance_end_real + budget.balance_end
+            budget.update({
+                'balance_end_variance': balance_end_variance,
+            })
+
+
+    def get_opening_balance(self):
+        # Search last bank statement and set current opening balance as closing balance of previous one
+        obj_last_budget = self.env['mbk.budget'].search([('state', 'in', ['done'])], order='date_to desc',
+                                                        limit=1)
+        if obj_last_budget:
+            if obj_last_budget.state == 'done':
+                self.balance_start_real = obj_last_budget.balance_end_real
+            else:
+                self.balance_start_real = 0.00
 
 class MBKBudgetInFlow(models.Model):
     _name = 'mbk.budget.in_flow'
@@ -217,7 +239,8 @@ class MBKBudgetInFlow(models.Model):
 
     mbk_budget_id = fields.Many2one('mbk.budget', string='Budget', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
-    mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True, domain="[('is_inflow', '=', True)]")
+    mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True,
+                                     domain="[('is_inflow', '=', True)]")
     name = fields.Char(string='Description', store=True)
     budget_amount = fields.Float(string='Budget')
     actual_amount = fields.Float(string='Actual')
@@ -233,7 +256,7 @@ class MBKBudgetInFlow(models.Model):
     def _default_description(self):
         for rec in self:
             if rec.mbk_project_id and not rec.name:
-                rec.name = rec.mbk_project_id.name
+                rec.name = rec.mbk_project_id.description
 
 
 class MBKBudgetOutFlow(models.Model):
@@ -243,7 +266,8 @@ class MBKBudgetOutFlow(models.Model):
 
     mbk_budget_id = fields.Many2one('mbk.budget', string='Budget', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, index=True, readonly=True, default=10)
-    mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True, domain="[('is_outflow', '=', True)]")
+    mbk_project_id = fields.Many2one('mbk.inv.projects', string='Projects', required=True,
+                                     domain="[('is_outflow', '=', True)]")
     name = fields.Char(string='Description', store=True)
     budget_amount = fields.Float(string='Budget')
     actual_amount = fields.Float(string='Actual')
@@ -253,13 +277,13 @@ class MBKBudgetOutFlow(models.Model):
     @api.depends('budget_amount', 'actual_amount')
     def _calculate_variance(self):
         for rec in self:
-            rec.variance_amount = rec.budget_amount - rec.actual_amount
+            rec.variance_amount = rec.actual_amount - rec.budget_amount
 
     @api.onchange('mbk_project_id')
     def _default_description(self):
         for rec in self:
             if rec.mbk_project_id and not rec.name:
-                rec.name = rec.mbk_project_id.name
+                rec.name = rec.mbk_project_id.description
 
 
 class MBKProjects(models.Model):
