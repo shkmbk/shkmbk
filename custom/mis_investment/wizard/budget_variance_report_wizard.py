@@ -19,6 +19,6 @@ class BudgetVarianceReportWizard(models.TransientModel):
 
     def button_export_pdf(self):
         data = {'date_from': self.date_from, 'date_to': self.date_to, 'year': self.year, 'month': self.month,
-                'header_period': self.date_from.strftime("%B %Y")}
+                'header_period': self.date_from.strftime("%B %Y").upper()}
         report = self.env.ref('mis_investment.action_budget_variation_report')
         return report.report_action(self, data=data)
