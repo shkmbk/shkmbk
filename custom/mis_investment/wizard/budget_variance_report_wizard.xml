@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="mbk_budget_variation_report_view" model="ir.ui.view">
-            <field name="name">Fund Flow Budget Report</field>
+            <field name="name">Fund Flow Variance Report</field>
             <field name="model">mbk.budget_variance.wizard</field>
             <field name="arch" type="xml">
                  <form name="Report Options">
@@ -32,7 +32,7 @@
         </record>
 
         <record id="action_budget_variation_report_menu" model="ir.actions.act_window">
-            <field name="name">Fund Flow Budget Variation Report</field>
+            <field name="name">Fund Flow Variance Report</field>
             <field name="res_model">mbk.budget_variance.wizard</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">form</field>
@@ -40,7 +40,7 @@
         </record>
 
         <menuitem id="menu_budget_variation_report"
-                  name="Fund Flow Budget Variation Report"
+                  name="Fund Flow Variance  Report"
                   sequence="10"
                   action="action_budget_variation_report_menu"
                   parent="mis_investment.mis_inv_report_menu"/>

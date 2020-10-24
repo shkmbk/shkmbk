@@ -2,6 +2,7 @@ from odoo import fields, models, _
 from datetime import date, datetime, timedelta
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
+import calendar
 
 
 class BudgetVarianceReportWizard(models.TransientModel):
@@ -18,7 +19,8 @@ class BudgetVarianceReportWizard(models.TransientModel):
                               ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], string='Month', default=str(datetime.now().month), required="1")
 
     def button_export_pdf(self):
+        header_period = calendar.month_name[int(self.month)] + ' ' + self.year
         data = {'date_from': self.date_from, 'date_to': self.date_to, 'year': self.year, 'month': self.month,
-                'header_period': self.date_from.strftime("%B %Y").upper()}
+                'header_period': header_period.upper()}
         report = self.env.ref('mis_investment.action_budget_variation_report')
         return report.report_action(self, data=data)
