@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="cash_payslip_report">
+	<template  id="report_header_custom" inherit_id="report.external_layout_header">
+		<t t-if="o and 'company_id' in o">
+			  <t t-set="company" t-value="o.company_id"/>
+		 </t>
+		  <t t-if="not o or not 'company_id' in o">
+			  <t t-set="company" t-value="res_company"/>
+		  </t>
+		<xpath expr="//div[@class='header']" position="replace">
+			<div class="header">
+				<div class="row">
+					 <div class="col-12">
+
+						  <img src="/mis_auh_report/static/src/img/header.jpg"
+								 style="margin:auto;width:100%;display:block;"/>
+					  </div>
+				</div>
+			</div>
+		</xpath>
+	</template>
+	<template id="custom_layout_footer" inherit_id="report.external_layout_footer">
+		<xpath expr="//div[@class='footer']" position="replace">
+			<div class="footer">
+				<div class="row">
+					<div class="col-11">
+						<img src="/mis_auh_report/static/src/img/footer.jpg" style="margin:auto;width:100%"/>
+					</div>
+					<div  class="col-1 text-right">
+					  <br/>
+							Page: <span class="page"/> / <span class="topage"/>
+					</div>
+				</div>
+			</div>
+		</xpath>
+	</template>
+		
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page">
+					<table width="100%">
+						<tr>
+							<td colspan="2" width="100%"  valign="middle" align="center">
+								<h2>
+									<br/>
+									<br/>
+									<span t-field="o.employee_id.payment_method.name"/><span> Payslip</span>
+									<br/>
+									<br/>                                
+								 </h2>
+							</td>
+						</tr>
+					</table>
+                    <h4 t-field="o.name"/>
+				    <table name="employee-infos" class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id"/></td>
+                            <td><strong>Designation</strong></td>
+                            <td><span t-field="o.employee_id.job_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <div t-field="o.employee_id.address_home_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Department</strong></td>
+                            <td><span t-field="o.employee_id.department_id"/></td>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.identification_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number"/></td>
+                            <td><strong>Payment Method</strong></td>
+                            <td><span t-field="o.employee_id.payment_method.name"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Date From</strong></td>
+                            <td><span t-field="o.date_from"/></td>
+                            <td><strong>Date To</strong></td>
+                            <td><span t-field="o.date_to"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Computed On</strong></td>
+                            <td><span t-field="o.compute_date"/></td>
+                            <td><strong>Registration Number</strong></td>
+                            <td><span t-field="o.employee_id.registration_number"/></td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm">
+                        <tr>
+                            <td><strong>Basic Salary</strong></td>
+                            <td>
+                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Number of Days</th>
+                                <th align="right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.worked_days_line_ids" t-as="worked_days">
+                                <td><span t-field="worked_days.code"/></td>
+                                <td>
+                                    <span t-field="worked_days.name"/>
+                                </td>
+                                <td><span t-field="worked_days.number_of_days"/></td>
+                                <td></td>
+                            </tr>
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                                <td><span t-field="line.code"/></td>
+                                <td><span t-field="line.name"/></td>
+                                <td></td>
+                                <td align="right"><span t-esc="line.total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+					<div class="row">
+						<div class="col-3" style="right;">
+							<p class="text-center" style="padding-left:5mm;">
+								<br/><br/><br/><br/><br/>
+							</p>	
+
+							<p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+								Employee Signature
+							</p>
+						</div>
+
+						<div class="col-6" style="center">
+
+						</div>							
+
+						<div class="col-3" style="left">
+							<p class="text-center" style="padding-left:5mm;">
+							 <br/><br/><br/><br/><br/>
+							</p>
+
+							<p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+							Authorized signature
+							</p>
+						</div>
+					</div>					
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

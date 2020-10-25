@@ -34,10 +34,8 @@ class FFBudgetReport(models.AbstractModel):
             balance_end = rec.balance_end
             net_fund_position = rec.net_fund_position
             net_fund_actual = rec.net_fund_actual
-            net_fund_variance = rec.net_fund_variance
             required_fund_budget = rec.required_fund_budget
             required_fund_actual = rec.required_fund_actual
-            required_fund_variance = rec.required_fund_variance
             available_fund = 0.00
             fund_requirement = 0.00
             fund_expense = 0.00

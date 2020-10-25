@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mbk_budget_variation_report_view" model="ir.ui.view">
+            <field name="name">Fund Flow Variance Report</field>
+            <field name="model">mbk.budget_variance.wizard</field>
+            <field name="arch" type="xml">
+                 <form name="Report Options">
+                    <group>
+                        <div>
+                            <label for="month" string="Month"
+                                   style="font-weight: bold !important;margin-right:107px;margin-left: 0px;"/>
+                            <field name="month" style="width:110px"/>
+                            <field name="year" style="width:110px;margin-left: 34px;"/>
+                        </div>
+                    </group>
+                     <footer>
+                         <table width="100%">
+                             <tr>
+                                 <td align="left"  width="50%">
+                                     <button name="button_export_pdf" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                                 </td>
+                                 <td align="right"   width="50%">
+                                     <button string="Cancel" class="oe_link" special="cancel"/>
+                                 </td>
+                             </tr>
+                         </table>
+                    </footer>
+
+                 </form>
+            </field>
+        </record>
+
+        <record id="action_budget_variation_report_menu" model="ir.actions.act_window">
+            <field name="name">Fund Flow Variance Report</field>
+            <field name="res_model">mbk.budget_variance.wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_budget_variation_report"
+                  name="Fund Flow Variance  Report"
+                  sequence="10"
+                  action="action_budget_variation_report_menu"
+                  parent="mis_investment.mis_inv_report_menu"/>
+    </data>
+</odoo>
