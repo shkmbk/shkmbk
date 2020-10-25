@@ -33,6 +33,7 @@
         'report/encash_report_templates.xml',
         'report/esob_report_templates.xml',
         'report/payslip_report_templates.xml',
+        'report/cash_payslip_report_templates.xml',
         'views/mbk_esob_view.xml',
         'views/mbk_esob_provision_view.xml',
         'views/mbk_leave_provision_view.xml',

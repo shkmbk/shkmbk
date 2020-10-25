@@ -25,7 +25,15 @@
 		report_type="qweb-pdf"
 		name="mbk_payroll.payslip_report"
 		file="mbk_payroll.payslip_report"
-	  />	
+	  />
+	<report
+		id="action_cash_payslip_print"
+		model="hr.payslip"
+		string="Salary Slip"
+		report_type="qweb-pdf"
+		name="mbk_payroll.cash_payslip_report"
+		file="mbk_payroll.cash_payslip_report"
+	  />	  
 	  
 	  
  </odoo>
