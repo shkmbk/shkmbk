@@ -58,10 +58,15 @@ class AccountAssetAsset(models.Model):
                 group_id = group_tag.id
 
             code =  vals['name'] + '(' + vals['asset_code'] + ')'
-            tag_ids = self.env['account.analytic.tag'].create({
-                'name':code, 'analytic_tag_group': group_id,
-                'company_id': self.env.company.id,
-                })
+            
+            obj_tag_id = self.env['account.analytic.tag'].search([('name', '=', code), ('company_id', '=', self.env.company.id)], limit=1)
+            if obj_tag_id:
+                tag_ids = obj_tag_id
+            else: 
+                tag_ids = self.env['account.analytic.tag'].create({
+                    'name':code, 'analytic_tag_group': group_id,
+                    'company_id': self.env.company.id,
+                    })
             asset.analytic_tag_ids = tag_ids.ids + asset.analytic_tag_ids.ids
         return asset
 
@@ -78,10 +83,15 @@ class AccountAssetAsset(models.Model):
                 group_id = group_tag.id
 
             code = self.name + '(' + self.asset_code + ')'
-            tag_ids = self.env['account.analytic.tag'].create({
-                'name':code, 'analytic_tag_group': group_id,
-                'company_id': self.env.company.id,
-                })
+            obj_tag_id = self.env['account.analytic.tag'].search([('name', '=', code), ('company_id', '=', self.env.company.id)], limit=1)
+            if obj_tag_id:
+                tag_ids = obj_tag_id
+            else: 
+                tag_ids = self.env['account.analytic.tag'].create({
+                    'name':code, 'analytic_tag_group': group_id,
+                    'company_id': self.env.company.id,
+                    })
+
             self.analytic_tag_ids = tag_ids.ids + self.analytic_tag_ids.ids
         return asset
 
