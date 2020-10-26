@@ -47,7 +47,7 @@ class AccountAssetAsset(models.Model):
     @api.model
     def create(self, vals):
         asset = super(AccountAssetAsset, self).create(vals)
-        if vals.get('custom_checkbox') == True:
+        if vals.get('custom_checkbox')==True:
             group_id=0
             group_tag = self.env['mis.analytic.tag.group'].search([('name', '=', 'Fixed Asset')])
             if group_tag:
@@ -58,16 +58,21 @@ class AccountAssetAsset(models.Model):
                 group_id = group_tag.id
 
             code =  vals['name'] + '(' + vals['asset_code'] + ')'
-            tag_ids = self.env['account.analytic.tag'].create({
-                'name':code, 'analytic_tag_group': group_id,
-                'company_id': self.env.company.id,
-                })
+            
+            obj_tag_id = self.env['account.analytic.tag'].search([('name', '=', code), ('company_id', '=', self.env.company.id)], limit=1)
+            if obj_tag_id:
+                tag_ids = obj_tag_id
+            else: 
+                tag_ids = self.env['account.analytic.tag'].create({
+                    'name':code, 'analytic_tag_group': group_id,
+                    'company_id': self.env.company.id,
+                    })
             asset.analytic_tag_ids = tag_ids.ids + asset.analytic_tag_ids.ids
         return asset
 
     def write(self, vals):
         asset = super(AccountAssetAsset, self).write(vals)
-        if vals.get('custom_checkbox') == True:
+        if vals.get('custom_checkbox') == True and not self.analytic_tag_ids:
             group_id = 0
             group_tag = self.env['mis.analytic.tag.group'].search([('name', '=', 'Fixed Asset')])
             if group_tag:
@@ -78,10 +83,15 @@ class AccountAssetAsset(models.Model):
                 group_id = group_tag.id
 
             code = self.name + '(' + self.asset_code + ')'
-            tag_ids = self.env['account.analytic.tag'].create({
-                'name':code, 'analytic_tag_group': group_id,
-                'company_id': self.env.company.id,
-                })
+            obj_tag_id = self.env['account.analytic.tag'].search([('name', '=', code), ('company_id', '=', self.env.company.id)], limit=1)
+            if obj_tag_id:
+                tag_ids = obj_tag_id
+            else: 
+                tag_ids = self.env['account.analytic.tag'].create({
+                    'name':code, 'analytic_tag_group': group_id,
+                    'company_id': self.env.company.id,
+                    })
+
             self.analytic_tag_ids = tag_ids.ids + self.analytic_tag_ids.ids
         return asset
 
