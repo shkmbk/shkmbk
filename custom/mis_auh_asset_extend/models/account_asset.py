@@ -47,7 +47,7 @@ class AccountAssetAsset(models.Model):
     @api.model
     def create(self, vals):
         asset = super(AccountAssetAsset, self).create(vals)
-        if vals.get('custom_checkbox') == True:
+        if self.custom_checkbox==True and not self.analytic_tag_ids:
             group_id=0
             group_tag = self.env['mis.analytic.tag.group'].search([('name', '=', 'Fixed Asset')])
             if group_tag:
@@ -72,7 +72,7 @@ class AccountAssetAsset(models.Model):
 
     def write(self, vals):
         asset = super(AccountAssetAsset, self).write(vals)
-        if vals.get('custom_checkbox') == True:
+        if vals.get('custom_checkbox') == True and not self.analytic_tag_ids:
             group_id = 0
             group_tag = self.env['mis.analytic.tag.group'].search([('name', '=', 'Fixed Asset')])
             if group_tag:
