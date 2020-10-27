@@ -14,11 +14,13 @@
     'depends': ['base', 'account', 'sale', 'account_check_printing'],
     'data': [
         'views/assets.xml',
+        'views/assets_investment.xml',
         'views/dashboard_views.xml',
         'views/accounting_menu.xml',
     ],
     'qweb': [
-        'static/src/xml/template.xml'
+        'static/src/xml/template.xml',
+        'static/src/xml/investment_template.xml'
     ],
     'license': 'LGPL-3',
     'images': ['static/description/banner.gif'],

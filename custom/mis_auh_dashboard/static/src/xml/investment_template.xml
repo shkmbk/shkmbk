@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<templates id="template" xml:space="preserve">
-    <t t-name="Invoicedashboard">
-        <div class="accounts-dashboard-wrap">
+<templates id="investment_template" xml:space="preserve">
+    <t t-name="Investmentdashboard">
+<div class="accounts-dashboard-wrap">
             <div class="o_dashboards col-xs-12 col-sm-12 col-lg-12 col-md-12" style="background-color: #e1e1e1;overflow: scroll; !important; ">
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-12">
                                 <div class="dash-header">
-                                    <h1 class="custom-h1 dashboard-h1">Dashboard </h1>
+                                    <h1 class="custom-h1 dashboard-h1">INVESTMENT DASHBOARD</h1>
                                     <input type="checkbox" style="display:none" data-toggle="toggle" data-on="" data-off="">
                                     <input type="checkbox" id="toggle-two"></input>
                                     </input>
@@ -82,20 +82,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--            Count items             -->
+                            <!--            Unreconciled items             -->
                             <div class="col-md-3">
                                 <div class="tile wide invoice box-4">
                                     <div class="header">
-                                        <div class="main-title">Transaction count</div>
+                                        <div class="main-title">Total Investment</div>
                                         <div id="monthly_unreconciled">
                                             <div class="left">
                                                 <div class="count">
-                                                    <span id="count_this_year" />
+                                                    <span id="investment_this_year" />
                                                 </div>
                                             </div>
                                             <div class="right">
                                                 <div class="count">
-                                                    <span id="count_this_month" />
+                                                    <span id="investment_this_month" />
                                                 </div>
                                             </div>
                                         </div>
@@ -110,32 +110,71 @@
             <!--		<div class="row" style="margin:0px">-->
             <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
                 <div class="row" style="margin:0px">
-					<div class="col-md-4" id="col-graph">
+
+					<div class="col-md-4">
+                        <div class="card" style="height:366px;">
+                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                <h3 class="custom-h3 card-title">
+                                    <b>PROFIT/LOSS SUMMARY</b>
+                                </h3>
+                                 <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="total_pl"/></b>
+                                        </h3>
+                                    </div>
+                            </div>
+
+                        <div class="card-body p-0" style=" height: 100px;">
+                                    <ul class="dashboard-list" id="pl_list"></ul>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" id="col-graph">
                         <div class="card">
                             <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
                                 <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
                                     <div class="card-title">
                                         <h3 class="custom-h3 card-title">
-                                            <b>BANK AND CASH BALANCE</b>
+                                            <b>INVESTMENT SECURITIES</b>
+                                        </h3>
+                                    </div>
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="total_securities"/></b>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0" style=" height: 100px;">
+                                    <ul class="dashboard-list" id="securities_list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
+                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b>INVESTMENT SUMMARY</b>
                                         </h3>
                                     </div>
 
                                     <div class="card-title">
                                         <h3 class="custom-h3 card-title">
-                                            <b><span id="total_bank_balance"/></b>
+                                            <b><span id="total_investment"/></b>
                                         </h3>
                                     </div>
-
-
                                 </div>
-
-                                <div class="card-body p-0" style=" height: 100px; " id="bank_balance_body_hide">
-                                    <ul class="dashboard-list" id="bank_balance_list"></ul>
+                                <div class="card-body p-0" style=" height: 100px;">
+                                    <ul class="dashboard-list" id="investment_list"></ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
 					<div class="col-md-4">
                         <div class="card" style="height:366px;">
                             <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
@@ -154,6 +193,28 @@
                         </div>
                     </div>
 
+                    <div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
+                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b>STOCK PORTFOLIO PERFORMANCE</b>
+                                        </h3>
+                                    </div>
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="total_share"/></b>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0" style=" height: 100px;">
+                                    <ul class="down-list" id="share_list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 					<div class="col-md-4" id="col-graph">
                         <div class="card">
                             <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
@@ -163,96 +224,19 @@
                                             <b>FIXED DEPOSIT SUMMARY</b>
                                         </h3>
                                     </div>
-
                                     <div class="card-title">
                                         <h3 class="custom-h3 card-title">
                                             <b><span id="totalfixeddeposit"/></b>
                                         </h3>
                                     </div>
                                 </div>
-
                                 <div class="card-body p-0" style=" height: 100px;">
                                     <ul id="fixed_deposit_list"></ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-					
-					<div class="col-md-4">
-                        <div class="card" style="height:366px;">
-                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                <h3 class="custom-h3 card-title">
-                                    <b>SALARY INCOME SUMMARY</b>
-                                </h3>
-                                 <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="totalsalary"/></b>
-                                        </h3>
-                                    </div>
-                            </div>
 
-                        <div class="card-body p-0" style=" height: 100px;">
-                                    <ul id="salary_list"></ul>
-                                </div>
-                        </div>
-                    </div>					
-					
-					<div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="custom-h3 card-title">
-                                    <h3 class="custom-h3 card-title">
-                                        <b>Income/Expense</b>
-                                    </h3>
-                                </div>
-                                <div class="card-tools">
-                                    <select id="income_expense_values">
-                                        <option id="income_this_year" value="income_this_year">This Year</option>
-                                        <option id="income_this_month" value="income_this_month">This Month</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="card-body mt-3" id="in_ex_body_hide">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <p id="myelement1"></p>
-                                        <div class="chart">
-                                            <canvas id="canvas" width="300" height="200"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
-
-					
-					<div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="custom-h3 card-title">
-                                    <h3 class="custom-h3 card-title">
-                                        <b>Aged Payable</b>
-                                    </h3>
-                                </div>
-                                <div class="card-tools">
-                                    <select id="aged_payable_value">
-                                        <option id="aged_receivable_this_month">This Month</option>
-                                        <option id="aged_receivable_this_year">This Year</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body" id="aged_payable_body_hide">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div id="chart">
-                                            <canvas id="horizontalbarChart" width="400" height="250"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <!--		</div>-->
