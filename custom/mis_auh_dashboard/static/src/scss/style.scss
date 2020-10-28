@@ -456,11 +456,13 @@ body {
 .accounts-dashboard-wrap span#total_incomes_ span,
 .accounts-dashboard-wrap span#total_incomes_last span,
 .accounts-dashboard-wrap span#total_expenses_ span,
-.accounts-dashboard-wrap span#total_expense_last span,
+.accounts-dashboard-wrap span#count_this_month span,
 .accounts-dashboard-wrap span#unreconciled_items_ span,
 .accounts-dashboard-wrap span#unreconciled_items_last span,
-.accounts-dashboard-wrap span#unreconciled_counts_last_year span,
+.accounts-dashboard-wrap span#count_this_year span,
 .accounts-dashboard-wrap span#unreconciled_counts_this_year span,
+.accounts-dashboard-wrap span#investment_this_month span,
+.accounts-dashboard-wrap span#investment_this_year span,
 .accounts-dashboard-wrap span#total_expense_last_year span,
 .accounts-dashboard-wrap span#total_expense_this_year span,
 .accounts-dashboard-wrap span#total_incomes_last_year span,
@@ -484,6 +486,8 @@ body {
 .accounts-dashboard-wrap span#unreconciled_items_last,
 .accounts-dashboard-wrap span#unreconciled_counts_last_year,
 .accounts-dashboard-wrap span#unreconciled_counts_this_year,
+.accounts-dashboard-wrap span#investment_this_month,
+.accounts-dashboard-wrap span#investment_this_year,
 .accounts-dashboard-wrap span#total_expense_last_year,
 .accounts-dashboard-wrap span#total_expense_this_year,
 .accounts-dashboard-wrap span#total_incomes_last_year,
@@ -820,6 +824,37 @@ body {
     display: flex;
     justify-content: space-between;
     padding-right: 2rem;
+}
+
+.dashboard-list {
+    padding: 0;
+}
+.dashboard-list li {
+    list-style: none;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: 13px;
+    color: #455e7b !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+    padding-left: 2rem;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2rem;
+}
+.down-list {
+    padding: 0 !important;
+}
+.down-list li {
+    list-style: none !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    font-size: 13px !important;
+    color: #455e7b;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+    padding-left: 2rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    padding-right: 2rem !important;
 }
 
 .accounts-dashboard-wrap #top_10_customers li {
