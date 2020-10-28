@@ -76,7 +76,6 @@ class WizardPayroll(models.TransientModel):
             return ('company_id', '=', self.env.company.id)
 
     def _get_filtered_domain(self):
-        #['&', ('date_from', '<=', self.start_date), ('date_to', '>=', self.end_date)])
         return [('date_from', '<=', self.start_date), ('date_to', '>=', self.end_date),
                 self._get_hr_tags(), self._get_analytic_account(), self._get_analytic_tag_ids(),
                 self._get_department_ids(), self._get_payment_method(),
@@ -102,7 +101,7 @@ class WizardPayroll(models.TransientModel):
             if not start[1] == end[1]:
                 raise UserError(_('The Dates Can of Same Month Only'))
 
-        slips = self.env['hr.payslip'].search(self._get_filtered_domain())
+        slips = self.env['hr.payslip'].search(self._get_filtered_domain(), order="employee_id, number")
 
         if not slips:
             raise UserError(_('There are no payslip Created for the selected month'))
@@ -236,18 +235,17 @@ class WizardPayroll(models.TransientModel):
         worksheet.write(0, col, 'Net Salary', wbf['content_border_bg'])
 
         count = 0
-        sum = 0
-        sum_basic_allow=0.0
-        sum_basic=0.0
-        sum_allowance=0.0
-        sum_fixedot=0.0
-        sum_lsalary =0.0
-        sum_ticketallow=0.0
-        sum_eosb=0.0
-        sum_gross_amount=0.0
-        sum_fine_penalty=0.0
-        sum_advance=0.0
-        sum_net=0.0
+        sum_basic_allow = 0.0
+        sum_basic = 0.0
+        sum_allowance = 0.0
+        sum_fixedot = 0.0
+        sum_lsalary = 0.0
+        sum_ticketallow = 0.0
+        sum_eosb = 0.0
+        sum_gross_amount = 0.0
+        sum_fine_penalty = 0.0
+        sum_advance = 0.0
+        sum_net = 0.0
         for rec in slips:
             count += 1
             col=0
@@ -266,119 +264,102 @@ class WizardPayroll(models.TransientModel):
             col += 1
             worksheet.write(count, col, rec.employee_id.department_id.name, wbf['content_border'])
             # PAYMENT METHOD
-            col+=1
+            col += 1
             worksheet.write(count, col, rec.employee_id.payment_method.name,  wbf['content_border'])
             # CONTRACT SALARY (BASIC + ALLOWANCE)
-            col+=1
+            col += 1
 
-            basic_allow=rec.employee_id.contract_id.wage+rec.employee_id.contract_id.x_house_rent+rec.employee_id.contract_id.x_transport+rec.employee_id.contract_id.x_other_allowance+rec.employee_id.contract_id.x_fixed_ot
+            basic_allow = rec.employee_id.contract_id.wage+rec.employee_id.contract_id.x_house_rent+rec.employee_id.contract_id.x_transport+rec.employee_id.contract_id.x_other_allowance+rec.employee_id.contract_id.x_fixed_ot
             worksheet.write(count, col, basic_allow,  wbf['content_float_border'])
             # DAYS
-            #worksheet.write(count, col, ((self.end_date-self.start_date).days+1),  wbf['content_border']) #For Days in Period
-            worked_days=0.0
-            payslip_worked_days = self.env['hr.payslip.worked_days'].search([('payslip_id', '=', rec.id), ('work_entry_type_id', '=',1)])
-            if payslip_worked_days:
-                worked_days=payslip_worked_days.number_of_days
-            col+=1
+            worked_days = 0.0
+            for w_line in rec.worked_days_line_ids:
+                if w_line.work_entry_type_id.id == 1:
+                    worked_days = -w_line.number_of_days if rec.credit_note else w_line.number_of_days
+            amount_basic = 0.0
+            amount_allow = 0.00
+            amount_fot = 0.00
+            amount_ls = 0.00
+            amount_at = 0.00
+            amount_esob = 0.00
+            amount_gross = 0.00
+            amount_fine = 0.00
+            amount_adv = 0.00
+            amount_net = 0.00
+            for line in rec.line_ids:
+                if line.code == 'BASIC':
+                    amount_basic = -line.total if rec.credit_note else line.total
+                if line.code == 'ALW':
+                    amount_allow = -line.total if rec.credit_note else line.total
+                if line.code == 'FOT':
+                    amount_fot = -line.total if rec.credit_note else line.total
+                if line.code == 'LS':
+                    amount_ls = -line.total if rec.credit_note else line.total
+                if line.code == 'AT':
+                    amount_at = -line.total if rec.credit_note else line.total
+                if line.code == 'ESOB':
+                    amount_esob = -line.total if rec.credit_note else line.total
+                if line.code == 'GROSS':
+                    amount_gross = -line.total if rec.credit_note else line.total
+                if line.code == 'PD':
+                    amount_fine = -line.total if rec.credit_note else line.total
+                if line.code == 'SA':
+                    amount_adv = -line.total if rec.credit_note else line.total
+                if line.code == 'NET':
+                    amount_net = -line.total if rec.credit_note else line.total
+
+            col += 1
             worksheet.write(count, col, worked_days,  wbf['content_float_border'])
             # BASIC AFTER UNPAID
             col += 1
-            amountbasic = 0.0
-            slipbasic = self.env['hr.payslip.line'].search([('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'BASIC')])
-            if slipbasic:
-                amountbasic=slipbasic.total
-            worksheet.write(count, col, amountbasic, wbf['content_float_border'])
+            worksheet.write(count, col, amount_basic, wbf['content_float_border'])
             # ALLOWANCE AFTER UNPAID
             col += 1
-            amountallow = 0.0
-            sliphra = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'ALW')])
-            if sliphra:
-                amountallow = sliphra.total
-            worksheet.write(count, col, amountallow, wbf['content_float_border'])
+            worksheet.write(count, col, amount_allow, wbf['content_float_border'])
             # FIX OT
             col += 1
-            amountfixot = 0.0
-            slipfixot = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'FOT')])
-            if slipfixot:
-                amountfixot = slipfixot.total
-            worksheet.write(count, col, amountfixot, wbf['content_float_border'])
+            worksheet.write(count, col, amount_fot, wbf['content_float_border'])
             # LEAVE SALARY
             col += 1
-            amountlsal = 0.0
-            sliplsal = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'LS')])
-            if sliplsal:
-                amountlsal = sliplsal.total
-            worksheet.write(count, col, amountlsal, wbf['content_float_border'])
-            # TICKET ALLOWANCE
+            worksheet.write(count, col, amount_ls, wbf['content_float_border'])
+            # TICKET ALLOWANCE AKA AIR TICKET
             col += 1
-            amounttall = 0.0
-            sliptall = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'AT')])
-            if sliptall:
-                amounttall = sliptall.total
-            worksheet.write(count, col, amounttall, wbf['content_float_border'])
+            worksheet.write(count, col, amount_at, wbf['content_float_border'])
             # EOSB
             col += 1
-            amounteosb= 0.0
-            slipeosb = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'EOSB')])
-            if slipeosb:
-                amounteosb = slipeosb.total
-            worksheet.write(count, col, amounteosb, wbf['content_float_border'])
+            worksheet.write(count, col, amount_esob, wbf['content_float_border'])
             # GROSS
             col += 1
-            amountgross= 0.0
-            slipgross = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'GROSS')])
-            if slipgross:
-                amountgross = slipgross.total
-            worksheet.write(count, col, amountgross, wbf['content_float_border'])
+            worksheet.write(count, col, amount_gross, wbf['content_float_border'])
             # FINE
             col += 1
-            amountfine= 0.0
-            slipfine = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'PD')])
-            if slipfine:
-                amountfine = slipfine.total
-            worksheet.write(count, col, amountfine, wbf['content_float_border'])
+            worksheet.write(count, col, amount_fine, wbf['content_float_border'])
             # ADVANCE
             col += 1
-            amountadv= 0.0
-            slipadv = self.env['hr.payslip.line'].search(
-                [('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'SA')])
-            if slipadv:
-                amountadv = slipadv.total
-            worksheet.write(count, col, amountadv, wbf['content_float_border'])
+            worksheet.write(count, col, amount_adv, wbf['content_float_border'])
             # NET
             col += 1
-            amountnet = 0.0
-            slipnet = self.env['hr.payslip.line'].search([('slip_id', '=', rec.id), ('employee_id', '=', rec.employee_id.id), ('code', '=', 'NET')])
-            if slipnet:
-                amountnet=slipnet.total
-            worksheet.write(count, col, amountnet, wbf['content_float_border'])
+            worksheet.write(count, col, amount_net, wbf['content_float_border'])
             #ADDING to sum
             sum_basic_allow += basic_allow
-            sum_basic += amountbasic
-            sum_allowance += amountallow
-            sum_fixedot += amountfixot
-            sum_lsalary += amountlsal
-            sum_ticketallow += amounttall
-            sum_eosb += amounteosb
-            sum_gross_amount += amountgross
-            sum_fine_penalty += amountfine
-            sum_advance += amountadv
-            sum_net += amountnet
+            sum_basic += amount_basic
+            sum_allowance += amount_allow
+            sum_fixedot += amount_fot
+            sum_lsalary += amount_ls
+            sum_ticketallow += amount_at
+            sum_eosb += amount_esob
+            sum_gross_amount += amount_gross
+            sum_fine_penalty += amount_fine
+            sum_advance += amount_adv
+            sum_net += amount_net
 
-        count+=2
+        count += 2
         # SUMMARY
         worksheet.merge_range('A%s:F%s'%(count,count), 'Total', wbf['content_border_bg_total'])
         worksheet.write(count-1, 6, sum_basic_allow, wbf['content_float_border_bg'])
         worksheet.write(count - 1, 7, "", wbf['content_border_bg'])
-        col=7
-        col+=1
+        col = 7
+        col += 1
         worksheet.write(count - 1, col, sum_basic, wbf['content_float_border_bg'])
         col += 1
         worksheet.write(count - 1, col, sum_allowance, wbf['content_float_border_bg'])
@@ -400,8 +381,8 @@ class WizardPayroll(models.TransientModel):
         worksheet.write(count - 1, col, sum_net, wbf['content_float_border_bg'])
 
         workbook.close()
-        out=base64.encodestring(fp.getvalue())
-        self.write({'datas':out, 'datas_fname':filename})
+        out=base64.encodebytes(fp.getvalue())
+        self.write({'datas': out, 'datas_fname': filename})
         fp.close()
         filename += '%2Exlsx'
 
