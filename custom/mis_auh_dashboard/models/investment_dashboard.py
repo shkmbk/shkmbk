@@ -123,7 +123,7 @@ class InvestmentDashBoard(models.Model):
         fd = []
         journal_items = self.env['account.move.line'].search(
             [('analytic_tag_ids.analytic_tag_group', '=', 35), ('parent_state', '=', 'posted'), ('company_id', '=', company_ids),
-             ('account_id', 'in', [724, 2264])])
+             ('account_id.code', 'in', ['111801', '111802'])])
         # raise UserError(company_ids)
         for rec in journal_items:
             total_amount += rec.debit - rec.credit
