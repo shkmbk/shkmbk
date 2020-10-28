@@ -253,9 +253,9 @@ class AccountsDashBoard(models.Model):
         profit = []
         for rec in records:
             month.append(rec['month'])
-            income.append(rec['income'])
-            expense.append(rec['expense'])
-            profit.append(rec['profit'])
+            income.append(round(rec['income'], 2))
+            expense.append(round(rec['expense'], 2))
+            profit.append(round(rec['profit'], 2))
         return {
             'month': month,
             'income': income,
