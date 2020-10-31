@@ -144,6 +144,9 @@ class WizardPayroll(models.TransientModel):
         wbf['content_border_bg_total'].set_bottom()
         wbf['content_border_bg_total'].set_left()
         wbf['content_border_bg_total'].set_right()
+        
+        wbf['content_signature'] = workbook.add_format({'align': 'center', 'bold': 1})
+        wbf['content_signature'].set_top(6)
 
         wbf['content_border_bg'] = workbook.add_format({'bold': 1, 'bg_color': '#E1E1E1'})
         wbf['content_border_bg'].set_top()
@@ -205,7 +208,7 @@ class WizardPayroll(models.TransientModel):
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Fixed OT', wbf['content_border_bg'])
         col = 11
-        column_width = 8
+        column_width = 9
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'L.Salary', wbf['content_border_bg'])
         col = 12
@@ -379,6 +382,9 @@ class WizardPayroll(models.TransientModel):
         worksheet.write(count - 1, col, sum_advance, wbf['content_float_border_bg'])
         col += 1
         worksheet.write(count - 1, col, sum_net, wbf['content_float_border_bg'])
+        # Signtaure option
+        worksheet.write(count + 4, 1, "Accounts Department", wbf['content_signature'])
+        worksheet.merge_range('E%s:F%s'%(count + 5,count + 5), 'Authorized By', wbf['content_signature'])
 
         workbook.close()
         out=base64.encodebytes(fp.getvalue())
