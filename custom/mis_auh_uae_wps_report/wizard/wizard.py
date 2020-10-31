@@ -132,6 +132,7 @@ class Wizard(models.TransientModel):
         wbf['content'] = workbook.add_format()
         wbf['header1'] = workbook.add_format(
             {'bold': 1, 'align': 'center', 'font_size': '13'})
+        wbf['header1'].set_align('vcenter')
         wbf['header2'] = workbook.add_format(
             {'bold': 1, 'align': 'center', 'bg_color': '#C4D79B'})
         wbf['header2'].set_top()
@@ -157,15 +158,23 @@ class Wizard(models.TransientModel):
         wbf['content_float_border_bg'].set_left()
         wbf['content_float_border_bg'].set_right()
 
+        wbf['content_signature'] = workbook.add_format({'align': 'center', 'bold': 1})
+        wbf['content_signature'].set_top(6)
+
         worksheet = workbook.add_worksheet(report_name)
         worksheet2 = workbook.add_worksheet("Summary")
+        worksheet2.center_horizontally()
+        worksheet2.set_margins(left=0, right=0, top=1.5, bottom=1.65)
+        worksheet2.fit_to_pages(1, 0)
+        worksheet2.set_footer('&C-------------------------\n&"Bold"(C.E.O)\n\n'+'&LPage &P of &N', {'margin': .5})
+        worksheet2.set_row(0, 25)
         worksheet2.merge_range('A1:E1', 'EMPLOYEES SALARY '+h_date_string, wbf['header1'])
 
         col = 0
         column_width = 25
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Beneficiary Bank Name', wbf['header2'])
-        worksheet2.set_column(col, col, 7)
+        worksheet2.set_column(col, col, 5)
         worksheet2.write(1, col, 'SL No', wbf['header2'])
         col = 1
         column_width = 16
@@ -177,7 +186,7 @@ class Wizard(models.TransientModel):
         column_width = 15
         worksheet.set_column(col, col, column_width)
         worksheet.write(0, col, 'Transaction Type', wbf['header2'])
-        worksheet2.set_column(col, col, 25)
+        worksheet2.set_column(col, col, 23.5)
         worksheet2.write(1, col, 'Beneficiary Bank Name', wbf['header2'])
         col = 3
         column_width = 15
