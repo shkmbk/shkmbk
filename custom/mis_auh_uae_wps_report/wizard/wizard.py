@@ -120,6 +120,7 @@ class Wizard(models.TransientModel):
         datetime_string = self.get_default_date_model().strftime("%Y-%m-%d %H:%M:%S")
         date_string = self.get_default_date_model().strftime("%Y-%m-%d")
         date_string = self.end_date.strftime("%B-%y")
+        h_date_string = self.end_date.strftime("%B %Y").upper()
 
         report_name = 'WPS_' + date.strftime("%y%m%d%H%M%S")
         filename = '%s %s' % (report_name, date_string)
@@ -158,7 +159,7 @@ class Wizard(models.TransientModel):
 
         worksheet = workbook.add_worksheet(report_name)
         worksheet2 = workbook.add_worksheet("Summary")
-        worksheet2.merge_range('A1:E1', 'EMPLOYEES SALARY', wbf['header1'])
+        worksheet2.merge_range('A1:E1', 'EMPLOYEES SALARY '+h_date_string, wbf['header1'])
 
         col = 0
         column_width = 25
@@ -241,36 +242,36 @@ class Wizard(models.TransientModel):
                 col = 0
                 worksheet2.write(count + 1, col, count, wbf['content_border'])
                 if rec['bank']:
-                    worksheet.write(count, col, rec['bank'], wbf['content'])
+                    worksheet.write(count, col, rec['bank'], wbf['content_border'])
                     worksheet2.write(count + 1, 2, rec['bank'], wbf['content_border'])
                 else:
                     worksheet2.write(count + 1, 2, '', wbf['content_border'])
 
                 col += 1
                 if rec['routing_code']:
-                    worksheet.write(count, col, rec['routing_code'], wbf['content'])
+                    worksheet.write(count, col, rec['routing_code'], wbf['content_border'])
                 col += 1
-                worksheet.write(count, col, "Salary", wbf['content'])
+                worksheet.write(count, col, "Salary", wbf['content_border'])
                 col += 1
-                worksheet.write(count, col, "SAL", wbf['content'])
+                worksheet.write(count, col, "SAL", wbf['content_border'])
                 col += 1
-                worksheet.write(count, col, rec['employee'], wbf['content'])
+                worksheet.write(count, col, rec['employee'], wbf['content_border'])
                 worksheet2.write(count + 1, 1, rec['employee'], wbf['content_border'])
                 col += 1
                 if rec['iban_no']:
-                    worksheet.write(count, col, rec['iban_no'], wbf['content'])
+                    worksheet.write(count, col, rec['iban_no'], wbf['content_border'])
                     worksheet2.write(count + 1, 3, rec['iban_no'], wbf['content_border'])
                 else:
                     worksheet2.write(count + 1, 3, '', wbf['content_border'])
 
                 col += 1
-                worksheet.write(count, col, rec['amount'], wbf['content_float'])
+                worksheet.write(count, col, rec['amount'], wbf['content_float_border'])
                 worksheet2.write(count + 1, 4, rec['amount'], wbf['content_float_border'])
                 sum += amount
                 col += 1
-                worksheet.write(count, col, "Salary Transfer", wbf['content'])
+                worksheet.write(count, col, "Salary Transfer", wbf['content_border'])
                 col += 1
-                worksheet.write(count, col, date_string, wbf['content'])
+                worksheet.write(count, col, date_string, wbf['content_border'])
         count += 2
         worksheet2.merge_range('A%s:D%s' % (count + 1, count + 1), 'Total', wbf['content_float_border_bg'])
         worksheet2.write(count, 4, sum, wbf['content_float_border_bg'])
