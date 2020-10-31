@@ -130,6 +130,7 @@
                                 </thead>
                                 <tbody class="invoice_tbody">
                                     <t t-set="total_amount" t-value="0.00"/>
+									<t t-set="total_expense" t-value="0.00"/>
                                     <t t-set="balance" t-value="o.balance_start"/>
                                     <t t-set="rowno" t-value="1"/>
                                     <t t-foreach="o.line_ids" t-as="line">
@@ -152,6 +153,9 @@
                                                 <t t-set="balance" t-value="balance+line.amount"/>
                                                 <span t-esc="'{0:,.2f}'.format(balance)"/>
                                             </td>
+											<t t-if="line.amount &lt; 0.00">
+												<t t-set="total_expense" t-value="(total_expense+line.amount)"/>
+											</t>											
                                         </tr>
                                     </t>
                                     <tr>
@@ -170,6 +174,10 @@
                                     </tr>
                                 </tbody>
                             </table>
+							<div class="row">
+								<br/><br/>
+								<p><b>Total Expense : <span t-esc="'{0:,.2f}'.format(-total_expense)"/></b></p>
+							</div>							
                             <div class="row">
                                 <div class="col-4" style="right;">
                                     <p class="text-center" style="margin-left:10mm;margin-right:10mm;">
