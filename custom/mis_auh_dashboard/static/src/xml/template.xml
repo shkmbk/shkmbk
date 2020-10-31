@@ -236,8 +236,8 @@
                                 </div>
                                 <div class="card-tools">
                                     <select id="aged_payable_value">
-                                        <option id="aged_receivable_this_month">This Month</option>
-                                        <option id="aged_receivable_this_year">This Year</option>
+										<option id="aged_receivable_this_year" value="this_year">This Year</option>
+                                        <option id="aged_receivable_this_month" value="this_month">This Month</option>                                        
                                     </select>
                                 </div>
                             </div>
