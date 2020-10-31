@@ -22,11 +22,14 @@
                                 <th class="text-right"><strong>Encash</strong></th>
                                 <th class="text-right"><strong>Balance Days</strong></th>
                                 <th class="text-right"><strong>Balance Amount</strong></th>
+                                <th class="text-right"><strong>Provision Date</strong></th>
+                                <th class="text-right"><strong>Provision Amount</strong></th>
                             </tr>
                         </thead>
                         <tbody>
                         <t t-set="rowno" t-value="1"/>
                             <t t-set="tot_annualleave_amount" t-value="0.0"/>
+                            <t t-set="tot_provision_amount" t-value="0.0"/>
                             <t t-foreach="docs" t-as="line">
                                 <tr>
                                     <td name="slno">
@@ -72,7 +75,14 @@
                                     <td class="text-right">
                                          <span t-esc="'{0:,.2f}'.format(line['annualleave_amount'])"/>
                                          <t t-set="tot_annualleave_amount" t-value="tot_annualleave_amount+(line['annualleave_amount'])"/>
-                                     </td>                                     
+                                     </td>
+                                    <td class="text-center">
+                                       <span t-esc="line['provision_date']"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['provision_amount'])"/>
+                                         <t t-set="tot_provision_amount" t-value="tot_provision_amount+(line['provision_amount'])"/>
+                                     </td>
                                 </tr>
                             </t>
                                 <tr style="width:100%;height:30px;background-color:#d3d3d3;">
@@ -81,6 +91,11 @@
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.2f}'.format((tot_annualleave_amount))"/></b>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_provision_amount)"/></b>
                                     </td>
                                 </tr>
                         </tbody>
