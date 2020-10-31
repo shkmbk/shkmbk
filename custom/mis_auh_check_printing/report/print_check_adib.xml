@@ -39,12 +39,12 @@
                                                 <span t-field="inv.narration"/>
                                             </td>
                                             <td style="width:40mm;" class="text-right">
-                                                <span t-field="inv.amount_total"/>
+                                                <span t-esc="o._get_invoice_payment_amount(inv)"/>
                                             </td>
                                         </tr>
                                     </t>
                                     <t t-if="linecount&gt;11">
-                                        <t t-set="othrinvtot" t-value="othrinvtot+inv.amount_total"/>
+                                        <t t-set="othrinvtot" t-value="othrinvtot+o._get_invoice_payment_amount(inv)"/>
                                     </t>
                                 </t>
                                 <t t-if="linecount&gt;11">
@@ -131,13 +131,14 @@
 					<t t-if="not o.check_is_acpayee_name">
 						<span t-esc="o.partner_id.name"/>
 					</t>
-					<t t-if="o.check_is_acpayee_name">
+					<t t-if="o.check_is_acpayee">
 						<span t-esc="o.check_acpayee_name"/>
 					</t>					
                 </div>				
                 <!--amount in words-->
                 <div style="position: absolute;top: 286mm; left: 35mm;font-size: 12pt;width:180mm;">
-                    <t t-esc="o.check_amount_in_words"/> Only
+                    <t t-set="amount_in_words" t-value="o.check_amount_in_words.replace(',','')"/>
+                    <t t-esc="amount_in_words"/> Only
                 </div>
             </div>
         </template>
