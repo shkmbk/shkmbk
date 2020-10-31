@@ -39,7 +39,7 @@
                                                 <span t-field="inv.narration"/>
                                             </td>
                                             <td style="width:40mm;" class="text-right">
-                                                <span t-esc="o._get_invoice_payment_amount(inv)"/>
+                                                <span t-esc="'{0:,.2f}'.format(round(o._get_invoice_payment_amount(inv), 2))"/>
                                             </td>
                                         </tr>
                                     </t>
@@ -65,7 +65,7 @@
                                                 Rest of Amount
                                             </td>
                                             <td style="width:40mm;" class="text-right">
-                                                <t t-esc="othrinvtot"/> AED
+                                                <t t-esc="'{0:,.2f}'.format(round(othrinvtot, 2))"/> AED
                                             </td>
                                     </tr>
                                 </t>
@@ -99,7 +99,7 @@
 											<span t-field="o.communication"/>
 										</td>
 										<td style="width:40mm;" class="text-right">
-											<span t-field="o.amount"/>
+											<span t-esc="'{0:,.2f}'.format(round(o.amount, 2))"/>
 										</td>
 									</tr>
 								</t>
