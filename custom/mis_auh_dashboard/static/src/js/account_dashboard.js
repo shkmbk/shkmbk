@@ -16,20 +16,12 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
         events: {
             'click .invoice_dashboard': 'onclick_dashboard',
             'click #prog_bar': 'onclick_prog_bar',
-            'click #invoice_this_month': 'onclick_invoice_this_month',
-            'click #invoice_this_year': 'onclick_invoice_this_year',
-            'click #invoice_last_month': 'onclick_invoice_last_month',
-            'click #invoice_last_year': 'onclick_invoice_last_year',
             'click #onclick_banks_balance': 'onclick_bank_balance',
             'click #income_this_month': 'onclick_income_this_month',
             'click #income_this_year': 'onclick_income_this_year',
             'click #total_aged_payable': 'onclick_total_aged_payable',
             'click #in_ex_bar_chart': 'onclick_in_ex_bar_chart',
             'click #aged_recevable_pie_chart': 'onclick_aged_recevable_pie_chart',
-            'click #invoice_bar_chart': 'onclick_invoice_bar_chart',
-            'click .overdue_line_cust': 'onclick_overdue_line_cust',
-            'click .top_customers': 'onclick_top_customers',
-            'click .top_customers_amount': 'onclick_top_customers_amount',
             'click #bank_balance_hide': 'onclick_bank_balance_hide',
             'click #cash_balance_hide': 'onclick_cash_balance_hide',
             'click #in_ex_hide': 'onclick_in_ex_hide',
@@ -541,141 +533,6 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
 
                         })
 
-                    var arg = 'this_month';
-                    rpc.query({
-                        model: 'account.move',
-                        method: 'get_overdues_this_month_and_year',
-                        args: [posted,arg],
-                    }).then(function (result) {
-
-                            //
-                        })
-                    var arg = 'this_month';
-                    rpc.query({
-                        model: 'account.move',
-                        method: 'get_overdues_this_month_and_year',
-                        args: [posted,arg],
-                    })
-                        .then(function (result) {
-                            // Doughnut Chart
-                            $(document).ready(function () {
-                                var options = {
-                                    // legend: false,
-                                    responsive: true,
-                                    legend: {
-                                        position: 'bottom'
-                                    }
-                                };
-                                if (window.donut != undefined)
-                                    window.donut.destroy();
-                                window.donut = new Chart($("#canvas1"), {
-                                    type: 'doughnut',
-                                    tooltipFillColor: "rgba(51, 51, 51, 0.55)",
-                                    data: {
-                                        labels: result.due_partner,
-                                        datasets: [{
-                                            data: result.due_amount,
-                                            backgroundColor: [
-                                                '#66aecf ', '#6993d6 ', '#666fcf', '#7c66cf', '#9c66cf',
-                                                '#bc66cf ', '#b75fcc', ' #cb5fbf ', ' #cc5f7f ', ' #cc6260',
-                                                '#cc815f', '#cca15f ', '#ccc25f', '#b9cf66', '#99cf66',
-                                                ' #75cb5f ', '#60cc6c', '#804D8000', '#80B33300', '#80CC80CC', '#f2552c', '#00cccc',
-                                                '#1f2e2e', '#993333', '#00cca3', '#1a1a00', '#3399ff',
-                                                '#8066664D', '#80991AFF', '#808E666FF', '#804DB3FF', '#801AB399',
-                                                '#80E666B3', '#8033991A', '#80CC9999', '#80B3B31A', '#8000E680',
-                                                '#804D8066', '#80809980', '#80E6FF80', '#801AFF33', '#80999933',
-                                                '#80FF3380', '#80CCCC00', '#8066E64D', '#804D80CC', '#809900B3',
-                                                '#80E64D66', '#804DB380', '#80FF4D4D', '#8099E6E6', '#806666FF'
-                                            ],
-                                            hoverBackgroundColor: [
-                                                '#66aecf ', '#6993d6 ', '#666fcf', '#7c66cf', '#9c66cf',
-                                                '#bc66cf ', '#b75fcc', ' #cb5fbf ', ' #cc5f7f ', ' #cc6260',
-                                                '#cc815f', '#cca15f ', '#ccc25f', '#b9cf66', '#99cf66',
-                                                ' #75cb5f ', '#60cc6c', '#804D8000', '#80B33300', '#80CC80CC', '#f2552c', '#00cccc',
-                                                '#1f2e2e', '#993333', '#00cca3', '#1a1a00', '#3399ff',
-                                                '#8066664D', '#80991AFF', '#808E666FF', '#804DB3FF', '#801AB399',
-                                                '#80E666B3', '#8033991A', '#80CC9999', '#80B3B31A', '#8000E680',
-                                                '#804D8066', '#80809980', '#80E6FF80', '#801AFF33', '#80999933',
-                                                '#80FF3380', '#80CCCC00', '#8066E64D', '#804D80CC', '#809900B3',
-                                                '#80E64D66', '#804DB380', '#80FF4D4D', '#8099E6E6', '#806666FF'
-                                            ]
-                                        }]
-                                    },
-                                    options: {
-                                        responsive: false
-                                    }
-                                });
-                            });
-                        })
-                    rpc.query({
-                        model: "account.move",
-                        method: "get_total_invoice_current_month",
-                        args: [posted],
-                    }).then(function (result) {
-
-                            $('#total_supplier_invoice_paid').hide();
-                            $('#total_supplier_invoice').hide();
-                            $('#total_customer_invoice_paid').hide();
-                            $('#total_customer_invoice').hide();
-                            $('#tot_invoice').hide();
-                            $('#tot_supplier_inv').hide();
-
-                            $('#total_supplier_invoice_paid_current_month').empty();
-                            $('#total_supplier_invoice_current_month').empty();
-                            $('#total_customer_invoice_paid_current_month').empty();
-                            $('#total_customer_invoice_current_month').empty();
-                            $('#tot_invoice_current_month').empty();
-                            $('#tot_supplier_inv_current_month').empty();
-
-                            $('#total_supplier_invoice_paid_current_year').hide();
-                            $('#total_supplier_invoice_current_year').hide();
-                            $('#total_customer_invoice_paid_current_year').hide();
-                            $('#total_customer_invoice_current_year').hide();
-                            $('#tot_invoice_current_year').hide();
-                            $('#tot_supplier_inv_current_year').hide();
-
-
-                            $('#total_supplier_invoice_paid_current_month').show();
-                            $('#total_supplier_invoice_current_month').show();
-                            $('#total_customer_invoice_paid_current_month').show();
-                            $('#total_customer_invoice_current_month').show();
-                            $('#tot_invoice_current_month').show();
-                            $('#tot_supplier_inv_current_month').show();
-
-
-                            var tot_invoice_current_month = result[0][0]
-                            var tot_credit_current_month = result[1][0]
-                            var tot_supplier_inv_current_month = result[2][0]
-                            var tot_supplier_refund_current_month = result[3][0]
-                            var tot_customer_invoice_paid_current_month = result[4][0]
-                            var tot_supplier_invoice_paid_current_month = result[5][0]
-                            var tot_customer_credit_paid_current_month = result[6][0]
-                            var tot_supplier_refund_paid_current_month = result[7][0]
-                            var customer_invoice_total_current_month = (tot_invoice_current_month - tot_credit_current_month).toFixed(2)
-                            var customer_invoice_paid_current_month = (tot_customer_invoice_paid_current_month - tot_customer_credit_paid_current_month).toFixed(2)
-                            var invoice_percentage_current_month = ((customer_invoice_total_current_month / customer_invoice_paid_current_month) * 100).toFixed(2)
-                            var supplier_invoice_total_current_month = (tot_supplier_inv_current_month - tot_supplier_refund_current_month).toFixed(2)
-                            var supplier_invoice_paid_current_month = (tot_supplier_invoice_paid_current_month - tot_supplier_refund_paid_current_month).toFixed(2)
-                            var supplier_percentage_current_month = ((supplier_invoice_total_current_month / supplier_invoice_paid_current_month) * 100).toFixed(2)
-
-                            $('#tot_supplier_inv_current_month').attr("value", supplier_invoice_paid_current_month);
-                            $('#tot_supplier_inv_current_month').attr("max", supplier_invoice_total_current_month);
-
-                            $('#tot_invoice_current_month').attr("value", customer_invoice_paid_current_month);
-                            $('#tot_invoice_current_month').attr("max", customer_invoice_total_current_month);
-                            currency = result[8]
-                            customer_invoice_paid_current_month = self.format_currency(currency, customer_invoice_paid_current_month);
-                            customer_invoice_total_current_month = self.format_currency(currency, customer_invoice_total_current_month);
-                            supplier_invoice_paid_current_month = self.format_currency(currency, supplier_invoice_paid_current_month);
-                            supplier_invoice_total_current_month = self.format_currency(currency, supplier_invoice_total_current_month);
-
-                            $('#total_customer_invoice_paid_current_month').append('<div class="logo">' + '<span>' + customer_invoice_paid_current_month + '</span><span>Total Paid<span></div>');
-                            $('#total_customer_invoice_current_month').append('<div" class="logo">' + '<span>' + customer_invoice_total_current_month + '</span><span>Total Invoice<span></div>');
-
-                            $('#total_supplier_invoice_paid_current_month').append('<div" class="logo">' + '<span>' + supplier_invoice_paid_current_month + '</span><span>Total Paid<span></div>');
-                            $('#total_supplier_invoice_current_month').append('<div" class="logo">' + '<span>' + supplier_invoice_total_current_month + '</span><span>Total Invoice<span></div>');
-
-                        })
                     var arg = 'last_month'
                     rpc.query({
                         model: 'account.move',
@@ -732,24 +589,7 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                                     }
                                 });
                             });
-                        })
-                    rpc.query({
-                        model: "account.move",
-                        method: "get_overdues",
-
-                    }).then(function (result) {
-                            var due_count = 0;
-                            _.forEach(result, function (x) {
-                                due_count++;
-                                $('#overdues').append('<li><a class="overdue_line_cust" href="#" id="line_' + x.parent + '" data-user-id="' + x.parent + '">' + x.due_partner + '</a>' + '&nbsp;&nbsp;&nbsp;&nbsp;' + '<span>' + x.due_amount + ' ' + currency + '</span>' + '</li>');
-
-                                //                                $('#overdues_amounts').append('<li><a class="overdue_line_cust" href="#" id="line_' + x.parent + '" data-user-id="' + x.parent + '">' + x.amount + '</a>' + '<span>'+' '+currency+ '</span>' + '</li>' );
-
-                            });
-
-                            $('#due_count').append('<span class="badge badge-danger">' + due_count + ' Due(s)</span>');
-                        })
-
+                          })
                     rpc.query({
                         model: "account.move",
                         method: "get_bank_balance",
@@ -790,51 +630,6 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                             } else {
                                  $('#total_share_pl').append('<span style= "color:#808080;">' + f_total_amount + '</span>')
                             }
-                        })
-
-                    rpc.query({
-                        model: "account.move",
-                        method: "get_latebills",
-
-                    }).then(function (result) {
-                            var late_count = 0;
-
-                            _.forEach(result, function (x) {
-                                late_count++;
-                                $('#latebills').append('<li><a class="overdue_line_cust" href="#" id="line_' + x.parent + '" data-user-id="' + x.parent + '">' + x.partner + '<span>' + x.amount + ' ' + currency + '</span>' + '</a>' + '</li>');
-                            });
-                            $('#late_count').append('<span class="badge badge-danger">' + late_count + ' Late(s)</span>');
-                        })
-                    rpc.query({
-                        model: "account.move",
-                        method: "get_total_invoice",
-                    })
-                        .then(function (result) {
-                            var total_invoice = result[0].sum;
-                            total_invoice = total_invoice
-                            $('#total_invoice').append('<span>' + total_invoice + ' ' + currency + '</span> ')
-                        })
-                    rpc.query({
-                        model: "account.move",
-                        method: "get_total_invoice_this_month",
-                        args: [posted],
-                    })
-                        .then(function (result) {
-                            var invoice_this_month = result[0].sum;
-                            if (invoice_this_month) {
-                                var total_invoices_this_month = invoice_this_month.toFixed(2)
-                                $('#total_invoices_').append('<span>' + total_invoices_this_month + ' ' + currency + '</span> <div class="title">This month</div>')
-                            }
-                        })
-
-                    rpc.query({
-                        model: "account.move",
-                        method: "get_total_invoice_last_month",
-                    })
-                        .then(function (result) {
-                            var invoice_last_month = result[0].sum;
-                            var total_invoices_last_month = invoice_last_month
-                            $('#total_invoices_last').append('<span>' + total_invoices_last_month + ' ' + currency + '</span><div class="title">Last month</div>')
                         })
 
                     rpc.query({
