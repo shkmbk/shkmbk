@@ -131,7 +131,7 @@
 					<t t-if="not o.check_is_acpayee_name">
 						<span t-esc="o.partner_id.name"/>
 					</t>
-					<t t-if="o.check_is_acpayee">
+					<t t-if="o.check_is_acpayee_name">
 						<span t-esc="o.check_acpayee_name"/>
 					</t>					
                 </div>				
