@@ -22,7 +22,7 @@
                                 <th class="text-right"><strong>Encash</strong></th>
                                 <th class="text-right"><strong>Balance Days</strong></th>
                                 <th class="text-right"><strong>Balance Amount</strong></th>
-                                <th class="text-right"><strong>Provision Date</strong></th>
+                                <th class="text-center"><strong>Provision Date</strong></th>
                                 <th class="text-right"><strong>Provision Amount</strong></th>
                             </tr>
                         </thead>
