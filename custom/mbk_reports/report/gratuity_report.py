@@ -49,7 +49,7 @@ class GratuityReport(models.AbstractModel):
         if not self.env['res.users'].browse(self.env.uid).tz:
             raise UserError(_('Please Set a User Timezone'))
             
-        objemp = self.env['hr.contract'].search([('state', '=', 'open'),('employee_id.date_of_join', '<=', ason_date),self._get_analytic(analytic_account_id),
+        objemp = self.env['hr.contract'].search([('state', 'in', ['open', 'close']),('employee_id.date_of_join', '<=', ason_date),self._get_analytic(analytic_account_id),
                                                     self._get_department(hr_department_ids), self._get_analytic_tags(analytic_tag_ids),self._get_employee(employee_id)])
 
         if not objemp:
@@ -127,10 +127,20 @@ class GratuityReport(models.AbstractModel):
             elif 365 <= eligible_days < 1825:
                 gratuity_days = eligible_days*21/365
             else:
-                gratuity_days=round(105+((eligible_days-1825)*30/365), 2)
+                gratuity_days = round(105+((eligible_days-1825)*30/365), 2)
             
-            gratuity_amount= round(per_day*gratuity_days,2)
+            gratuity_amount = round(per_day*gratuity_days, 2)
 
+            obj_last_esob_p = self.env['mbk.esob_provision.line'].search(
+                [('employee_id', '=', rec.employee_id.id), ('esob_provision_id.state', '=', 'posted'), ('to_date', '<=', as_on_date)],
+                order='to_date desc', limit=1)
+            last_esob_pb_date = obj_last_esob_p.to_date
+            provision_booked_amount = obj_last_esob_p.avl_esob_amount
+
+            if last_esob_pb_date:
+                last_leave_pb_date_str = last_esob_pb_date.strftime("%d-%m-%Y")
+            else:
+                last_leave_pb_date_str = False
                         
             master_table.append({
                             'emp_name': rec.employee_id.name,
@@ -140,8 +150,10 @@ class GratuityReport(models.AbstractModel):
                             'total_days': total_days,
                             'lop_days': lop_days,
                             'eligible_days': eligible_days,
-                            'gratuity_days' : gratuity_days,
-                            'gratuity_amount' : gratuity_amount,
+                            'gratuity_days': gratuity_days,
+                            'gratuity_amount': gratuity_amount,
+                            'provision_date': last_leave_pb_date_str,
+                            'provision_amount': provision_booked_amount,
                         })
         master_table.sort(key=lambda g:(g['gratuity_amount'],g['eligible_days']), reverse=True)
         docargs = {
