@@ -157,7 +157,7 @@ class AnnualLeaveReport(models.AbstractModel):
             annualleave_amount = round(per_day * annualleave_days, 2)
 
             obj_last_leave_p = self.env['mbk.leave_provision.line'].search(
-                [('employee_id', '=', rec.employee_id.id), ('leave_provision_id.state', '=', 'posted')],
+                [('employee_id', '=', rec.employee_id.id), ('leave_provision_id.state', '=', 'posted'), ('to_date', '<=', as_on_date)],
                 order='to_date desc', limit=1)
 
             last_leave_pb_date = obj_last_leave_p.to_date
@@ -167,6 +167,15 @@ class AnnualLeaveReport(models.AbstractModel):
                 last_leave_pb_date_str = last_leave_pb_date.strftime("%d-%m-%Y")
             else:
                 last_leave_pb_date_str = False
+
+            # Computing total booked Leave Salary provision
+            obj_ls_provision = self.env['mbk.leave_provision.line'].search(
+                [('employee_id', '=', rec.employee_id.id), ('leave_provision_id.state', '=', 'posted'), ('to_date', '<=', as_on_date)])
+            lsp_booked = 0.00
+            for lsp in obj_ls_provision:
+                lsp_booked += lsp.amount
+
+            net_leave_amount = lsp_booked - encashed_amount
 
             master_table.append({
                             'emp_name': rec.employee_id.name,
@@ -183,7 +192,7 @@ class AnnualLeaveReport(models.AbstractModel):
                             'balanceal_days': annualleave_days,
                             'annualleave_amount': annualleave_amount,
                             'provision_date': last_leave_pb_date_str,
-                            'provision_amount': provision_bal_amount,
+                            'provision_amount': net_leave_amount,
                         })
         master_table.sort(key=lambda g:(g['annualleave_amount'],g['eligible_days']), reverse=True)
         docargs = {
