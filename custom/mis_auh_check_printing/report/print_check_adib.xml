@@ -5,7 +5,12 @@
             <div style="position: relative;">
                 <!--- Print Header-->
                 <div style="position: absolute;top: 21mm; left: 10mm;font-size: 12pt;font-weight: bold;width:90mm;">
-                    <span t-esc="o.partner_id.name"/>
+ 					 <t t-if="o.payment_type=='outbound'">
+						<span t-esc="o.partner_id.name"/>
+					 </t>                   
+					 <t t-if="o.payment_type=='transfer'">
+						<span t-esc="o.destination_journal_id.name"/>
+					 </t>
                 </div>
                 <!--- payment Number-->
                 <div style="position: absolute;top: 41mm; left: 50mm;font-size: 12pt;font-weight: bold;">
