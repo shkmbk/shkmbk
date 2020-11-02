@@ -46,12 +46,19 @@ class Wizard(models.TransientModel):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     payment_method = fields.Many2one('mis.hr.paymentmethod', string="Payment Method")
+    employee_id = fields.Many2one('hr.employee', string='Employee', domian="[('status', '!=', 'draft')]")
 
     def _get_hr_tags(self):
         if self.category_ids:
             return ('employee_id.category_ids', 'in', self.category_ids.ids)
         else:
             return ('company_id', '=', self.env.company.id)
+
+    def _get_employee(self):
+        if self.employee_id:
+            return ('employee_id', '=', self.employee_id.id)
+        else:
+            return (self.employee_id.id, '=', False)
 
     def _get_analytic_account(self):
         if self.analytic_account_id:
@@ -81,7 +88,7 @@ class Wizard(models.TransientModel):
         # ['&', ('date_from', '<=', self.start_date), ('date_to', '>=', self.end_date)])
         return [('date_from', '<=', self.start_date), ('date_to', '>=', self.end_date),
                 self._get_hr_tags(), self._get_analytic_account(), self._get_analytic_tag_ids(),
-                self._get_department_ids(), self._get_payment_method(),
+                self._get_department_ids(), self._get_payment_method(), self._get_employee(),
                 ('company_id', '=', self.env.company.id)]
 
     @api.onchange('start_date', 'end_date')

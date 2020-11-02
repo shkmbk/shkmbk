@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payroll_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>PAYROLL REPORT FOR  <t t-esc="report_head"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-left" width="2%"><strong>Sl No</strong></th>
+                                <th class="text-left"><strong>Code</strong></th>
+                                <th class="text-left"><strong>Employee</strong></th>
+                                <th class="text-left"><strong>Designation</strong></th>
+                                <th class="text-left"><strong>Payment Mode</strong></th>
+                                <th class="text-left"><strong>Period</strong></th>
+                                <th class="text-right" ><strong>Contract Salary</strong></th>
+                                <th class="text-right"><strong>Days</strong></th>
+                                <th class="text-right" ><strong>Basic Salary</strong></th>
+                                <th class="text-right"><strong>Allowance</strong></th>
+                                <th class="text-right"><strong>Fixed OT</strong></th>
+                                <th class="text-right"><strong>L.Salary</strong></th>
+                                <th class="text-right"><strong>Air Ticket</strong></th>
+                                <th class="text-right"><strong>EOSB</strong></th>
+                                <th class="text-right"><strong>Gross Amount</strong></th>
+                                <th class="text-right"><strong>Penalty</strong></th>
+                                <th class="text-right"><strong>S. Advance</strong></th>
+                                <th class="text-right"><strong>Net Salary</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="rowno" t-value="1"/>
+                            <t t-set="tot_contract_salary" t-value="0.0"/>
+                            <t t-set="tot_amount_basic" t-value="0.0"/>
+                            <t t-set="tot_amount_allow" t-value="0.0"/>
+                            <t t-set="tot_amount_fot" t-value="0.0"/>
+                            <t t-set="tot_amount_ls" t-value="0.0"/>
+                            <t t-set="tot_amount_at" t-value="0.0"/>
+                            <t t-set="tot_amount_esob" t-value="0.0"/>
+                            <t t-set="tot_amount_gross" t-value="0.0"/>
+                            <t t-set="tot_amount_fine" t-value="0.0"/>
+                            <t t-set="tot_amount_adv" t-value="0.0"/>
+                            <t t-set="tot_amount_net" t-value="0.0"/>
+                            <t t-foreach="docs" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="line['sl_no']"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['emp_code']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['emp_name']"/>
+                                    </td>
+                                    <td>
+                                       <span t-esc="line['designation']"/>
+                                     </td>
+                                    <td>
+                                       <span t-esc="line['payment_mode']"/>
+                                    </td>
+                                    <td>
+                                       <span t-esc="line['Period']"/>
+                                    </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['contract_salary'])"/>
+                                         <t t-set="tot_contract_salary" t-value="tot_contract_salary+line['contract_salary']"/>
+                                     </td>									
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['worked_days'])"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_basic'])"/>
+                                         <t t-set="tot_amount_basic" t-value="tot_amount_basic+line['amount_basic']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_allow'])"/>
+                                         <t t-set="tot_amount_allow" t-value="tot_amount_allow+line['amount_allow']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_fot'])"/>
+                                         <t t-set="tot_amount_fot" t-value="tot_amount_fot+line['amount_fot']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_ls'])"/>
+                                         <t t-set="tot_amount_ls" t-value="tot_amount_ls+line['amount_ls']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_at'])"/>
+                                         <t t-set="tot_amount_at" t-value="tot_amount_at+line['amount_at']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_esob'])"/>
+                                         <t t-set="tot_amount_esob" t-value="tot_amount_esob+line['amount_esob']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_gross'])"/>
+                                         <t t-set="tot_amount_gross" t-value="tot_amount_gross+line['amount_gross']"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_fine'])"/>
+                                         <t t-set="tot_amount_fine" t-value="tot_amount_fine+line['amount_fine']"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_adv'])"/>
+                                         <t t-set="tot_amount_adv" t-value="tot_amount_adv+(line['amount_adv'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['amount_net'])"/>
+                                         <t t-set="tot_amount_net" t-value="tot_amount_net+(line['amount_net'])"/>
+                                     </td>
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="6" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b>TOTAL</b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_contract_salary)"/></b>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_basic)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_allow)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_fot)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_ls)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_at)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_esob)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_gross)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_fine)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_adv)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_amount_net)"/></b>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+
