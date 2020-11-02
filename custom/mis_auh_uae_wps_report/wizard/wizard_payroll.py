@@ -45,12 +45,19 @@ class WizardPayroll(models.TransientModel):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     payment_method = fields.Many2one('mis.hr.paymentmethod', string="Payment Method")
+    employee_id = fields.Many2one('hr.employee', string='Employee', domian="[('status', '!=', 'draft')]")
 
     def _get_hr_tags(self):
         if self.category_ids:
             return ('employee_id.category_ids', 'in', self.category_ids.ids)
         else:
             return ('company_id', '=', self.env.company.id)
+
+    def _get_employee(self):
+        if self.employee_id:
+            return ('employee_id', '=', self.employee_id.id)
+        else:
+            return (1, '=', 1)
 
     def _get_analytic_account(self):
         if self.analytic_account_id:
@@ -76,9 +83,9 @@ class WizardPayroll(models.TransientModel):
             return ('company_id', '=', self.env.company.id)
 
     def _get_filtered_domain(self):
-        return [('date_from', '<=', self.start_date), ('date_to', '>=', self.end_date),
+        return [('date_from', '>=', self.start_date), ('date_to', '<=', self.end_date),
                 self._get_hr_tags(), self._get_analytic_account(), self._get_analytic_tag_ids(),
-                self._get_department_ids(), self._get_payment_method(),
+                self._get_department_ids(), self._get_payment_method(), self._get_employee(),
                 ('company_id', '=', self.env.company.id)]
 
 
@@ -95,16 +102,13 @@ class WizardPayroll(models.TransientModel):
     def print_payroll_xlsx(self):
         if not self.env['res.users'].browse(self.env.uid).tz:
             raise UserError(_('Please Set a User Timezone'))
-        if self.start_date and self.end_date:
-            start = str(self.start_date).split('-')
-            end = str(self.end_date).split('-')
-            if not start[1] == end[1]:
-                raise UserError(_('The Dates Can of Same Month Only'))
+        if self.start_date > self.end_date:
+            raise UserError(_('End date should be greater than or equal to start Date'))
 
         slips = self.env['hr.payslip'].search(self._get_filtered_domain(), order="employee_id, number")
 
         if not slips:
-            raise UserError(_('There are no payslip Created for the selected month'))
+            raise UserError(_(self._get_filtered_domain()))
 
         user = self.env['res.users'].browse(self.env.uid)
         if user.tz:
@@ -114,7 +118,16 @@ class WizardPayroll(models.TransientModel):
         else:
             date = datetime.now()
             time = datetime.now()
-        date_string =  self.end_date.strftime("%B-%y")
+
+        start = str(self.start_date).split('-')
+        end = str(self.end_date).split('-')
+        if start[1] == end[1]:
+            report_head = 'THE MONTH '+self.end_date.strftime("%B %Y").upper()
+            report_footer = 'PVT OFF SALARY - '+self.end_date.strftime("%b %Y").upper()
+        else:
+            report_head = self.start_date.strftime("%d/%m/%Y").upper()+' - ' + self.end_date.strftime("%d/%m/%Y").upper()
+            report_footer = self.start_date.strftime("%m %y").upper()+' - ' + self.end_date.strftime("%m %y").upper()
+        date_string = self.end_date.strftime("%B-%y")
 
         report_name = 'PayrollReport_'+ date.strftime("%y%m%d%H%M%S")
         filename = '%s %s' % (report_name, date_string)
@@ -126,7 +139,7 @@ class WizardPayroll(models.TransientModel):
 
         wbf['content'] = workbook.add_format()
         wbf['header'] = workbook.add_format(
-            {'bold': 1, 'align': 'center'})
+            {'bold': 1, 'align': 'center', 'valign': 'center'})
         wbf['content_float'] = workbook.add_format({'align': 'right', 'num_format': '#,##0.00'})
         wbf['content_border'] = workbook.add_format()
         wbf['content_border'].set_top()
@@ -159,85 +172,92 @@ class WizardPayroll(models.TransientModel):
         wbf['content_float_border_bg'].set_left()
         wbf['content_float_border_bg'].set_right()
 
+        worksheet = workbook.add_worksheet(report_footer)
+        worksheet.center_horizontally()
+        worksheet.set_landscape()
+        worksheet.set_margins(left=.2, right=.2, top=.60, bottom=.50)
+        worksheet.fit_to_pages(1, 0)
+        worksheet.set_footer('&L&A'+'&RPage &P of &N', {'margin': .15})
+        worksheet.set_row(0, 20)
+        worksheet.merge_range('A%s:R%s' % (1, 1), 'PVT.OFFICE OF H.H.SHK.MOHAMMED BIN KHALIFA BIN ZAYED AL NAHYAN', wbf['header'])
+        worksheet.set_row(1, 20)
+        worksheet.merge_range('A%s:R%s' % (2, 2), 'SALARY SHEET FOR '+report_head, wbf['header'])
 
-
-        worksheet = workbook.add_worksheet(report_name)
-
-        col=0
+        col = 0
         column_width=6
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Sl. No.', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Sl. No.', wbf['content_border_bg'])
         col = 1
         column_width = 40
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Employee Name', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Employee Name', wbf['content_border_bg'])
         col = 2
         column_width = 21
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Designation', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Designation', wbf['content_border_bg'])
         col = 3
         column_width = 12
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Division', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Division', wbf['content_border_bg'])
         col = 4
         column_width = 25
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Department', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Department', wbf['content_border_bg'])
         col = 5
         column_width = 14
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Payment Mode', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Payment Mode', wbf['content_border_bg'])
         col = 6
         column_width = 14
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Contract Salary', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Contract Salary', wbf['content_border_bg'])
         col = 7
         column_width = 5
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Days', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Days', wbf['content_border_bg'])
         col = 8
         column_width = 10
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Basic Salary', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Basic Salary', wbf['content_border_bg'])
         col = 9
         column_width = 10
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Allowance', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Allowance', wbf['content_border_bg'])
         col = 10
         column_width = 8
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Fixed OT', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Fixed OT', wbf['content_border_bg'])
         col = 11
         column_width = 9
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'L.Salary', wbf['content_border_bg'])
+        worksheet.write(2, col, 'L.Salary', wbf['content_border_bg'])
         col = 12
         column_width = 8
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Air Ticket', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Air Ticket', wbf['content_border_bg'])
         col = 13
         column_width = 10
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'EOSB', wbf['content_border_bg'])
+        worksheet.write(2, col, 'EOSB', wbf['content_border_bg'])
         col = 14
         column_width = 13
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Gross Amount', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Gross Amount', wbf['content_border_bg'])
         col = 15
         column_width = 13
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Fine & Penalty', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Fine & Penalty', wbf['content_border_bg'])
         col = 16
         column_width = 10
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'S. Advance', wbf['content_border_bg'])
+        worksheet.write(2, col, 'S. Advance', wbf['content_border_bg'])
 
         col = 17
         column_width = 14
         worksheet.set_column(col, col, column_width)
-        worksheet.write(0, col, 'Net Salary', wbf['content_border_bg'])
+        worksheet.write(2, col, 'Net Salary', wbf['content_border_bg'])
 
-        count = 0
+        count = 2
         sum_basic_allow = 0.0
         sum_basic = 0.0
         sum_allowance = 0.0
@@ -397,3 +417,16 @@ class WizardPayroll(models.TransientModel):
             'target': 'new',
             'url': 'web/content/?model='+self._name+'&id='+str(self.id)+'&field=datas&download=true&filename='+filename,
         }
+
+    def print_payroll(self):
+        data = {}
+        data['start_date'] = self.start_date
+        data['end_date'] = self.end_date
+        data['hr_department_ids'] = self.hr_department_ids.ids
+        data['category_ids'] = self.category_ids.ids
+        data['analytic_account_id'] = self.analytic_account_id.id
+        data['analytic_tag_ids'] = self.analytic_tag_ids.ids
+        data['payment_method'] = self.payment_method.id
+        data['employee_id'] = self.employee_id.id
+        report = self.env.ref('mis_auh_uae_wps_report.payroll_report')
+        return report.report_action(self, data=data)

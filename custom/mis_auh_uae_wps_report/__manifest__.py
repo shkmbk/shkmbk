@@ -20,6 +20,9 @@
         'wizard/wizard.xml',
         'wizard/wizard_payroll.xml',
         'security/ir.model.access.csv',
+        'report/report_menu.xml',
+        'report/payroll_report.xml',
+
     ],
     'installable': True,
     'application': False,

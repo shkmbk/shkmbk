@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <report id="payroll_report"
+            model="hr.payslip"
+            string="Payroll Report"
+            report_type="qweb-html"
+            name="mis_auh_uae_wps_report.payroll_report"
+            file="mis_auh_uae_wps_report.payroll_report"
+            menu="False"/>
+</odoo>
