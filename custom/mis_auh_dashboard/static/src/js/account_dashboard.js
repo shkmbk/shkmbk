@@ -548,12 +548,8 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
              if (typeof(amount) != 'number'){
                 amount = parseFloat(amount);
              }
-             var formatted_value = (parseInt(amount)).toLocaleString(currency.language, {minimumFractionDigits: 2})
-             if (currency.position === "after") {
-                return formatted_value += ' ' + currency.symbol;
-             } else {
-                return currency.symbol + ' ' + formatted_value;
-             }
+             var formatted_value = (parseInt(amount)).toLocaleString("en-US", {minimumFractionDigits: 2})
+             return formatted_value += ' ' + "AED";
         },
 
         willStart: function () {
