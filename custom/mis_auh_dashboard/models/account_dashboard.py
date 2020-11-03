@@ -263,3 +263,51 @@ class AccountsDashBoard(models.Model):
             'profit': profit
         }
         return records
+
+
+    # Function to get investment summary
+    @api.model
+    def get_investment_summary_pie(self):
+        company_ids = self.get_current_multi_company_value()
+        total_amount = 0.00
+        investment = []
+        journal_items = self.env['account.move.line'].search(
+            [('analytic_tag_ids.analytic_tag_group', '=', 35), ('parent_state', '=', 'posted'), ('company_id', '=', company_ids),
+             ('account_id.group_id', 'in', [48, 61]), ('account_id', '!=', 2498)])
+        # raise UserError(company_ids)
+        for rec in journal_items:
+            if rec.account_id.account_remark:
+                name = rec.account_id.account_remark
+            else:
+                name = rec.account_id.name
+
+            total_amount += rec.debit - rec.credit
+            existing_lines = (
+                line_id for line_id in investment if
+                line_id['particulars'] == name)
+            main_line = next(existing_lines, False)
+
+            if not main_line:
+                main_line = {
+                    'particulars': name,
+                    'amount': rec.debit - rec.credit,
+                    'percentage': 0.00,
+                }
+                investment.append(main_line)
+            else:
+                main_line['amount'] += rec.debit - rec.credit
+        label = []
+        amount = []
+        investment.sort(key=lambda item: (item["amount"]), reverse=True)
+
+        for line in investment:
+            line['percentage'] = line['particulars'] + ' (' + str(round(line['amount'] * 100 / total_amount if total_amount != 0 else 1, 2)) + '%)'
+            label.append(line['percentage'])
+            amount.append(round(line['amount'], 2))
+
+        return {
+            'label': label,
+            'amount': amount,
+            'total_amount': total_amount,
+        }
+        return records

@@ -26,20 +26,6 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
             'click #cash_balance_hide': 'onclick_cash_balance_hide',
             'click #in_ex_hide': 'onclick_in_ex_hide',
             'click #aged_payable_hide': 'onclick_aged_payable_hide',
-            'change #aged_receivable_values': function(e) {
-                            e.stopPropagation();
-                            var $target = $(e.target);
-                            var value = $target.val();
-//                            this.$('.aged_receivable_this_month').empty();
-                            this.onclick_aged_payable(this.$('#aged_receivable_values').val());
-                                                        },
-            'change #aged_payable_value': function(e) {
-                            e.stopPropagation();
-                            var $target = $(e.target);
-                            var value = $target.val();
-                            this.$('.aged_receivable_this_month').empty();
-                            this.onclick_aged_receivable(this.$('#aged_payable_value').val());
-                                                        },
             'change #income_expense_values': function(e) {
                             e.stopPropagation();
                             var $target = $(e.target);
@@ -52,8 +38,6 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
         },
         onclick_toggle_two: function (ev) {
 
-            this.onclick_aged_payable(this.$('#aged_receivable_values').val());
-            this.onclick_aged_receivable(this.$('#aged_payable_value').val());
         },
 
         onclick_income_last_year: function (ev) {
@@ -293,153 +277,6 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                 })
         },
 
-        onclick_aged_payable: function (f) {
-
-//            ev.preventDefault();
-            var arg = f;
-            var selected = $('.btn.btn-tool.expense');
-            var data = $(selected[0]).data();
-            var posted = false;
-            if ($('#toggle-two')[0].checked == true) {
-                posted = "posted"
-            }
-            rpc.query({
-                model: 'account.move',
-                method: 'get_overdues_this_month_and_year',
-                args: [posted,f],
-            })
-                .then(function (result) {
-                    // Doughnut Chart
-                    $(document).ready(function () {
-                        var options = {
-                            // legend: false,
-                            responsive: false
-                        };
-                        if (window.donut != undefined)
-                            window.donut.destroy();
-
-
-                        window.donut = new Chart($("#canvas1"), {
-                            type: 'doughnut',
-                            tooltipFillColor: "rgba(51, 51, 51, 0.55)",
-                            data: {
-                                labels: result.due_partner,
-                                datasets: [{
-                                    data: result.due_amount,
-                                    backgroundColor: [
-                                        '#66aecf ', '#6993d6 ', '#666fcf', '#7c66cf', '#9c66cf',
-                                        '#bc66cf ', '#b75fcc', ' #cb5fbf ', ' #cc5f7f ', ' #cc6260',
-                                        '#cc815f', '#cca15f ', '#ccc25f', '#b9cf66', '#99cf66',
-                                        ' #75cb5f ', '#60cc6c', '#804D8000', '#80B33300', '#80CC80CC', '#f2552c', '#00cccc',
-                                        '#1f2e2e', '#993333', '#00cca3', '#1a1a00', '#3399ff',
-                                        '#8066664D', '#80991AFF', '#808E666FF', '#804DB3FF', '#801AB399',
-                                        '#80E666B3', '#8033991A', '#80CC9999', '#80B3B31A', '#8000E680',
-                                        '#804D8066', '#80809980', '#80E6FF80', '#801AFF33', '#80999933',
-                                        '#80FF3380', '#80CCCC00', '#8066E64D', '#804D80CC', '#809900B3',
-                                        '#80E64D66', '#804DB380', '#80FF4D4D', '#8099E6E6', '#806666FF'
-                                    ],
-                                    hoverBackgroundColor: [
-                                        '#66aecf ', '#6993d6 ', '#666fcf', '#7c66cf', '#9c66cf',
-                                        '#bc66cf ', '#b75fcc', ' #cb5fbf ', ' #cc5f7f ', ' #cc6260',
-                                        '#cc815f', '#cca15f ', '#ccc25f', '#b9cf66', '#99cf66',
-                                        ' #75cb5f ', '#60cc6c', '#804D8000', '#80B33300', '#80CC80CC', '#f2552c', '#00cccc',
-                                        '#1f2e2e', '#993333', '#00cca3', '#1a1a00', '#3399ff',
-                                        '#8066664D', '#80991AFF', '#808E666FF', '#804DB3FF', '#801AB399',
-                                        '#80E666B3', '#8033991A', '#80CC9999', '#80B3B31A', '#8000E680',
-                                        '#804D8066', '#80809980', '#80E6FF80', '#801AFF33', '#80999933',
-                                        '#80FF3380', '#80CCCC00', '#8066E64D', '#804D80CC', '#809900B3',
-                                        '#80E64D66', '#804DB380', '#80FF4D4D', '#8099E6E6', '#806666FF'
-                                    ]
-                                }]
-                            },
-                            options: {
-                                responsive: false
-                            }
-                        });
-                    });
-                    // Doughnut Chart
-
-                })
-        },
-
-
-        onclick_aged_receivable: function (f) {
-            var selected = $('.btn.btn-tool.expense');
-            var data = $(selected[0]).data();
-            var posted = false;
-            var f = f
-            if ($('#toggle-two')[0].checked == true) {
-                posted = "posted"
-            }
-            rpc.query({
-                model: 'account.move',
-                method: 'get_latebillss',
-                args: [posted, f],
-
-            })
-                .then(function (result) {
-                    function myFunction() {
-                        document.getElementByClass("btn btn-tool dropdown-toggle").text
-                        document.getElementById("aged_receivable_this_month").text
-                    }
-
-                    $(document).ready(function () {
-                        var options = {
-                            // legend: false,
-                            responsive: true,
-                            legend: {
-                                position: 'bottom'
-                            }
-                        };
-
-
-                        if (window.donuts != undefined)
-                            window.donuts.destroy();
-
-
-                        window.donuts = new Chart($("#horizontalbarChart"), {
-                            type: 'doughnut',
-                            tooltipFillColor: "rgba(51, 51, 51, 0.55)",
-                            data: {
-                                labels: result.bill_partner,
-                                datasets: [{
-                                    data: result.bill_amount,
-                                    backgroundColor: [
-                                        '#66aecf ', '#6993d6 ', '#666fcf', '#7c66cf', '#9c66cf',
-                                        '#bc66cf ', '#b75fcc', ' #cb5fbf ', ' #cc5f7f ', ' #cc6260',
-                                        '#cc815f', '#cca15f ', '#ccc25f', '#b9cf66', '#99cf66',
-                                        ' #75cb5f ', '#60cc6c', '#804D8000', '#80B33300', '#80CC80CC', '#f2552c', '#00cccc',
-                                        '#1f2e2e', '#993333', '#00cca3', '#1a1a00', '#3399ff',
-                                        '#8066664D', '#80991AFF', '#808E666FF', '#804DB3FF', '#801AB399',
-                                        '#80E666B3', '#8033991A', '#80CC9999', '#80B3B31A', '#8000E680',
-                                        '#804D8066', '#80809980', '#80E6FF80', '#801AFF33', '#80999933',
-                                        '#80FF3380', '#80CCCC00', '#8066E64D', '#804D80CC', '#809900B3',
-                                        '#80E64D66', '#804DB380', '#80FF4D4D', '#8099E6E6', '#806666FF'
-                                    ],
-                                    hoverBackgroundColor: [
-                                        '#66aecf ', '#6993d6 ', '#666fcf', '#7c66cf', '#9c66cf',
-                                        '#bc66cf ', '#b75fcc', ' #cb5fbf ', ' #cc5f7f ', ' #cc6260',
-                                        '#cc815f', '#cca15f ', '#ccc25f', '#b9cf66', '#99cf66',
-                                        ' #75cb5f ', '#60cc6c', '#804D8000', '#80B33300', '#80CC80CC', '#f2552c', '#00cccc',
-                                        '#1f2e2e', '#993333', '#00cca3', '#1a1a00', '#3399ff',
-                                        '#8066664D', '#80991AFF', '#808E666FF', '#804DB3FF', '#801AB399',
-                                        '#80E666B3', '#8033991A', '#80CC9999', '#80B3B31A', '#8000E680',
-                                        '#804D8066', '#80809980', '#80E6FF80', '#801AFF33', '#80999933',
-                                        '#80FF3380', '#80CCCC00', '#8066E64D', '#804D80CC', '#809900B3',
-                                        '#80E64D66', '#804DB380', '#80FF4D4D', '#8099E6E6', '#806666FF'
-                                    ]
-                                }]
-                            },
-                            options: {
-                                responsive: false
-                            }
-                        });
-                    });
-
-
-                })
-        },
-
         renderElement: function (ev) {
             var self = this;
             $.when(this._super())
@@ -536,14 +373,15 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                     var arg = 'last_month'
                     rpc.query({
                         model: 'account.move',
-                        method: 'get_latebillss',
-                        args: [posted, arg],
+                        method: 'get_investment_summary_pie',
                     })
                         .then(function (result) {
-
+                            var total_amount = result.total_amount
+                            total_amount = self.format_currency(currency, total_amount);
+                            $('#total_inv_amount').append('<span>' + total_amount + '</span>')
                             $(document).ready(function () {
                                 var options = {
-                                    // legend: false,
+                                    legend: false,
                                     responsive: true,
                                     legend: {
                                         position: 'bottom'
@@ -552,14 +390,14 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                                 if (window.donuts != undefined)
                                     window.donuts.destroy();
                                 window.donuts = new Chart($("#horizontalbarChart"), {
-                                    type: 'doughnut',
+                                    type: 'pie',
                                     tooltipFillColor: "rgba(51, 51, 51, 0.55)",
                                     data: {
-                                        labels: result.bill_partner,
+                                        labels: result.label,
                                         datasets: [{
-                                            data: result.bill_amount,
+                                            data: result.amount,
                                             backgroundColor: [
-                                                '#66aecf ', '#6993d6 ', '#666fcf', '#7c66cf', '#9c66cf',
+                                                '#003f5c', '#7a5195', '#ef5675', '#ffa600', '#9c66cf',
                                                 '#bc66cf ', '#b75fcc', ' #cb5fbf ', ' #cc5f7f ', ' #cc6260',
                                                 '#cc815f', '#cca15f ', '#ccc25f', '#b9cf66', '#99cf66',
                                                 ' #75cb5f ', '#60cc6c', '#804D8000', '#80B33300', '#80CC80CC', '#f2552c', '#00cccc',
@@ -571,7 +409,7 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                                                 '#80E64D66', '#804DB380', '#80FF4D4D', '#8099E6E6', '#806666FF'
                                             ],
                                             hoverBackgroundColor: [
-                                                '#66aecf ', '#6993d6 ', '#666fcf', '#7c66cf', '#9c66cf',
+                                                '#003f5c', '#7a5195', '#ef5675', '#ffa600', '#9c66cf',
                                                 '#bc66cf ', '#b75fcc', ' #cb5fbf ', ' #cc5f7f ', ' #cc6260',
                                                 '#cc815f', '#cca15f ', '#ccc25f', '#b9cf66', '#99cf66',
                                                 ' #75cb5f ', '#60cc6c', '#804D8000', '#80B33300', '#80CC80CC', '#f2552c', '#00cccc',

@@ -188,7 +188,7 @@
                                         <h3 class="custom-h3 card-title">
                                             <b><span id="totalsalary"/></b>
                                         </h3>
-                                    </div>
+                                 </div>
                             </div>
 
                         <div class="card-body p-0" style=" height: 100px;">
@@ -228,18 +228,15 @@
 					
 					<div class="col-md-4" id="col-graph">
                         <div class="card">
-                            <div class="card-header">
-                                <div class="custom-h3 card-title">
-                                    <h3 class="custom-h3 card-title">
-                                        <b>Aged Payable</b>
-                                    </h3>
-                                </div>
-                                <div class="card-tools">
-                                    <select id="aged_payable_value">
-										<option id="aged_receivable_this_year" value="this_year">This Year</option>
-                                        <option id="aged_receivable_this_month" value="this_month">This Month</option>                                        
-                                    </select>
-                                </div>
+                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                <h3 class="custom-h3 card-title">
+                                    <b>INVESTMENT SUMMARY</b>
+                                </h3>
+                                 <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="total_inv_amount"/></b>
+                                        </h3>
+                                 </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body" id="aged_payable_body_hide">
@@ -253,6 +250,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <!--		</div>-->
