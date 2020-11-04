@@ -1,6 +1,7 @@
 from odoo import models, api
 from datetime import timedelta, datetime, date
 from odoo.exceptions import ValidationError, UserError
+from dateutil.relativedelta import relativedelta
 
 
 class FFBudgetVariationReport(models.AbstractModel):
@@ -13,7 +14,7 @@ class FFBudgetVariationReport(models.AbstractModel):
         year = int(data['year'])
         month = int(data['month'])
         year_from = date(year, month, 1)
-        year_to = date(year, month, 31)
+        year_to = year_from + relativedelta(months=+1, day=1, days=-1)
         obj_budget = self.env['mbk.budget'].search(
             [('state', '=', ['verify', 'done']), ('date_to', '>=', year_from), ('date_to', '<=', year_to)],
             order='date_to, id')
