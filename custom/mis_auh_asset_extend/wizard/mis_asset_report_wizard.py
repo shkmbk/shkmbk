@@ -132,7 +132,7 @@ class MisAssetCustomReport(models.TransientModel):
         report_name = 'AssetReport_'+ date.strftime("%y%m%d%H%M%S")
         filename = '%s %s' % (report_name, date_string)
         
-        pre_cls_date=self.from_date-timedelta(days=1)
+        pre_cls_date = self.from_date-timedelta(days=1)
         op_fy_date = datetime(2020, 6, 1)
 
 
@@ -354,7 +354,7 @@ class MisAssetCustomReport(models.TransientModel):
 
             # Depreciation Opening
             col += 1
-            dep_opening= (purchase_value-rec.original_value)+self._getSum(rec.id,1,1,op_fy_date,pre_cls_date)
+            dep_opening = (purchase_value-rec.original_value)+self._getSum(rec.id, 1, 1, op_fy_date, pre_cls_date)
             sum_depcreciable_opening+=dep_opening
             worksheet.write(count, col, dep_opening, wbf['content_float_border'])
             # Depreciation for Period
@@ -365,15 +365,15 @@ class MisAssetCustomReport(models.TransientModel):
             # Accumated Depreciation
             col += 1
             #acc_depreciation_amount=self._getSum(rec.id,0,1,self.from_date,self.to_date)
-            acc_depreciation_amount=dep_opening+depreciation_period
-            sum_depreciable_period+=acc_depreciation_amount
+            acc_depreciation_amount = dep_opening + depreciation_period
+            sum_depreciable_period += depreciation_period
             worksheet.write(count, col, acc_depreciation_amount, wbf['content_float_border'])
             # Previous Closing NBV Value
             col += 1
 
             #fromdate_value= self._getSum(rec.id,1,0,self.from_date,self.to_date)
-            fromdate_value=purchase_value-dep_opening
-            sum_fromdate_value+=fromdate_value
+            fromdate_value = purchase_value-dep_opening
+            sum_fromdate_value += fromdate_value
             worksheet.write(count, col, fromdate_value, wbf['content_float_border'])
             # To Date NBA Value
             col += 1
@@ -422,8 +422,8 @@ class MisAssetCustomReport(models.TransientModel):
         worksheet.write(count - 1, col, sum_todate_value, wbf['content_float_border_bg'])
 
         workbook.close()
-        out=base64.encodestring(fp.getvalue())
-        self.write({'datas':out, 'datas_fname':filename})
+        out=base64.encodebytes(fp.getvalue())
+        self.write({'datas': out, 'datas_fname': filename})
         fp.close()
         filename += '%2Exlsx'
 
