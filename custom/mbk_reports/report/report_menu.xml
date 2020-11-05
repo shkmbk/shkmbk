@@ -43,4 +43,18 @@
             name="mbk_reports.report_audit_trail"
             file="mbk_reports.report_audit_trail"
             menu="False"/>
+	<report id="pl_report_pdf"
+		model="account.move.line"
+		string="Profit and Loss Report"
+		report_type="qweb-html"
+		name="mbk_reports.report_pl"
+		file="mbk_reports.report_pl"
+		menu="False"/>
+	<report id="pl_group_report"
+		model="account.move.line"
+		string="MBK Profit and Loss Report"
+		report_type="qweb-html"
+		name="mbk_reports.report_pl_group"
+		file="mbk_reports.report_pl_group"
+		menu="False"/>
 </odoo>

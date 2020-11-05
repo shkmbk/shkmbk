@@ -30,13 +30,14 @@ class Mbkannualleave_Wizard(models.TransientModel):
         data['ason_date'] = self.ason_date
         data['employee_id'] = self.employee_id.id
         tmpdate = self.ason_date
-        data['hr_department_ids'] = self.hr_department_ids.id
-        data['category_ids'] = self.category_ids.id
+        data['hr_department_ids'] = self.hr_department_ids.ids
+        data['category_ids'] = self.category_ids.ids
         data['analytic_account_id'] = self.analytic_account_id.id
-        data['analytic_tag_ids'] = self.analytic_tag_ids.id        
+        data['analytic_tag_ids'] = self.analytic_tag_ids.ids
         data['header_date'] = tmpdate.strftime("%d-%m-%Y")
         report = self.env.ref('mbk_reports.annualleave_report_pdf')        
-        return report.report_action(self, data=data)    
+        return report.report_action(self, data=data)
+
     def print_annualleave_report_xls(self):
         raise UserError("In Progress, Comeback Later")
      

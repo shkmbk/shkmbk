@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pl_group">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4 style="color: #800000;">MBK GROUP OF COMPANIES</h4></center>
+                    <center><h4>STATEMENT OF COMPREHENSIVE INCOME <t t-esc="this"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 12px;">
+                        <thead>
+                            <tr>
+                                <th class="text-left" width="50%"><strong>PARTICULARS</strong></th>
+                                <th class="text-right"><strong>TOTAL</strong></th>
+                                <th class="text-right"><strong>ADWV</strong></th>
+                                <th class="text-right"><strong>ADPM</strong></th>
+                                <th class="text-right"><strong>MBKS</strong></th>
+                                <th class="text-right"><strong>RMAD</strong></th>
+                                <th class="text-right"><strong>RMFJ</strong></th>
+                                <th class="text-right"><strong>UTAB</strong></th>
+                                <th class="text-right"><strong>UTFJ</strong></th>
+                                <th class="text-right"><strong>FJML</strong></th>
+                                <th class="text-right"><strong>GLXC</strong></th>
+                                <th class="text-right"><strong>SHCT</strong></th>
+                                <th class="text-right"><strong>MBKM</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="width:100%;height:30px;background-color:#90EE90;">
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[0]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['total'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['adwv'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['adpm'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['mbks'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['rmad'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['rmfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['utab'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['utfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['fjml'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['glxc'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['shct'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['mbkm'])"/></b>
+                                </td>
+                            </tr>
+                            <t t-foreach="income_table" t-as="line">
+                                <tr>
+                                    <td style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                        <span t-esc="line['particulars']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['total'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['adwv'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['adpm'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['mbks'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['rmad'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['rmfj'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['utab'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['utfj'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['fjml'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['glxc'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['shct'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['mbkm'])"/></b>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr style="width:100%;height:30px;background-color:#ffcccb;">
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[1]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['total'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['adwv'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['adpm'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['mbks'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['rmad'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['rmfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['utab'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['utfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['fjml'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['glxc'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['shct'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['mbkm'])"/></b>
+                                </td>
+                            </tr>
+                            <t t-foreach="expense_table" t-as="line">
+                                <tr>
+                                    <td style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                        <span t-esc="line['particulars']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['total'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['adwv'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['adpm'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['mbks'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['rmad'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['rmfj'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['utab'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['utfj'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['fjml'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['glxc'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['shct'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(line['mbkm'])"/></b>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr style="width:100%;height:30px;background-color:#add8e6;">
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[2]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['total'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['adwv'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['adpm'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['mbks'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['rmad'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['rmfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['utab'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['utfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['fjml'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['glxc'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['shct'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['mbkm'])"/></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[3]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['total'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['adwv'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['adpm'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['mbks'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['rmad'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['rmfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['utab'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['utfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['fjml'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['glxc'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['shct'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['mbkm'])"/></b>
+                                </td>
+                            </tr>
+                            <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[4]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['total'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['adwv'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['adpm'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['mbks'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['rmad'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['rmfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['utab'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['utfj'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['fjml'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['glxc'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['shct'])"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['mbkm'])"/></b>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+
