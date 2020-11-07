@@ -72,40 +72,40 @@
                                         <span t-esc="line['particulars']"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['total'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['total'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['adwv'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['adwv'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['adpm'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['adpm'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['mbks'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['mbks'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['rmad'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['rmad'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['rmfj'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['rmfj'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['utab'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['utab'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['utfj'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['utfj'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['fjml'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['fjml'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['glxc'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['glxc'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['shct'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['shct'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['mbkm'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['mbkm'])"/>
                                     </td>
                                 </tr>
                             </t>
@@ -156,40 +156,40 @@
                                         <span t-esc="line['particulars']"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['total'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['total'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['adwv'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['adwv'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['adpm'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['adpm'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['mbks'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['mbks'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['rmad'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['rmad'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['rmfj'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['rmfj'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['utab'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['utab'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['utfj'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['utfj'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['fjml'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['fjml'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['glxc'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['glxc'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['shct'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['shct'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(line['mbkm'])"/></b>
+                                        <span t-esc="'{0:,.0f}'.format(line['mbkm'])"/>
                                     </td>
                                 </tr>
                             </t>
@@ -235,44 +235,44 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="vertical-align:middle;text-align:left;">
-                                  <b><t t-esc="docs[3]['particulars']"/></b>
+                                <td style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                    <span t-esc="docs[3]['particulars']"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['total'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['total'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['adwv'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['adwv'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['adpm'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['adpm'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['mbks'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['mbks'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['rmad'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['rmad'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['rmfj'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['rmfj'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['utab'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['utab'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['utfj'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['utfj'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['fjml'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['fjml'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['glxc'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['glxc'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['shct'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['shct'])"/>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[3]['mbkm'])"/></b>
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['mbkm'])"/>
                                 </td>
                             </tr>
                             <tr style="width:100%;height:30px;background-color:#d3d3d3;">

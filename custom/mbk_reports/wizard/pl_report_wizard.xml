@@ -21,11 +21,11 @@
                      <footer>
                          <table width="100%">
                              <tr>
-                                 <td align="left"  width="15%">
-                                     <button name="button_export_pdf" string="Division P&amp;L" type="object" default_focus="1" class="oe_highlight"/>
+                                 <td align="left"  width="20%">
+                                     <button name="button_export_pdf" string="Division Profit and Loss" type="object" default_focus="1" class="oe_highlight"/>
                                  </td>
                                  <td align="left"  width="35%">
-                                     <button name="button_summary" string="Group P&amp;L" type="object" class="oe_highlight"/>
+                                     <button name="button_summary" string="Group Profit and Loss" type="object" class="oe_highlight"/>
                                  </td>
 
                                  <td align="right"   width="50%">

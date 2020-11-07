@@ -170,18 +170,19 @@ class PLGroup_Report(models.AbstractModel):
             mbkm_expense += rec['mbkm']
 
         for rec in dep_table:
-            dep_total += rec['total']
-            adwv_dep += rec['adwv']
-            adpm_dep += rec['adpm']
-            mbks_dep += rec['mbks']
-            rmad_dep += rec['rmad']
-            rmfj_dep += rec['rmfj']
-            utab_dep += rec['utab']
-            utfj_dep += rec['utfj']
-            fjml_dep += rec['fjml']
-            glxc_dep += rec['glxc']
-            shct_dep += rec['shct']
-            mbkm_dep += rec['mbkm']
+            if rec['total']:
+                dep_total += rec['total']
+                adwv_dep += rec['adwv']
+                adpm_dep += rec['adpm']
+                mbks_dep += rec['mbks']
+                rmad_dep += rec['rmad']
+                rmfj_dep += rec['rmfj']
+                utab_dep += rec['utab']
+                utfj_dep += rec['utfj']
+                fjml_dep += rec['fjml']
+                glxc_dep += rec['glxc']
+                shct_dep += rec['shct']
+                mbkm_dep += rec['mbkm']
 
         opl_total = income_total - expense_total
         adwv_opl = adwv_income - adwv_expense
