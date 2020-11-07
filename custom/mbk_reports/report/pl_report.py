@@ -31,7 +31,7 @@ class PL_Report(models.AbstractModel):
                             INNER JOIN account_account A ON AML.account_id=A.id
                             INNER JOIN account_group AG ON A.group_id= AG.id
                             WHERE  (AML.date BETWEEN '"""+str(year_from)+"""' AND '"""+str(year_to)+"""') AND AML.company_id=3 AND A.internal_group in ('income') AND (AML.analytic_account_id = '"""+str(analytic_id)+"""' OR '"""+str(analytic_id)+"""'=0)
-                            GROUP BY AG.Name""")
+                            GROUP BY AG.Name ORDER BY 2 DESC""")
 
         income_table = self._cr.dictfetchall()
 
@@ -43,7 +43,7 @@ class PL_Report(models.AbstractModel):
                             INNER JOIN account_account A ON AML.account_id=A.id
                             INNER JOIN account_group AG ON A.group_id= AG.id
                             WHERE  (AML.date BETWEEN '"""+str(year_from)+"""' AND '"""+str(year_to)+"""') AND AML.company_id=3 AND A.internal_group in ('expense') and A.user_type_id<>16 AND (AML.analytic_account_id = '"""+str(analytic_id)+"""' OR '"""+str(analytic_id)+"""'=0)
-                            GROUP BY AG.Name""")
+                            GROUP BY AG.Name ORDER BY 2 DESC""")
 
         expense_table = self._cr.dictfetchall()
 
@@ -54,7 +54,7 @@ class PL_Report(models.AbstractModel):
                             FROM account_move_line AS AML 
                             INNER JOIN account_account A ON AML.account_id=A.id
                             INNER JOIN account_group AG ON A.group_id= AG.id
-                            WHERE  (AML.date BETWEEN '"""+str(year_from)+"""' AND '"""+str(year_to)+"""') AND AML.company_id=3 AND A.internal_group in ('expense') and A.user_type_id=16 AND (AML.analytic_account_id = '"""+str(analytic_id)+"""' OR '"""+str(analytic_id)+"""'=0)""")
+                            WHERE  (AML.date BETWEEN '"""+str(year_from)+"""' AND '"""+str(year_to)+"""') AND AML.company_id=3 AND A.internal_group in ('expense') and A.user_type_id=16 AND (AML.analytic_account_id = '"""+str(analytic_id)+"""' OR '"""+str(analytic_id)+"""'=0) ORDER BY 2 DESC""")
 
         dep_table = self._cr.dictfetchall()
 

@@ -13,7 +13,7 @@ class PLReportWizard(models.TransientModel):
                             required="1")
     month = fields.Selection([('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'),
                               ('5', 'May'), ('6', 'June'), ('7', 'July'), ('8', 'August'),
-                              ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], string='Month', default=str(datetime.now().month), required="1")
+                              ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], string='Month', default=str((date.today() + relativedelta(months=-1)).month), required="1")
     analytic_id = fields.Selection([('0', 'All'), ('9', 'Al Dhafra Workers Village'), ('10', 'Al Dhafra Property Management'), ('11', 'MBK Securities'), ('12', 'Royal M Hotel Abu Dhabi'), ('13', 'Royal M Hotel Fujairah'), ('14', 'Up Town Hotel Apartments - Abu Dhabi'), ('15', 'Up Town Hotel Apartments - Fujairah'), ('16', 'Fujairah Mall'), ('17', 'Galaxy Cinemas'), ('18', 'Shoot & Cart'), ('19', 'MBK Marine Industries')], string='Division', default='0', required="1")
     is_detailed = fields.Boolean(string="Detailed Report", default=False)
 
