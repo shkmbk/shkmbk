@@ -324,7 +324,7 @@ class MbkESOB(models.Model):
                     for pl in pid.line_ids:
                         if pl.code == 'NET':
                             ps_net_amount += pl.amount
-                        if pl.code in ('AL', 'ESOB'):
+                        if pl.code in ('AL', 'ESOB', 'LS'):
                             ps_esob_amount += pl.amount
                         if pl.code in ('PD', 'SA'):
                             ps_ded_amount += pl.amount
