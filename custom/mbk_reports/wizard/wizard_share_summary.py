@@ -19,7 +19,7 @@ class MbkStockSummary(models.TransientModel):
 
     from_date = fields.Date(default='2020-06-01', string='From Date', required=True)
     to_date = fields.Date(default=fields.Date.to_string(date.today()), string="To Date", required=True)
-    product_id = fields.Many2one('product.product',"Product",  domain="[('type', '=', 'product')]")
+    product_id = fields.Many2one('product.product', "Product",  domain="[('type', '=', 'product')]")
 
 
     datas = fields.Binary('File', readonly=True)

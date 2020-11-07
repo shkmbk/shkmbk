@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pl">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4 style="color: #800000;"><t t-esc="header_name"/></h4></center>
+                    <center><h4>STATEMENT OF COMPREHENSIVE INCOME <t t-esc="this"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 12px;">
+                        <thead>
+                            <tr>
+                                <th class="text-left" width="50%"><strong>Particulars</strong></th>
+                                <th class="text-right"><strong><t t-esc="this"/></strong></th>
+                                <t t-if="is_detailed">
+                                    <th class="text-right"><strong><t t-esc="year"/></strong></th>
+                                    <th class="text-right"><strong><t t-esc="last"/></strong></th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="width:100%;height:30px;background-color:#90EE90;">
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[0]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['this_month'])"/></b>
+                                </td>
+                                <t t-if="is_detailed">
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[0]['this_year'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[0]['last_month'])"/></b>
+                                    </td>
+                                </t>
+                            </tr>
+                            <t t-foreach="income_table" t-as="line">
+                                <tr>
+                                    <td style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                        <span t-esc="line['particulars']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['this_month'])"/>
+                                    </td>
+                                    <t t-if="is_detailed">
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['this_year'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['last_month'])"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <tr style="width:100%;height:30px;background-color:#ffcccb;">
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[1]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['this_month'])"/></b>
+                                </td>
+                                <t t-if="is_detailed">
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[1]['this_year'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[1]['last_month'])"/></b>
+                                    </td>
+                                </t>
+                            </tr>
+                            <t t-foreach="expense_table" t-as="line">
+                                <tr>
+                                    <td style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                        <span t-esc="line['particulars']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['this_month'])"/>
+                                    </td>
+                                    <t t-if="is_detailed">
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['this_year'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['last_month'])"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <tr style="width:100%;height:30px;background-color:#add8e6;">
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[2]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['this_month'])"/></b>
+                                </td>
+                                <t t-if="is_detailed">
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['this_year'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['last_month'])"/></b>
+                                    </td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                  <t t-esc="docs[3]['particulars']"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{0:,.0f}'.format(docs[3]['this_month'])"/>
+                                </td>
+                                <t t-if="is_detailed">
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(docs[3]['this_year'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(docs[3]['last_month'])"/>
+                                    </td>
+                                </t>
+                            </tr>
+                            <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                <td style="vertical-align:middle;text-align:left;">
+                                  <b><t t-esc="docs[4]['particulars']"/></b>
+                                </td>
+                                <td class="text-right">
+                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['this_month'])"/></b>
+                                </td>
+                                <t t-if="is_detailed">
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[4]['this_year'])"/></b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b><span t-esc="'{0:,.0f}'.format(docs[4]['last_month'])"/></b>
+                                    </td>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+
