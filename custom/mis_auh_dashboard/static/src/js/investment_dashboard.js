@@ -104,7 +104,6 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                             $('#totalfixeddeposit').append('<span>' + total_amount + '</span>')
                         })
 
-
                     rpc.query({
                         model: "account.move",
                         method: "get_investment_profit"
@@ -244,6 +243,104 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                             } else {
                                  $('#total_share').append('<span style= "color:#808080;">' + f_total_amount + '</span>')
                             }
+
+                        })
+
+                    rpc.query({
+                        model: "account.move",
+                        method: "get_inv_net_summary",
+                    })
+                        .then(function (result) {
+
+                            var ctx = document.getElementById("canvas").getContext('2d');
+
+                            // Define the data
+                            var fd_free = result.fd_free; // Add data values to array
+                            var fd_en = result.fd_en; // Add data values to array
+                            var share = result.share;
+                            var bond = result.bond;
+
+                            var labels = result.particulars; // Add labels to array
+                            // End Defining data
+
+                            // End Defining data
+                            if (window.myCharts != undefined)
+                                window.myCharts.destroy();
+                            window.myCharts = new Chart(ctx, {
+                                //var myChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'FD Free', // Name the series
+                                        data: fd_free, // Specify the data values array
+                                        backgroundColor: '#66aecf',
+                                        borderColor: '#66aecf',
+
+                                        borderWidth: 3, // Specify bar border width
+                                        type: 'line', // Set this data to a line chart
+                                        fill: false
+                                    },
+                                        {
+                                            label: 'FD Encumbered', // Name the series
+                                            data: fd_en, // Specify the data values array
+                                            backgroundColor: '#800000',
+                                            borderColor: '#800000',
+
+                                            borderWidth: 3, // Specify bar border width
+                                            type: 'line', // Set this data to a line chart
+                                            fill: false
+                                        },
+                                        {
+                                            label: 'Share', // Name the series
+                                            data: share, // Specify the data values array
+                                            backgroundColor: '#ffa500',
+                                            borderColor: '#ffa500',
+
+                                            borderWidth: 3, // Specify bar border width
+                                            type: 'line', // Set this data to a line chart
+                                            fill: false
+                                        },
+                                        {
+                                            label: 'Bond', // Name the series
+                                            data: bond, // Specify the data values array
+                                            backgroundColor: '#0bd465',
+                                            borderColor: '#0bd465',
+
+                                            borderWidth: 3, // Specify bar border width
+                                            type: 'line', // Set this data to a line chart
+                                            fill: false
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true, // Instruct chart js to respond nicely.
+                                    maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                },
+                                    scales: {
+                                            xAxes: [{
+                                                type: 'time',
+                                                display: true,
+                                                scaleLabel: {
+                                                    display: true,
+                                                    labelString: 'Date'
+                                                },
+                                                ticks: {
+                                                    major: {
+                                                        fontStyle: 'bold',
+                                                        fontColor: '#FF0000'
+                                                    }
+                                                }
+                                            }],
+                                            yAxes: [{
+                                                display: true,
+                                                scaleLabel: {
+                                                    display: true,
+                                                    labelString: 'value'
+                                                }
+                                            }]
+                                        }
+                            });
 
                         })
 

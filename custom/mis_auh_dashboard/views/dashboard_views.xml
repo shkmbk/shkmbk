@@ -8,7 +8,12 @@
         <record id="action_investment_report_all" model="ir.actions.client">
             <field name="name">Investment Report</field>
             <field name="tag">investment_dashboard</field>
-        </record>		
+        </record>
+
+        <record id="action_division_report_all" model="ir.actions.client">
+            <field name="name">Division Report</field>
+            <field name="tag">division_dashboard</field>
+        </record>
 
         <menuitem name="Accounting" id="menu_accounting_dashboard" parent="account.menu_finance"
                   sequence="0"
@@ -17,7 +22,11 @@
         <menuitem name="Investment" id="menu_investment_dashboard" parent="account.menu_finance"
                   sequence="0"
                   groups="account.group_account_manager"
-                  action="action_investment_report_all"/>		
+                  action="action_investment_report_all"/>
+        <menuitem name="Division" id="menu_division_dashboard" parent="account.menu_finance"
+                  sequence="0"
+                  groups="base.group_erp_manager"
+                  action="action_division_report_all"/>
 
     </data>
 </odoo>

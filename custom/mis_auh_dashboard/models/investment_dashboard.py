@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import calendar
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
+import datetime
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
@@ -115,7 +116,7 @@ class InvestmentDashBoard(models.Model):
         investment.sort(key=lambda item: (item["amount"]), reverse=True)
         return investment
 
-    # Function to get Fixed Asset summary
+    # Function to get Fixed Deposit summary
     @api.model
     def get_fd_summary(self):
         company_ids = self.get_current_multi_company_value()
@@ -307,3 +308,93 @@ class InvestmentDashBoard(models.Model):
 
         amount.sort(key=lambda item: (item["amount"]), reverse=True)
         return amount
+
+        # function to P&L chart
+    @api.model
+    def get_inv_net_summary(self):
+        company_ids = self.get_current_multi_company_value()
+        total_fd_free = 0.00
+        total_share = 0.00
+        total_bond = 0.00
+        total_fd_en = 0.0
+        total = 0.00
+        investment = []
+        journal_items = self.env['account.move.line'].search(
+            [('analytic_tag_ids.analytic_tag_group', '=', 35), ('parent_state', '=', 'posted'),
+             ('company_id', '=', company_ids), ('account_id.group_id', 'in', [48, 61])], order="date")
+
+        first_date = journal_items[0].date
+        last_date = date.today()
+
+        # date_generated = [first_date + datetime.timedelta(days=x) for x in range(0, (last_date - first_date).days)]
+        # for d in date_generated:
+        #     investment.append({
+        #         'particulars': d,
+        #         'fd': 0.00,
+        #         'share': 0.00,
+        #         'bond': 0.00,
+        #         'total': 0.00,
+        #     })
+
+        # raise UserError(company_ids)
+        for rec in journal_items:
+            total += rec.debit - rec.credit
+            if rec.account_id.code in ['111802']:
+                total_fd_free += rec.debit - rec.credit
+
+            if rec.account_id.code in ['111801']:
+                total_fd_en += rec.debit - rec.credit
+
+            if rec.account_id.code in ['123201', '123202']:
+                total_share += rec.debit - rec.credit
+
+            if rec.account_id.code in ['123203']:
+                total_bond += rec.debit - rec.credit
+
+            existing_lines = (
+                line_id for line_id in investment if
+                line_id['particulars'] == rec.date.strftime("%b %y").upper())
+            main_line = next(existing_lines, False)
+
+            if not main_line:
+                main_line = {
+                    'particulars': rec.date.strftime("%b %y").upper(),
+                    'fd_free': total_fd_free,
+                    'fd_en': total_fd_en,
+                    'share': total_share,
+                    'bond': total_bond,
+                    'total': total,
+                }
+                investment.append(main_line)
+            else:
+                main_line['fd_free'] = total_fd_free
+                main_line['fd_en'] = total_fd_en
+                main_line['share'] = total_share
+                main_line['bond'] = total_bond
+                main_line['total'] = total
+
+        # investment.sort(key=lambda item: (item["amount"]), reverse=True)
+        particulars = []
+        fd_free = []
+        fd_en = []
+        share = []
+        bond = []
+        total = []
+
+        for rec in investment:
+                particulars.append(rec['particulars'])
+                fd_free.append(round(rec['fd_free'], 2))
+                fd_en.append(round(rec['fd_en'], 2))
+                share.append(round(rec['share'], 2))
+                bond.append(round(rec['bond'], 2))
+                total.append(round(rec['total'], 2))
+
+        return {
+            'particulars': particulars,
+            'fd_free': fd_free,
+            'fd_en': fd_en,
+            'share': share,
+            'bond': bond,
+            'total': total,
+        }
+
