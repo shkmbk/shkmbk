@@ -6,10 +6,11 @@
                 <div class="page">
                     <center><h4 style="color: #800000;">MBK GROUP OF COMPANIES</h4></center>
                     <center><h4>STATEMENT OF COMPREHENSIVE INCOME <t t-esc="this"/></h4></center>
+                    <div style="font-size: 12px; text-align: right;">*All currencies are in AED</div>
                     <table class="table table-sm o_main_table" style="font-size: 12px;">
                         <thead>
                             <tr>
-                                <th class="text-left" width="50%"><strong>PARTICULARS</strong></th>
+                                <th class="text-left" width="25%"><strong>PARTICULARS</strong></th>
                                 <th class="text-right"><strong>TOTAL</strong></th>
                                 <th class="text-right"><strong>ADWV</strong></th>
                                 <th class="text-right"><strong>ADPM</strong></th>
@@ -21,7 +22,6 @@
                                 <th class="text-right"><strong>FJML</strong></th>
                                 <th class="text-right"><strong>GLXC</strong></th>
                                 <th class="text-right"><strong>SHCT</strong></th>
-                                <th class="text-right"><strong>MBKM</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,9 +62,6 @@
                                 <td class="text-right">
                                     <b><span t-esc="'{0:,.0f}'.format(docs[0]['shct'])"/></b>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[0]['mbkm'])"/></b>
-                                </td>
                             </tr>
                             <t t-foreach="income_table" t-as="line">
                                 <tr>
@@ -103,9 +100,6 @@
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(line['shct'])"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="'{0:,.0f}'.format(line['mbkm'])"/>
                                     </td>
                                 </tr>
                             </t>
@@ -146,9 +140,6 @@
                                 <td class="text-right">
                                     <b><span t-esc="'{0:,.0f}'.format(docs[1]['shct'])"/></b>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[1]['mbkm'])"/></b>
-                                </td>
                             </tr>
                             <t t-foreach="expense_table" t-as="line">
                                 <tr>
@@ -187,9 +178,6 @@
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(line['shct'])"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-esc="'{0:,.0f}'.format(line['mbkm'])"/>
                                     </td>
                                 </tr>
                             </t>
@@ -230,9 +218,6 @@
                                 <td class="text-right">
                                     <b><span t-esc="'{0:,.0f}'.format(docs[2]['shct'])"/></b>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['mbkm'])"/></b>
-                                </td>
                             </tr>
                             <tr>
                                 <td style="vertical-align:middle;text-align:left;padding: 0px 50px;">
@@ -271,9 +256,6 @@
                                 <td class="text-right">
                                     <span t-esc="'{0:,.0f}'.format(docs[3]['shct'])"/>
                                 </td>
-                                <td class="text-right">
-                                    <span t-esc="'{0:,.0f}'.format(docs[3]['mbkm'])"/>
-                                </td>
                             </tr>
                             <tr style="width:100%;height:30px;background-color:#d3d3d3;">
                                 <td style="vertical-align:middle;text-align:left;">
@@ -311,9 +293,6 @@
                                 </td>
                                 <td class="text-right">
                                     <b><span t-esc="'{0:,.0f}'.format(docs[4]['shct'])"/></b>
-                                </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['mbkm'])"/></b>
                                 </td>
                             </tr>
                         </tbody>

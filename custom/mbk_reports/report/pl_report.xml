@@ -6,6 +6,7 @@
                 <div class="page">
                     <center><h4 style="color: #800000;"><t t-esc="header_name"/></h4></center>
                     <center><h4>STATEMENT OF COMPREHENSIVE INCOME <t t-esc="this"/></h4></center>
+                    <div style="font-size: 12px; text-align: right;">*All currencies are in AED</div>
                     <table class="table table-sm o_main_table" style="font-size: 12px;">
                         <thead>
                             <tr>
