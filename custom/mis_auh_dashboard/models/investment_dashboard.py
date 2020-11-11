@@ -46,14 +46,14 @@ class InvestmentDashBoard(models.Model):
                     this_month_expense += rec.debit - rec.credit
 
         amount.append({
-            'profit': profit,
-            'income': income,
-            'expense': expense,
+            'profit': round(profit, 2),
+            'income': round(income, 2),
+            'expense': round(expense, 2),
         })
         amount.append({
-            'profit': this_month_profit,
-            'income': this_month_income,
-            'expense': this_month_expense,
+            'profit': round(this_month_profit, 2),
+            'income': round(this_month_income, 2),
+            'expense': round(this_month_expense, 2),
         })
         return amount
 
@@ -77,10 +77,10 @@ class InvestmentDashBoard(models.Model):
                 this_month_investment += rec.debit - rec.credit
 
         investment.append({
-            'investment': this_year_investment,
+            'investment': round(this_year_investment, 2),
         })
         investment.append({
-            'investment': this_month_investment,
+            'investment': round(this_month_investment, 2),
         })
         return investment
 
@@ -111,6 +111,7 @@ class InvestmentDashBoard(models.Model):
             else:
                 main_line['amount'] += rec.debit - rec.credit
         for line in investment:
+            line['amount'] = round(line['amount'], 2)
             line['percentage'] = line['particulars']+' ('+str(round(line['amount']*100/total_amount if total_amount != 0 else 1, 2))+'%)'
 
         investment.sort(key=lambda item: (item["amount"]), reverse=True)
@@ -143,6 +144,7 @@ class InvestmentDashBoard(models.Model):
             else:
                 main_line['amount'] += rec.debit - rec.credit
         for line in fd:
+            line['amount'] = round(line['amount'], 2)
             line['percentage'] = line['particulars']+' ('+str(round(line['amount']*100/total_amount if total_amount != 0 else 1, 2))+'%)'
 
         fd.sort(key=lambda item: (item["amount"]), reverse=True)
@@ -175,19 +177,19 @@ class InvestmentDashBoard(models.Model):
         if share_pl != 0.00:
             amount.append({
                 'particulars': 'Inv. in Sec. - Listed Stock',
-                'amount': share_pl,
+                'amount': round(share_pl, 2),
                 'percentage': 'Inv. in Sec. - Listed Stock (' + str(round(share_pl*100/total_pl if total_pl != 0 else 1, 2))+'% )',
             })
         if bond_pl != 0:
             amount.append({
                 'particulars': 'Inv. in Sec. - Debentures',
-                'amount': bond_pl,
+                'amount': round(bond_pl, 2),
                 'percentage': 'Inv. in Sec. - Debentures (' + str(round(bond_pl*100/total_pl if total_pl != 0 else 1, 2))+'% )',
             })
         if fd_pl != 0:
             amount.append({
                 'particulars': 'Fixed Deposits',
-                'amount': fd_pl,
+                'amount': round(fd_pl, 2),
                 'percentage': 'Fixed Deposits (' + str(round(fd_pl*100/total_pl if total_pl != 0 else 1, 2))+'% )',
             })
         amount.sort(key=lambda item: (item["amount"]), reverse=True)
@@ -220,6 +222,7 @@ class InvestmentDashBoard(models.Model):
             else:
                 main_line['amount'] += rec.debit - rec.credit
         for line in securities:
+            line['amount'] = round(line['amount'], 2)
             line['percentage'] = line['particulars']+' ('+str(round(line['amount']*100/total_amount if total_amount != 0 else 1, 2))+'%)'
 
         securities.sort(key=lambda item: (item["amount"]), reverse=True)
@@ -255,8 +258,8 @@ class InvestmentDashBoard(models.Model):
                 market_price = cost
             market_value = qty * market_price
 
-            price_change = market_price - cost
-            value_change = market_value - closing_amount
+            price_change = round(market_price - cost, 2)
+            value_change = round(market_value - closing_amount, 2)
             if closing_amount != 0:
                 percentage_change = round(value_change*100/closing_amount, 2)
             else:

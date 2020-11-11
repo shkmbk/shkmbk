@@ -107,6 +107,7 @@ class AccountsDashBoard(models.Model):
                 bank.append(main_line)
 
         for line in bank:
+            line['amount'] = round(line['amount'], 2)
             line['percentage'] = line['particulars'] + ' (' + str(
                 round(line['amount'] * 100 / total_amount if total_amount != 0 else 1, 2)) + '%)'
 
@@ -149,6 +150,7 @@ class AccountsDashBoard(models.Model):
                 main_line['amount'] += fd.list_price
 
         for line in amount:
+            line['amount'] = round(line['amount'], 2)
             line['percentage'] = line['particulars'] + ' (' + str(
                 round(line['amount'] * 100 / total_amount if total_amount != 0 else 1, 2)) + '%)'
 
