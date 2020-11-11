@@ -251,7 +251,7 @@ class InvestmentDashBoard(models.Model):
             if qty != 0.00:
                 cost = closing_amount/qty
 
-            objlastvaluation = self.env['mis.invrevaluation.line'].search([('revaluation_id.state', '=', 'posted'), ('share_id', '=', share.id)], order='revaluation_id desc', limit=1)
+            objlastvaluation = self.env['mis.invrevaluation.line'].search([('revaluation_id.state', '=', 'posted'), ('share_id', '=', share.id)], order='revaluation_id', limit=1)
             if objlastvaluation:
                 market_price = objlastvaluation.closingprice
             else:
