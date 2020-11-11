@@ -18,11 +18,12 @@ class DivisionDashBoard(models.Model):
 
         self._cr.execute("""SELECT date FROM account_move WHERE state='posted' and company_id=3 order by date desc,id limit 1""")
         last_entry = self._cr.dictfetchall()
-        last_entry_date = last_entry[0]['date']
+        if last_entry:
+            last_entry_date = last_entry[0]['date']
+        else:
+            last_entry_date = date.today() + relativedelta(months=-1, day=1)
 
         analytic_id = int(division_id)
-        # r_month_from = date.today().replace(day=1)
-        # r_month_to = date.today() + relativedelta(months=+1, day=1, days=-1)
         month_from = last_entry_date.replace(day=1)
         month_to = month_from + relativedelta(months=+1, day=1, days=-1)
         last_to = month_from + relativedelta(days=-1)
@@ -54,11 +55,12 @@ class DivisionDashBoard(models.Model):
     def get_revenue(self, division_id):
         self._cr.execute("""SELECT date FROM account_move WHERE state='posted' and company_id=3 order by date desc,id limit 1""")
         last_entry = self._cr.dictfetchall()
-        last_entry_date = last_entry[0]['date']
+        if last_entry:
+            last_entry_date = last_entry[0]['date']
+        else:
+            last_entry_date = date.today() + relativedelta(months=-1, day=1)
 
         analytic_id = int(division_id)
-        # r_month_from = date.today().replace(day=1)
-        # r_month_to = date.today() + relativedelta(months=+1, day=1, days=-1)
         month_from = last_entry_date.replace(day=1)
         month_to = month_from + relativedelta(months=+1, day=1, days=-1)
         last_to = month_from + relativedelta(days=-1)
@@ -93,11 +95,12 @@ class DivisionDashBoard(models.Model):
     def get_expense(self, division_id):
         self._cr.execute("""SELECT date FROM account_move WHERE state='posted' and company_id=3 order by date desc,id limit 1""")
         last_entry = self._cr.dictfetchall()
-        last_entry_date = last_entry[0]['date']
+        if last_entry:
+            last_entry_date = last_entry[0]['date']
+        else:
+            last_entry_date = date.today() + relativedelta(months=-1, day=1)
 
         analytic_id = int(division_id)
-        # r_month_from = date.today().replace(day=1)
-        # r_month_to = date.today() + relativedelta(months=+1, day=1, days=-1)
         month_from = last_entry_date.replace(day=1)
         month_to = month_from + relativedelta(months=+1, day=1, days=-1)
         last_to = month_from + relativedelta(days=-1)
@@ -134,11 +137,12 @@ class DivisionDashBoard(models.Model):
     def get_division_income_expense(self, division_id):
         self._cr.execute("""SELECT date FROM account_move WHERE state='posted' and company_id=3 order by date desc,id limit 1""")
         last_entry = self._cr.dictfetchall()
-        last_entry_date = last_entry[0]['date']
+        if last_entry:
+            last_entry_date = last_entry[0]['date']
+        else:
+            last_entry_date = date.today() + relativedelta(months=-1, day=1)
 
         analytic_id = int(division_id)
-        # r_month_from = date.today().replace(day=1)
-        # r_month_to = date.today() + relativedelta(months=+1, day=1, days=-1)
         month_from = last_entry_date.replace(day=1)
         month_to = month_from + relativedelta(months=+1, day=1, days=-1)
         last_to = month_from + relativedelta(days=-1)

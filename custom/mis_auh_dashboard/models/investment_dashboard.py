@@ -322,8 +322,10 @@ class InvestmentDashBoard(models.Model):
         journal_items = self.env['account.move.line'].search(
             [('analytic_tag_ids.analytic_tag_group', '=', 35), ('parent_state', '=', 'posted'),
              ('company_id', '=', company_ids), ('account_id.group_id', 'in', [48, 61])], order="date")
-
-        first_date = journal_items[0].date
+        if journal_items:
+            first_date = journal_items[0].date
+        else:
+            first_date = date.today()
         last_date = date.today()
 
         # date_generated = [first_date + datetime.timedelta(days=x) for x in range(0, (last_date - first_date).days)]
