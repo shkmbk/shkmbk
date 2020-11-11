@@ -253,7 +253,7 @@ class InvestmentDashBoard(models.Model):
 
             objlastvaluation = self.env['mis.invrevaluation.line'].search([('revaluation_id.state', '=', 'posted'), ('share_id', '=', share.id)], order='revaluation_id', limit=1)
             if objlastvaluation:
-                market_price = objlastvaluation.closingprice
+                market_price = objlastvaluation[0].closingprice if objlastvaluation[0].closingprice != 0 else cost
             else:
                 market_price = cost
             market_value = qty * market_price
@@ -318,6 +318,7 @@ class InvestmentDashBoard(models.Model):
         company_ids = self.get_current_multi_company_value()
         total_fd_free = 0.00
         total_share = 0.00
+        total_share_invested = 0.00
         total_bond = 0.00
         total_fd_en = 0.0
         total = 0.00
@@ -352,6 +353,8 @@ class InvestmentDashBoard(models.Model):
 
             if rec.account_id.code in ['123201', '123202']:
                 total_share += rec.debit - rec.credit
+                if rec.account_id.code == '123201':
+                    total_share_invested += rec.debit - rec.credit
 
             if rec.account_id.code in ['123203']:
                 total_bond += rec.debit - rec.credit
@@ -367,6 +370,7 @@ class InvestmentDashBoard(models.Model):
                     'fd_free': total_fd_free,
                     'fd_en': total_fd_en,
                     'share': total_share,
+                    'share_invested': total_share_invested,
                     'bond': total_bond,
                     'total': total,
                 }
@@ -375,6 +379,7 @@ class InvestmentDashBoard(models.Model):
                 main_line['fd_free'] = total_fd_free
                 main_line['fd_en'] = total_fd_en
                 main_line['share'] = total_share
+                main_line['share_invested'] = total_share_invested
                 main_line['bond'] = total_bond
                 main_line['total'] = total
 
@@ -383,6 +388,7 @@ class InvestmentDashBoard(models.Model):
         fd_free = []
         fd_en = []
         share = []
+        share_invested = []
         bond = []
         total = []
 
@@ -391,6 +397,7 @@ class InvestmentDashBoard(models.Model):
                 fd_free.append(round(rec['fd_free'], 2))
                 fd_en.append(round(rec['fd_en'], 2))
                 share.append(round(rec['share'], 2))
+                share_invested.append(round(rec['share_invested'], 2))
                 bond.append(round(rec['bond'], 2))
                 total.append(round(rec['total'], 2))
 
@@ -399,6 +406,7 @@ class InvestmentDashBoard(models.Model):
             'fd_free': fd_free,
             'fd_en': fd_en,
             'share': share,
+            'share_invested': share_invested,
             'bond': bond,
             'total': total,
         }

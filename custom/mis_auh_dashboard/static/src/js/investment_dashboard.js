@@ -253,11 +253,13 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                         .then(function (result) {
 
                             var ctx = document.getElementById("canvas").getContext('2d');
+                            var ctx1 = document.getElementById("canvas1").getContext('2d');
 
                             // Define the data
                             var fd_free = result.fd_free; // Add data values to array
                             var fd_en = result.fd_en; // Add data values to array
                             var share = result.share;
+                            var share_invested = result.share_invested;
                             var bond = result.bond;
 
                             var labels = result.particulars; // Add labels to array
@@ -292,7 +294,7 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                                             fill: false
                                         },
                                         {
-                                            label: 'Share', // Name the series
+                                            label: 'Stock', // Name the series
                                             data: share, // Specify the data values array
                                             backgroundColor: '#ffa500',
                                             borderColor: '#ffa500',
@@ -302,7 +304,7 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                                             fill: false
                                         },
                                         {
-                                            label: 'Bond', // Name the series
+                                            label: 'Debentures', // Name the series
                                             data: bond, // Specify the data values array
                                             backgroundColor: '#0bd465',
                                             borderColor: '#0bd465',
@@ -341,6 +343,65 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                                             }]
                                         }
                             });
+
+                            if (window.marketCharts != undefined)
+                                window.marketCharts.destroy();
+                            window.marketCharts = new Chart(ctx1, {
+                                //var myChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Invested Value', // Name the series
+                                        data: share_invested, // Specify the data values array
+                                        backgroundColor: '#66aecf',
+                                        borderColor: '#66aecf',
+
+                                        borderWidth: 3, // Specify bar border width
+                                        type: 'line', // Set this data to a line chart
+                                        fill: false
+                                    },
+                                        {
+                                            label: 'Market Value', // Name the series
+                                            data: share, // Specify the data values array
+                                            backgroundColor: '#800000',
+                                            borderColor: '#800000',
+
+                                            borderWidth: 3, // Specify bar border width
+                                            type: 'line', // Set this data to a line chart
+                                            fill: false
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true, // Instruct chart js to respond nicely.
+                                    maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                },
+                                    scales: {
+                                            xAxes: [{
+                                                type: 'time',
+                                                display: true,
+                                                scaleLabel: {
+                                                    display: true,
+                                                    labelString: 'Date'
+                                                },
+                                                ticks: {
+                                                    major: {
+                                                        fontStyle: 'bold',
+                                                        fontColor: '#FF0000'
+                                                    }
+                                                }
+                                            }],
+                                            yAxes: [{
+                                                display: true,
+                                                scaleLabel: {
+                                                    display: true,
+                                                    labelString: 'value'
+                                                }
+                                            }]
+                                        }
+                            });
+
 
                         })
 

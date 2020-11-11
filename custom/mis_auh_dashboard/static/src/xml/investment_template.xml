@@ -259,6 +259,28 @@
                         </div>
                     </div>
 
+					<div class="col-md-12" id="col-graph">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="custom-h3 card-title">
+                                    <h3 class="custom-h3 card-title">
+                                        <b>STOCK MARKET PERFORMANCE</b>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="card-body mt-3" id="in_ex_body_hide">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p id="myelement1"></p>
+                                        <div class="chart">
+                                            <canvas id="canvas1" width="300" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
