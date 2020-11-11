@@ -308,9 +308,8 @@ class MisInvestmentRevaluationLine(models.Model):
     @api.depends('share_id')
     def calculate_cost(self):
         for rec in self:
-
             dtfilter = self.revaluation_id.trans_date + timedelta(days=1)
-            objcost = self.env['stock.valuation.layer'].search([('product_id', '=', rec.share_id.id), ('create_date', '<=', dtfilter)])
+            objcost = self.env['stock.valuation.layer'].search([('product_id', '=', rec.share_id.id), ('create_date', '<', dtfilter)])
             fltotalcost=0.00
             fltotalqty =0.00
             for ocost in objcost:
