@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<templates id="investment_template" xml:space="preserve">
-    <t t-name="Investmentdashboard">
+<templates id="division_template" xml:space="preserve">
+    <t t-name="Divisiondashboard">
 <div class="accounts-dashboard-wrap">
             <div class="o_dashboards col-xs-12 col-sm-12 col-lg-12 col-md-12" style="background-color: #e1e1e1;overflow: scroll; !important; ">
                 <div class="content-header">
@@ -8,10 +8,23 @@
                         <div class="row mb-2">
                             <div class="col-sm-12">
                                 <div class="dash-header">
-                                    <h1 class="custom-h1 dashboard-h1">INVESTMENT DASHBOARD</h1>
-                                    <input type="checkbox" style="display:none" data-toggle="toggle" data-on="" data-off="">
-                                    <input type="checkbox" id="toggle-two"></input>
-                                    </input>
+                                    <input type="image" id="logo" value="Logo" src="/mis_auh_dashboard/static/description/logo.jpg" width="80" height="100" style="border-style:inset;"/>
+                                    <h1 class="custom-h1 dashboard-h1">STATEMENT OF COMPREHENSIVE INCOME <span id="header1"/></h1>
+                                    <span id="header1"/>
+                                    <select id="division_values" style="width: 38%;">
+                                        <option id="mbk_group" value="0">MBK Group</option>
+                                        <option id="adwv" value="9">Al Dhafra Workers Village</option>
+                                        <option id="adpm" value="10">Al Dhafra Property Management</option>
+                                        <option id="mbks" value="11">MBK Securities</option>
+                                        <option id="rmad" value="12">Royal M Hotel Abu Dhabi</option>
+                                        <option id="rmfj" value="13">Royal M Hotel Fujairah</option>
+                                        <option id="utab" value="14">Up Town Hotel Apartments - Abu Dhabi</option>
+                                        <option id="utfj" value="15">Up Town Hotel Apartments - Fujairah</option>
+                                        <option id="fjml" value="16">Fujairah Mall</option>
+                                        <option id="glxc" value="17">Galaxy Cinemas</option>
+                                        <option id="shct" value="18">Shoot &amp; Cart</option>
+                                        <option id="mbkm" value="19">MBK Marine Industries</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -36,6 +49,26 @@
                                             <div class="right">
                                                 <div class="count">
                                                     <span id="net_profit_current_months" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--            Operating Profit             -->
+                            <div class="col-md-3">
+                                <div class="tile wide invoice box-4">
+                                    <div class="header">
+                                        <div class="main-title">NET OPERATING INCOME / LOSS</div>
+                                        <div id="monthly_unreconciled">
+                                            <div class="left">
+                                                <div class="count">
+                                                    <span id="opl_current_year" />
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                <div class="count">
+                                                    <span id="opl_current_months" />
                                                 </div>
                                             </div>
                                         </div>
@@ -82,26 +115,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--            Unreconciled items             -->
-                            <div class="col-md-3">
-                                <div class="tile wide invoice box-4">
-                                    <div class="header">
-                                        <div class="main-title">Total Investment</div>
-                                        <div id="monthly_unreconciled">
-                                            <div class="left">
-                                                <div class="count">
-                                                    <span id="investment_this_year" />
-                                                </div>
-                                            </div>
-                                            <div class="right">
-                                                <div class="count">
-                                                    <span id="investment_this_month" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                         </div>
                     </div>
@@ -111,139 +124,15 @@
             <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
                 <div class="row" style="margin:0px">
 
-					<div class="col-md-4">
-                        <div class="card" style="height:366px;">
-                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                <h3 class="custom-h3 card-title">
-                                    <b>PROFIT/LOSS SUMMARY</b>
-                                </h3>
-                                 <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="total_pl"/></b>
-                                        </h3>
-                                    </div>
-                            </div>
-
-                        <div class="card-body p-0" style=" height: 100px;">
-                                    <ul class="dashboard-list" id="pl_list"></ul>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
-                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b>INVESTMENT SECURITIES</b>
-                                        </h3>
-                                    </div>
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="total_securities"/></b>
-                                        </h3>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0" style=" height: 100px;">
-                                    <ul class="dashboard-list" id="securities_list"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
-                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b>INVESTMENT SUMMARY</b>
-                                        </h3>
-                                    </div>
-
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="total_investment"/></b>
-                                        </h3>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0" style=" height: 100px;">
-                                    <ul class="dashboard-list" id="investment_list"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-					<div class="col-md-4">
-                        <div class="card" style="height:366px;">
-                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                <h3 class="custom-h3 card-title">
-                                    <b>SHARE TRADING PROFIT/LOSS</b>
-                                </h3>
-                                 <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="total_share_pl"/></b>
-                                        </h3>
-                                    </div>
-                            </div>
-                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; " id="top_10_body">
-                                <ul class="dashboard-list" id="share_pl_list"></ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
-                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b>STOCK PORTFOLIO PERFORMANCE</b>
-                                        </h3>
-                                    </div>
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="total_share"/></b>
-                                        </h3>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0" style=" height: 100px;">
-                                    <ul class="down-list" id="share_list"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
 					<div class="col-md-4" id="col-graph">
-                        <div class="card">
-                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
-                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b>FIXED DEPOSIT SUMMARY</b>
-                                        </h3>
-                                    </div>
-                                    <div class="card-title">
-                                        <h3 class="custom-h3 card-title">
-                                            <b><span id="totalfixeddeposit"/></b>
-                                        </h3>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0" style=" height: 100px;">
-                                    <ul id="fixed_deposit_list"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-					<div class="col-md-12" id="col-graph">
                         <div class="card">
                             <div class="card-header">
                                 <div class="custom-h3 card-title">
                                     <h3 class="custom-h3 card-title">
-                                        <b>INVESTMENT SUMMARY</b>
+                                        <b>PROFIT/LOSS SUMMARY</b>
                                     </h3>
+                                </div>
+                                <div class="card-tools">
                                 </div>
                             </div>
                             <div class="card-body mt-3" id="in_ex_body_hide">
@@ -259,10 +148,123 @@
                         </div>
                     </div>
 
+                    <div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
+                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b>REVENUE</b>
+                                        </h3>
+                                    </div>
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="total_revenue"/></b>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0" style=" height: 100px;">
+                                    <ul class="dashboard-list" id="revenue_list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-body p-0" style=" height: 287px; overflow-y: auto; ">
+                                <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b>EXPENDITURE</b>
+                                        </h3>
+                                    </div>
+
+                                    <div class="card-title">
+                                        <h3 class="custom-h3 card-title">
+                                            <b><span id="total_expense"/></b>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0" style=" height: 100px;">
+                                    <ul class="dashboard-list" id="expense_list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+					<div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="custom-h3 card-title">
+                                    <h3 class="custom-h3 card-title">
+                                        <b>NET PROFIT/LOSS SUMMARY</b>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="card-body mt-3" id="in_ex_body_hide">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p id="myelement1"></p>
+                                        <div class="chart">
+                                            <canvas id="pl_canvas" width="300" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+					<div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="custom-h3 card-title">
+                                    <h3 class="custom-h3 card-title">
+                                        <b>REVENUE SUMMARY</b>
+                                    </h3>
+                                </div>
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                            <div class="card-body mt-3" id="in_ex_body_hide">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p id="myelement1"></p>
+                                        <div class="chart">
+                                            <canvas id="income_canvas" width="300" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+					<div class="col-md-4" id="col-graph">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="custom-h3 card-title">
+                                    <h3 class="custom-h3 card-title">
+                                        <b>EXPENSE SUMMARY</b>
+                                    </h3>
+                                </div>
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                            <div class="card-body mt-3" id="in_ex_body_hide">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p id="myelement1"></p>
+                                        <div class="chart">
+                                            <canvas id="expense_canvas" width="300" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
-
             <!--		</div>-->
             <div class="container-fluid o_hr_dashboard">
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" id="invoice_grapg" />
