@@ -92,14 +92,29 @@
                                   <b><t t-esc="docs[2]['particulars']"/></b>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[2]['this_month'])"/></b>
+									<t t-if="docs[2]['this_month'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[2]['this_month'])"/></b>
+									</t>
+									<t t-if="docs[2]['this_month'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[2]['this_month'])"/></b>
+									</t>
                                 </td>
                                 <t t-if="is_detailed">
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['this_year'])"/></b>
+										<t t-if="docs[2]['this_year'] &gt;=0">
+											<b><span t-esc="'{0:,.0f}'.format(docs[2]['this_year'])"/></b>
+										</t>
+										<t t-if="docs[2]['this_year'] &lt; 0">
+											<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[2]['this_year'])"/></b>
+										</t>
                                     </td>
                                     <td class="text-right">
-                                        <b><span t-esc="'{0:,.0f}'.format(docs[2]['last_month'])"/></b>
+										<t t-if="docs[2]['last_month'] &gt;=0">
+											<b><span t-esc="'{0:,.0f}'.format(docs[2]['last_month'])"/></b>
+										</t>
+										<t t-if="docs[2]['last_month'] &lt; 0">
+											<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[2]['last_month'])"/></b>
+										</t>
                                     </td>
                                 </t>
                             </tr>
