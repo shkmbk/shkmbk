@@ -21,14 +21,14 @@
                      <footer>
                          <table width="100%">
                              <tr>
-                                 <td align="left"  width="20%">
+                                 <td align="left"  width="35%">
                                      <button name="button_export_pdf" string="Division Profit and Loss" type="object" default_focus="1" class="oe_highlight"/>
                                  </td>
                                  <td align="left"  width="35%">
                                      <button name="button_summary" string="Group Profit and Loss" type="object" class="oe_highlight"/>
                                  </td>
 
-                                 <td align="right"   width="50%">
+                                 <td align="right"   width="30%">
                                      <button string="Cancel" class="oe_link" special="cancel"/>
                                  </td>
                              </tr>
@@ -52,5 +52,9 @@
                   sequence="10"
                   action="action_pl_report_menu"
                   parent="mis_investment.mis_inv_report_menu"/>
+        <menuitem name="Profit &amp; Loss Summary" id="menu_mbk_pl_dashboard" parent="account.menu_finance"
+                  sequence="1"
+                  groups="base.group_erp_manager"
+                  action="action_pl_report_menu"/>
     </data>
 </odoo>

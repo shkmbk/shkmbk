@@ -45,5 +45,9 @@
                   sequence="9"
                   action="action_budget_report_menu"
                   parent="mis_investment.mis_inv_report_menu"/>
+        <menuitem name="Fund Requirement Summary" id="menu_mbk_fund_flow_dashboard" parent="account.menu_finance"
+                  sequence="2"
+                  groups="base.group_erp_manager"
+                  action="action_budget_report_menu"/>
     </data>
 </odoo>
