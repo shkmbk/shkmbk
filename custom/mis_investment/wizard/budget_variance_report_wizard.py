@@ -16,7 +16,7 @@ class BudgetVarianceReportWizard(models.TransientModel):
                             required="1")
     month = fields.Selection([('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'),
                               ('5', 'May'), ('6', 'June'), ('7', 'July'), ('8', 'August'),
-                              ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], string='Month', default=str(datetime.now().month), required="1")
+                              ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], string='Month', default=str((date.today() + relativedelta(months=-1)).month), required="1")
 
     def button_export_pdf(self):
         header_period = calendar.month_name[int(self.month)] + ' ' + self.year
