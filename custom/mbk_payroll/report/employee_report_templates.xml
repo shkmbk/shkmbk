@@ -60,31 +60,31 @@
                     </thead>
                     <tbody class="invoice_tbody">
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>Employee Code</strong></td>
+                            <td style="padding: 0px 10px;">Employee Code</td>
                             <td style="padding: 0px 40px;"><span t-field="o.employee_id.registration_number"/></td>
                         </tr>
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>Employee Name</strong></td>
+                            <td style="padding: 0px 10px;">Employee Name</td>
                             <td style="padding: 0px 40px;"><span t-field="o.employee_id.name"/></td>
                         </tr>
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>Passport No</strong></td>
+                            <td style="padding: 0px 10px;">Passport No</td>
                             <td style="padding: 0px 40px;"><span t-field="o.employee_id.passport_id"/></td>
                         </tr>
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>Nationality</strong></td>
+                            <td style="padding: 0px 10px;">Nationality</td>
                             <td style="padding: 0px 40px;"><span t-field="o.employee_id.country_id"/></td>
                         </tr>
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>Designation</strong></td>
+                            <td style="padding: 0px 10px;">Designation</td>
                             <td style="padding: 0px 40px;"><span t-field="o.job_id"/></td>
                         </tr>
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>Department</strong></td>
+                            <td style="padding: 0px 10px;">Department</td>
                             <td style="padding: 0px 40px;"><span t-field="o.department_id"/></td>
                         </tr>
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>Date Of Join</strong></td>
+                            <td style="padding: 0px 10px;">Date Of Join</td>
                             <td style="padding: 0px 40px;"><span t-field="o.employee_id.date_of_join"/></td>
                         </tr>
                         <tr style="width:100%;height:30px;background-color:#d3d3d3;padding: 0px 50px;">
@@ -92,34 +92,34 @@
                         </tr>
                         <t t-if="not o.wage==0">
                             <tr style="padding: 0px 50px;">
-                                <td style="padding: 0px 10px;"><strong>Basic Salary</strong></td>
+                                <td style="padding: 0px 10px;">Basic Salary</td>
                                 <td style="padding: 0px 40px;"><span t-field="o.wage"/></td>
                             </tr>
                         </t>
                         <t t-if="not o.x_other_allowance==0">
                             <tr style="padding: 0px 50px;">
-                                <td style="padding: 0px 10px;"><strong>Allowance</strong></td>
+                                <td style="padding: 0px 10px;">Allowance</td>
                                 <td style="padding: 0px 40px;"><span t-field="o.x_other_allowance" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
                             </tr>
                         </t>
                         <t t-if="not o.x_house_rent==0">
                             <tr style="padding: 0px 50px;">
-                                <td style="padding: 0px 10px;"><strong>Special Allowance</strong></td>
+                                <td style="padding: 0px 10px;">Special Allowance</td>
                                 <td style="padding: 0px 40px;"><span t-field="o.x_house_rent" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
                             </tr>
                         </t>
                         <t t-if="not o.x_fixed_ot==0">
                             <tr style="padding: 0px 50px;">
-                                <td style="padding: 0px 10px;"><strong>Fixed OT</strong></td>
+                                <td style="padding: 0px 10px;">Fixed OT</td>
                                 <td style="padding: 0px 40px;"><span t-field="o.x_fixed_ot" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
                             </tr>
                         </t>
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>Net Salary</strong></td>
+                            <td style="padding: 0px 10px;">Net Salary</td>
                             <td style="padding: 0px 40px;"><span t-field="o.x_net_Salary" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
                         </tr>
                         <tr style="padding: 0px 50px;">
-                            <td style="padding: 0px 10px;"><strong>E.O.S.B</strong></td>
+                            <td style="padding: 0px 10px;">E.O.S.B</td>
                             <td style="padding: 0px 40px;"><span t-field="o.notes"/></td>
                         </tr>
                     </tbody>
