@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_employee_document">
+        <template  id="report_header_custom" inherit_id="report.external_layout_header">
+            <t t-if="o and 'company_id' in o">
+                  <t t-set="company" t-value="o.company_id"/>
+             </t>
+              <t t-if="not o or not 'company_id' in o">
+                  <t t-set="company" t-value="res_company"/>
+              </t>
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <div class="row">
+                         <div class="col-12">
+
+                              <img src="/mis_auh_report/static/src/img/header.jpg"
+                                     style="margin:auto;width:100%;display:block;"/>
+                          </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
+            <xpath expr="//div[@class='footer']" position="replace">
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-11">
+                            <img src="/mis_auh_report/static/src/img/footer.jpg" style="margin:auto;width:100%"/>
+                        </div>
+                        <div  class="col-1 text-right">
+                          <br/>
+                                Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+
+            <div class="page">
+                <table width="100%">
+                    <tr>
+                        <td colspan="2" width="100%"  valign="middle" align="center">
+                            <h2>
+                                <br/>
+                                <br/>
+                                <span>Employee Joining Form</span>
+                             </h2>
+                        </td>
+                    </tr>
+                </table>
+                <br/><br/>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr style="width:100%;height:30px;background-color:#d3d3d3;padding: 0px 50px;">
+                            <th colspan="2" class="text-left"><b>Personal Information</b></th>
+                        </tr>
+                    </thead>
+                    <tbody class="invoice_tbody">
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>Employee Code</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.employee_id.registration_number"/></td>
+                        </tr>
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>Employee Name</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.employee_id.name"/></td>
+                        </tr>
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>Passport No</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.employee_id.passport_id"/></td>
+                        </tr>
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>Nationality</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.employee_id.country_id"/></td>
+                        </tr>
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>Designation</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.job_id"/></td>
+                        </tr>
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>Department</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.department_id"/></td>
+                        </tr>
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>Date Of Join</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.employee_id.date_of_join"/></td>
+                        </tr>
+                        <tr style="width:100%;height:30px;background-color:#d3d3d3;padding: 0px 50px;">
+                            <td colspan="2" class="text-left"><b>Salary Information</b></td>
+                        </tr>
+                        <t t-if="not o.wage==0">
+                            <tr style="padding: 0px 50px;">
+                                <td style="padding: 0px 10px;"><strong>Basic Salary</strong></td>
+                                <td style="padding: 0px 40px;"><span t-field="o.wage"/></td>
+                            </tr>
+                        </t>
+                        <t t-if="not o.x_other_allowance==0">
+                            <tr style="padding: 0px 50px;">
+                                <td style="padding: 0px 10px;"><strong>Allowance</strong></td>
+                                <td style="padding: 0px 40px;"><span t-field="o.x_other_allowance" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                        </t>
+                        <t t-if="not o.x_house_rent==0">
+                            <tr style="padding: 0px 50px;">
+                                <td style="padding: 0px 10px;"><strong>Special Allowance</strong></td>
+                                <td style="padding: 0px 40px;"><span t-field="o.x_house_rent" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                        </t>
+                        <t t-if="not o.x_fixed_ot==0">
+                            <tr style="padding: 0px 50px;">
+                                <td style="padding: 0px 10px;"><strong>Fixed OT</strong></td>
+                                <td style="padding: 0px 40px;"><span t-field="o.x_fixed_ot" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                        </t>
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>Net Salary</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.x_net_Salary" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                        </tr>
+                        <tr style="padding: 0px 50px;">
+                            <td style="padding: 0px 10px;"><strong>E.O.S.B</strong></td>
+                            <td style="padding: 0px 40px;"><span t-field="o.notes"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                  <div class="col-3" style="right;">
+                      <p class="text-center" style="padding-left:5mm;">
+                          <br/><br/><br/><br/>
+                          <span t-esc="o.create_uid.name"/>
+                      </p>
+
+                    <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+
+                        Prepared by</p>
+                  </div>
+
+                  <div class="col-6" style="center">
+
+                  </div>
+
+              <div class="col-3" style="left">
+                  <p class="text-center" style="padding-left:5mm;">
+                      <br/><br/><br/><br/><br/>
+
+                  </p>
+
+                <p class="text-center" style="padding-left:5mm; border-top:1px solid black; border-length: 7px;">
+
+                    Approved By
+                    <br/>
+                    CEO
+                </p>
+              </div>
+        </div>
+       </t>
+    </template>
+
+    <template id="report_employee_joining">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="mbk_payroll.report_employee_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>
