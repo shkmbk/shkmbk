@@ -33,7 +33,15 @@
 		report_type="qweb-pdf"
 		name="mbk_payroll.cash_payslip_report"
 		file="mbk_payroll.cash_payslip_report"
-	  />	  
+	  />
+		<report
+		id="action_employee_print"
+		model="hr.contract"
+		string="Employee Joining Form"
+		report_type="qweb-pdf"
+		name="mbk_payroll.report_employee_joining"
+		file="mbk_payroll.report_employee_joining"
+	  />
 	  
 	  
  </odoo>
