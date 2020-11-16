@@ -132,7 +132,7 @@
                                 <tr>
                                      <td align="left"><strong>Requested Days</strong></td>
                                      <td align="left"><strong>:  </strong></td>
-                                     <td align="right"><span t-field="o.encash_days"/></td>
+                                     <td align="right"><span t-field="o.leave_days"/></td>
                                 </tr>
                                 <tr>
                                      <td align="left"><strong>Balance days</strong></td>
