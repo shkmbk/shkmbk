@@ -317,37 +317,92 @@
                                   <b><t t-esc="docs[4]['particulars']"/></b>
                                 </td>
                                 <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['total'])"/></b>
+									<t t-if="docs[4]['total'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['total'])"/></b>
+									</t>
+									<t t-if="docs[4]['total'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['total'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['adwv'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['adwv'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['adwv'])"/></b>
+									</t>
+									<t t-if="docs[4]['adwv'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['adwv'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['adpm'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['adpm'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['adpm'])"/></b>
+									</t>
+									<t t-if="docs[4]['adpm'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['adpm'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['mbks'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['mbks'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['mbks'])"/></b>
+									</t>
+									<t t-if="docs[4]['mbks'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['mbks'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['rmad'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['rmad'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['rmad'])"/></b>
+									</t>
+									<t t-if="docs[4]['rmad'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['rmad'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['rmfj'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['rmfj'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['rmfj'])"/></b>
+									</t>
+									<t t-if="docs[4]['rmfj'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['rmfj'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['utab'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['utab'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['utab'])"/></b>
+									</t>
+									<t t-if="docs[4]['utab'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['utab'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['utfj'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['utfj'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['utfj'])"/></b>
+									</t>
+									<t t-if="docs[4]['utfj'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['utfj'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['fjml'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['fjml'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['fjml'])"/></b>
+									</t>
+									<t t-if="docs[4]['fjml'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['fjml'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['glxc'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['glxc'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['glxc'])"/></b>
+									</t>
+									<t t-if="docs[4]['glxc'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['glxc'])"/></b>
+									</t>
                                 </td>
-                                <td class="text-right">
-                                    <b><span t-esc="'{0:,.0f}'.format(docs[4]['shct'])"/></b>
+								<td class="text-right">
+									<t t-if="docs[4]['shct'] &gt;=0">
+										<b><span t-esc="'{0:,.0f}'.format(docs[4]['shct'])"/></b>
+									</t>
+									<t t-if="docs[4]['shct'] &lt; 0">
+										<b><span style="color: #FF0000;" t-esc="'{0:,.0f}'.format(docs[4]['shct'])"/></b>
+									</t>
                                 </td>
                             </tr>
                         </tbody>
