@@ -10,28 +10,28 @@ class StockDetailsReport(models.AbstractModel):
 
     
     @api.model
-    def _get_product(self,product_id):
+    def _get_product(self, product_id):
         if product_id:
             return ('product_id', '=', product_id)
         else:
             return ('product_id.type', '=', 'product')
 
-    def _get_analytic(self,analytic_id):
+    def _get_analytic(self, analytic_id):
         if analytic_id:
             return ('stock_move_id.analytic_account_id', '=', analytic_id)
         else:
             return (1, '=', 1)            
 
-    def _getdomainfilter(self,from_date,to_date,product_id,analytic_id):
-        return [('create_date', '<=', to_date),('company_id', '=', self.env.company.id),
+    def _getdomainfilter(self, from_date, to_date, product_id,analytic_id):
+        return [('create_date', '<=', to_date), ('company_id', '=', self.env.company.id),
                 self._get_product(product_id), self._get_analytic(analytic_id)]
 
     
     def _get_report_values(self, docids, data=None):
         s_from_date = data['from_date']
         s_to_date = data['to_date']
-        product_id =data['product_id']
-        analytic_id=data['analytic_id']
+        product_id = data['product_id']
+        analytic_id = data['analytic_id']
         header_date = data['header_date']
 
         from_date= datetime.strptime(s_from_date, '%Y-%m-%d').date()
@@ -65,46 +65,46 @@ class StockDetailsReport(models.AbstractModel):
 
         
         count = 0
-        master_table =[]
-        sum_opening=0.0
-        sum_in_qty=0.0
-        sum_out_qty=0.0
-        sum_balance_qty =0.0
+        master_table = []
+        sum_opening = 0.0
+        sum_in_qty = 0.0
+        sum_out_qty = 0.0
+        sum_balance_qty = 0.0
 
         for rec in objinv:
-            if rec.create_date.date()< from_date:
-                sum_opening+=rec.quantity
-                sum_balance_qty+=rec.quantity
+            if rec.create_date.date() < from_date:
+                sum_opening +=rec.quantity
+                sum_balance_qty +=rec.quantity
             else:
                 count += 1
-                transaction_no= rec.description                
+                transaction_no = rec.description
                 # Date
                 trn_date=rec.create_date.strftime("%d-%m-%Y")
                 # Partner
                 if rec.stock_move_id.picking_id.partner_id:
-                    partner_name=rec.stock_move_id.picking_id.partner_id.name
+                    partner_name = rec.stock_move_id.picking_id.partner_id.name
                 else:
                     partner_name=''
 
                 # Product
-                product_name=rec.product_id.name
+                product_name = rec.product_id.name
                 # Opening Qty                                
-                opening_qty=sum_balance_qty
+                opening_qty = sum_balance_qty
                 # In Qty
                 in_qty=0.00
                 out_qty=0.00
                 
                 if rec.create_date.date()>=from_date and rec.create_date.date()<=to_date:
                     if rec.quantity>0:
-                        in_qty=rec.quantity
-                        sum_in_qty+=rec.quantity
-                    if rec.quantity<0:
-                        sum_out_qty+=rec.quantity
-                        out_qty=rec.quantity          
+                        in_qty = rec.quantity
+                        sum_in_qty += rec.quantity
+                    if rec.quantity < 0:
+                        sum_out_qty += rec.quantity
+                        out_qty = rec.quantity
 
                 # Balance Qty
-                if rec.create_date.date()<= to_date:
-                    sum_balance_qty+=rec.quantity          
+                if rec.create_date.date() <= to_date:
+                    sum_balance_qty += rec.quantity
                         
                 master_table.append({
                                 'transaction_no': transaction_no,

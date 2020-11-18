@@ -36,6 +36,7 @@
         'report/audit_trail_report.xml',
         'report/pl_report.xml',
         'report/pl_group_report.xml',
+        'report/stock_summary_template.xml',
     ],
     # only loaded in demonstration mode
     'demo': [],

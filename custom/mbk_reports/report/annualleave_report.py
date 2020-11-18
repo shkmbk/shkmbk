@@ -7,27 +7,27 @@ import pytz
 class AnnualLeaveReport(models.AbstractModel):
     _name = 'report.mbk_reports.report_annualleave'
     _description = "Annual Leave Report"
-
     
     @api.model
-    def _get_employee(self,employee_id):
+    def _get_employee(self, employee_id):
         if employee_id:
             return ('employee_id', '=', employee_id)
         else:
             return (1, '=', 1)
 
-    def _get_department(self,hr_department_ids):
+    def _get_department(self, hr_department_ids):
         if hr_department_ids:
             return ('department_id', 'in', hr_department_ids)
         else:
             return (1, '=', 1)
 
-    def _get_analytic(self,analytic_id):
+    def _get_analytic(self, analytic_id):
         if analytic_id:
             return ('analytic_account_id', '=', analytic_id)
         else:
             return (1, '=', 1)
-    def _get_analytic_tags(self,analytic_tag_ids):
+
+    def _get_analytic_tags(self, analytic_tag_ids):
         if analytic_tag_ids:
             return ('x_analytic_tag_ids', 'in', analytic_tag_ids)
         else:

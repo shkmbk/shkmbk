@@ -25,7 +25,7 @@
         </record>
 
         <record id="mbk_sharedetails_action_view" model="ir.actions.act_window">
-            <field name="name">Stock Details Report</field>
+            <field name="name">Share Details Report</field>
             <field name="res_model">mbk.wizard.report.sharedetails</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">form</field>
@@ -37,7 +37,7 @@
                   name="Stock Details Report"
                   parent="stock.menu_warehouse_report"
                   action="mbk_sharedetails_action_view"
-                  groups="account.group_account_manager"
+                  groups="base.group_erp_manager"
                   sequence="13"/>
     </data>
 

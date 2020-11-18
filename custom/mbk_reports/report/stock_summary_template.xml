@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_stock_summary">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>STOCK SUMMARY REPORT AS ON  <t t-esc="header_date"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-left" width="2%" rowspan="2"><strong>Sl No</strong></th>
+                                <th class="text-left" rowspan="2"><strong>Product</strong></th>
+                                <th class="text-center" colspan="2"><strong>Opening</strong></th>
+                                <th class="text-center" colspan="2"><strong>Inwards</strong></th>
+                                <th class="text-center" colspan="2"><strong>Outwards</strong></th>
+                                <th class="text-center" colspan="3"><strong>Closing</strong></th>
+                            </tr>
+                            <tr>
+                                <th class="text-right"><strong>Qty</strong></th>
+                                <th class="text-right"><strong>Amount</strong></th>
+                                <th class="text-right"><strong>Qty</strong></th>
+                                <th class="text-right"><strong>Amount</strong></th>
+                                <th class="text-right"><strong>Qty</strong></th>
+                                <th class="text-right"><strong>Amount</strong></th>
+                                <th class="text-right"><strong>Qty</strong></th>
+                                <th class="text-right"><strong>Cost</strong></th>
+                                <th class="text-right"><strong>Amount</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="rowno" t-value="1"/>
+                            <t t-set="tot_opening_amt" t-value="0.0"/>
+                            <t t-set="tot_in_amt" t-value="0.0"/>
+                            <t t-set="tot_out_amt" t-value="0.0"/>
+                            <t t-set="tot_cls_amt" t-value="0.0"/>
+                            <t t-foreach="docs" t-as="line">
+                                <tr>
+                                    <td name="slno">
+                                        <span t-esc="rowno"/>
+                                        <t t-set="rowno" t-value="rowno+1"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['product_name']"/>
+                                    </td>
+                                     <td class="text-right">
+                                       <span t-esc="'{0:,.2f}'.format(line['opening_qty'])"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['opening_amt'])"/>
+                                         <t t-set="tot_opening_amt" t-value="tot_opening_amt+(line['opening_amt'])"/>
+                                     </td>
+                                     <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['in_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['in_amt'])"/>
+                                         <t t-set="tot_in_amt" t-value="tot_in_amt+(line['in_amt'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['out_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['out_amt'])"/>
+                                         <t t-set="tot_out_amt" t-value="tot_out_amt+(line['out_amt'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['closing_qty'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['unit_cost'])"/>
+                                     </td>
+                                    <td class="text-right">
+                                         <span t-esc="'{0:,.2f}'.format(line['closing_amt'])"/>
+                                         <t t-set="tot_cls_amt" t-value="tot_cls_amt+(line['closing_amt'])"/>
+                                     </td>
+                                </tr>
+                            </t>
+                                <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                    <td colspan="2" style="vertical-align:middle;text-align:lef;padding: 0px 50px;">
+                                      <b>TOTAL</b>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_opening_amt)"/></b>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_in_amt)"/></b>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_out_amt)"/></b>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_cls_amt)"/></b>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+

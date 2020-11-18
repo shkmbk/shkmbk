@@ -7,6 +7,13 @@
             name="mbk_reports.report_stock_details"
             file="mbk_reports.report_stock_details"
             menu="False"/>
+    <report id="stock_summary"
+            model="stock.valuation.layer"
+            string="Stock Summary Report"
+            report_type="qweb-html"
+            name="mbk_reports.report_stock_summary"
+            file="mbk_reports.report_stock_summary"
+            menu="False"/>
     <report id="farmstock_details_pdf"
             model="stock.valuation.layer"
             string="Stock Details Report"
