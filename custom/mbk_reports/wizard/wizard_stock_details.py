@@ -19,9 +19,9 @@ class MbkStockDetailsW(models.TransientModel):
 
     from_date = fields.Date(default='2020-06-01', string='From Date', required=True)
     to_date = fields.Date(default=fields.Date.to_string(date.today()), string="To Date", required=True)
-    product_id = fields.Many2one('product.product',"Product",required=True,domain="[('type', 'in', ['consu','product'])]")
-    partner_id = fields.Many2one('res.partner',"Partner")
-    analytic_id = fields.Many2one('account.analytic.account',"Analytic Account")
+    product_id = fields.Many2one('product.product', "Product", required=True, domain="[('type', 'in', ['consu', 'product'])]")
+    partner_id = fields.Many2one('res.partner', "Partner")
+    analytic_id = fields.Many2one('account.analytic.account', "Analytic Account")
 
     datas = fields.Binary('File', readonly=True)
     datas_fname = fields.Char('Filename', readonly=True)    
@@ -31,7 +31,7 @@ class MbkStockDetailsW(models.TransientModel):
         if self.product_id:
             return ('product_id', '=', self.product_id.id)
         else:
-            return ('product_id.type', 'in', ['consu','product'])
+            return ('product_id.type', 'in', ['consu', 'product'])
 
     def _get_analytic(self):
         if self.analytic_id:
@@ -40,7 +40,7 @@ class MbkStockDetailsW(models.TransientModel):
             return (1, '=', 1)            
 
     def _getdomainfilter(self):
-        return [('create_date', '<=', self.to_date),('company_id', '=', self.env.company.id),
+        return [('create_date', '<=', self.to_date), ('company_id', '=', self.env.company.id),
                 self._get_product(), self._get_analytic()]
 
     def print_cstock_summary_pdf(self):
@@ -160,9 +160,9 @@ class MbkStockDetailsW(models.TransientModel):
         sum_balance_qty =0.0
 
         for rec in objbill:
-            if rec.create_date.date()< self.from_date:
-                sum_opening+=rec.quantity
-                sum_balance_qty+=rec.quantity
+            if rec.create_date.date() < self.from_date:
+                sum_opening += rec.quantity
+                sum_balance_qty += rec.quantity
             else:
                 count += 1
                 col=0
@@ -196,7 +196,7 @@ class MbkStockDetailsW(models.TransientModel):
                 in_qty=0.00
                 out_qty=0.00
                 
-                if rec.create_date.date()>=self.from_date and rec.create_date.date()<=self.to_date:
+                if rec.create_date.date() >= self.from_date and rec.create_date.date()<=self.to_date:
                     if rec.quantity>0:
                         in_qty=rec.quantity
                         sum_in_qty+=rec.quantity
@@ -206,7 +206,7 @@ class MbkStockDetailsW(models.TransientModel):
                 
                 worksheet.write(count, col, in_qty,  wbf['content_float_border'])
                 # Out Qty
-                col+=1
+                col += 1
                 worksheet.write(count, col, -out_qty,  wbf['content_float_border'])
                 # Balance Qty
                 col+=1
@@ -214,13 +214,13 @@ class MbkStockDetailsW(models.TransientModel):
                     sum_balance_qty+=rec.quantity           
                 worksheet.write(count, col, sum_balance_qty,  wbf['content_float_border'])
 
-        count+=2
+        count += 2
         # SUMMARY
-        worksheet.merge_range('A%s:E%s'%(count,count), 'Total', wbf['content_border_bg_total'])
-        col =5
-        worksheet.write(count - 1, col,sum_opening, wbf['content_float_border_bg'])
+        worksheet.merge_range('A%s:E%s'%(count, count), 'Total', wbf['content_border_bg_total'])
+        col = 5
+        worksheet.write(count - 1, col, sum_opening, wbf['content_float_border_bg'])
 
-        col+=1
+        col += 1
         worksheet.write(count - 1, col, sum_in_qty, wbf['content_float_border_bg'])
 
         col += 1
@@ -229,8 +229,8 @@ class MbkStockDetailsW(models.TransientModel):
         worksheet.write(count - 1, col, sum_balance_qty, wbf['content_float_border_bg'])        
 
         workbook.close()
-        out=base64.encodestring(fp.getvalue())
-        self.write({'datas':out, 'datas_fname':filename})
+        out = base64.encodebytes(fp.getvalue())
+        self.write({'datas': out, 'datas_fname': filename})
         fp.close()
         filename += '%2Exlsx'
 
@@ -249,6 +249,4 @@ class MbkStockDetailsW(models.TransientModel):
         data['analytic_id'] = self.analytic_id.id
         data['header_date'] = tmpdate.strftime("%d-%m-%Y")
         report = self.env.ref('mbk_reports.stock_details_pdf')        
-        return report.report_action(self, data=data)    
-     
-        
+        return report.report_action(self, data=data)

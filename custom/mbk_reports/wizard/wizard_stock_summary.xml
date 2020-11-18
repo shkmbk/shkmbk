@@ -38,7 +38,7 @@
                   name="Consumable Summary Report"
                   parent="stock.menu_warehouse_report"
                   action="mbk_stocksummary_action_view"
-                  groups="account.group_account_manager"
+                  groups="base.group_erp_manager"
                   sequence="10"/>
     </data>
 

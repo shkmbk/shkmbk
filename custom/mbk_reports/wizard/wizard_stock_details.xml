@@ -27,7 +27,7 @@
         </record>
 
         <record id="mbk_stockdetails_action_view" model="ir.actions.act_window">
-            <field name="name">Consumable Details Report</field>
+            <field name="name">Stock Details Report</field>
             <field name="res_model">mbk.wizard.report.stockdetails</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">form</field>

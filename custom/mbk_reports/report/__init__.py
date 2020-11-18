@@ -5,3 +5,4 @@ from . import annualleave_report
 from . import audit_trail_report
 from . import pl_report
 from . import pl_group_report
+from . import stock_summary_report

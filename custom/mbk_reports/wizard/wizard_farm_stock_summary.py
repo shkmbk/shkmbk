@@ -61,7 +61,7 @@ class MbkStockSummary(models.TransientModel):
         else:
             date = datetime.now()
             time = datetime.now()
-        date_string =  self.to_date.strftime("%B-%y")
+        date_string = self.to_date.strftime("%B-%y")
         dt_string = self.to_date.strftime("%d/%m/%Y")
         report_name = 'Farm_Summary_'+ date.strftime("%y%m%d%H%M%S")
         filename = '%s %s' % (report_name, date_string)
@@ -118,7 +118,7 @@ class MbkStockSummary(models.TransientModel):
         count = 0
 
         # Report Heading
-        worksheet.merge_range('A%s:K%s'%(1,1), 'FARM STOCK SUMMARY REPORT AS ON '+ dt_string, wbf['header'])
+        worksheet.merge_range('A%s:K%s'%(1, 1), 'FARM STOCK SUMMARY REPORT AS ON '+ dt_string, wbf['header'])
         count += 2
         col=0
         column_width=6
@@ -306,8 +306,8 @@ class MbkStockSummary(models.TransientModel):
         worksheet.write(count - 1, col, sum_closing_qty, wbf['content_float_border_bg'])        
 
         workbook.close()
-        out=base64.encodestring(fp.getvalue())
-        self.write({'datas':out, 'datas_fname':filename})
+        out = base64.encodebytes(fp.getvalue())
+        self.write({'datas': out, 'datas_fname': filename})
         fp.close()
         filename += '%2Exlsx'
 
