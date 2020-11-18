@@ -232,8 +232,8 @@ class MbkStockSummary(models.TransientModel):
         worksheet.write(count - 1, col, sum_wip_qty, wbf['content_float_border_bg'])          
 
         workbook.close()
-        out=base64.encodestring(fp.getvalue())
-        self.write({'datas':out, 'datas_fname':filename})
+        out=base64.encodebytes(fp.getvalue())
+        self.write({'datas': out, 'datas_fname': filename})
         fp.close()
         filename += '%2Exlsx'
 

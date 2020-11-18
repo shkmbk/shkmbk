@@ -34,7 +34,7 @@
         </record>
 
         <menuitem id="mbk_share_details_wizard_submenu"
-                  name="Stock Details Report"
+                  name="Share Details Report"
                   parent="stock.menu_warehouse_report"
                   action="mbk_sharedetails_action_view"
                   groups="base.group_erp_manager"
