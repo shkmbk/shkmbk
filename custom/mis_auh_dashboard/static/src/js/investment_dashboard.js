@@ -357,8 +357,8 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                                     datasets: [{
                                         label: 'Invested Value', // Name the series
                                         data: share_invested, // Specify the data values array
-                                        backgroundColor: '#66aecf',
-                                        borderColor: '#66aecf',
+                                        backgroundColor: '#800000',
+                                        borderColor: '#800000',
 
                                         borderWidth: 3, // Specify bar border width
                                         type: 'line', // Set this data to a line chart
@@ -367,8 +367,8 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                                         {
                                             label: 'Market Value', // Name the series
                                             data: share, // Specify the data values array
-                                            backgroundColor: '#800000',
-                                            borderColor: '#800000',
+                                            backgroundColor: '#0bd465',
+                                            borderColor: '#0bd465',
 
                                             borderWidth: 3, // Specify bar border width
                                             type: 'line', // Set this data to a line chart
