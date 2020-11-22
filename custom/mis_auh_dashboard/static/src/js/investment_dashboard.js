@@ -238,10 +238,13 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                             var f_total_amount = self.format_currency(currency, total_amount);
                             if (total_amount>0.00){
                                 $('#total_share').append('<span style= "color:#008000;">' + f_total_amount + '</span>')
+                                $('#total_share_change').append('<span style= "color:#008000;">' + f_total_amount + '</span>')
                             } else if(total_amount<0.00){
                                 $('#total_share').append('<span style= "color:#FF0000;">' + f_total_amount + '</span>')
+                                $('#total_share_change').append('<span style= "color:#FF0000;">' + f_total_amount + '</span>')
                             } else {
                                  $('#total_share').append('<span style= "color:#808080;">' + f_total_amount + '</span>')
+                                 $('#total_share_change').append('<span style= "color:#FF0000;">' + f_total_amount + '</span>')
                             }
 
                         })
