@@ -87,7 +87,7 @@ class MisHrPayslip(models.Model):
             [('employee_id', '=', rec.employee_id.id), ('state', '!=', 'cancel'),
              ('date_effective', '>=', rec.date_from), ('date_effective', '<=', rec.date_to)])
         if objencash:
-            result = objencash.encash_amount
+            result = objencash.net_leave_salary
         else:
             result = 0.00
         if obj_esob:
