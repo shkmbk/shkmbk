@@ -17,18 +17,19 @@ class MBKPayrollReport(models.AbstractModel):
 
     def _get_department(self, hr_department_ids):
         if hr_department_ids:
-            return ('department_id', 'in', hr_department_ids)
+            return ('employee_id.department_id', 'in', hr_department_ids)
         else:
             return (1, '=', 1)
 
     def _get_analytic(self, analytic_id):
         if analytic_id:
-            return ('analytic_account_id', '=', analytic_id)
+            return ('employee_id.contract_ids.analytic_account_id', '=', analytic_id)
         else:
             return (1, '=', 1)
+
     def _get_analytic_tags(self,analytic_tag_ids):
         if analytic_tag_ids:
-            return ('x_analytic_tag_ids', 'in', analytic_tag_ids)
+            return ('employee_id.contract_ids.x_analytic_tag_ids', 'in', analytic_tag_ids)
         else:
             return (1, '=', 1)
 
