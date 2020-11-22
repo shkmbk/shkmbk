@@ -58,7 +58,7 @@ class Wizard(models.TransientModel):
         if self.employee_id:
             return ('employee_id', '=', self.employee_id.id)
         else:
-            return (self.employee_id.id, '=', False)
+            return (1, '=', 1)
 
     def _get_analytic_account(self):
         if self.analytic_account_id:
@@ -85,7 +85,6 @@ class Wizard(models.TransientModel):
             return ('company_id', '=', self.env.company.id)
 
     def _get_filtered_domain(self):
-        # ['&', ('date_from', '<=', self.start_date), ('date_to', '>=', self.end_date)])
         return [('date_from', '<=', self.start_date), ('date_to', '>=', self.end_date),
                 self._get_hr_tags(), self._get_analytic_account(), self._get_analytic_tag_ids(),
                 self._get_department_ids(), self._get_payment_method(), self._get_employee(),
@@ -135,7 +134,6 @@ class Wizard(models.TransientModel):
         fp = BytesIO()
         workbook = xlsxwriter.Workbook(fp)
         wbf = {}
-
         wbf['content'] = workbook.add_format()
         wbf['header1'] = workbook.add_format(
             {'bold': 1, 'align': 'center', 'font_size': '13'})
