@@ -261,10 +261,15 @@
 
 					<div class="col-md-12" id="col-graph">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header" style=" padding: 17px 1.5rem !important; display: flex !IMPORTANT; justify-content: space-between; align-items: center; ">
                                 <div class="custom-h3 card-title">
                                     <h3 class="custom-h3 card-title">
                                         <b>STOCK MARKET PERFORMANCE</b>
+                                    </h3>
+                                </div>
+                                <div class="card-title">
+                                    <h3 class="custom-h3 card-title">
+                                        <b><span id="total_share_change"/></b>
                                     </h3>
                                 </div>
                             </div>
