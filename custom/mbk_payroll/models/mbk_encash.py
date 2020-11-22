@@ -182,8 +182,8 @@ class MbkEncash(models.Model):
         return self.write({'state': 'draft'})
 
     def action_encash_done(self):
-        if self.encash_days <= 0:
-            raise UserError('Enter valid Leave Encash Days')
+        if self.leave_days <= 0:
+            raise UserError('Enter valid Leave Days')
 
         if self.encash_no == 'New':
             self.encash_no = self.env['ir.sequence'].with_context(force_company=self.company_id.id).next_by_code(
