@@ -85,7 +85,7 @@ class Wizard(models.TransientModel):
             return ('company_id', '=', self.env.company.id)
 
     def _get_filtered_domain(self):
-        return [('date_from', '<=', self.start_date), ('date_to', '>=', self.end_date),
+        return [('date_to', '>=', self.start_date), ('date_to', '<=', self.end_date),
                 self._get_hr_tags(), self._get_analytic_account(), self._get_analytic_tag_ids(),
                 self._get_department_ids(), self._get_payment_method(), self._get_employee(),
                 ('company_id', '=', self.env.company.id)]
@@ -106,8 +106,8 @@ class Wizard(models.TransientModel):
         if self.start_date and self.end_date:
             start = str(self.start_date).split('-')
             end = str(self.end_date).split('-')
-            if not start[1] == end[1]:
-                raise UserError(_('The Dates Can of Same Month Only'))
+            # if not start[1] == end[1]:
+            # raise UserError(_('The Dates Can of Same Month Only'))
         # return self.env['hr.employee'].search(self._get_available_contracts_domain())
         slips = self.env['hr.payslip'].search(self._get_filtered_domain())
 
@@ -125,8 +125,8 @@ class Wizard(models.TransientModel):
 
         datetime_string = self.get_default_date_model().strftime("%Y-%m-%d %H:%M:%S")
         date_string = self.get_default_date_model().strftime("%Y-%m-%d")
-        date_string = self.end_date.strftime("%B-%y")
-        h_date_string = self.end_date.strftime("%B %Y").upper()
+        date_string = self.start_date.strftime("%B-%y")
+        h_date_string = self.start_date.strftime("%B %Y").upper()
 
         report_name = 'WPS_' + date.strftime("%y%m%d%H%M%S")
         filename = '%s %s' % (report_name, date_string)

@@ -64,6 +64,7 @@ class WizardPayroll(models.TransientModel):
             return ('employee_id.contract_ids.analytic_account_id', '=', self.analytic_account_id.id)
         else:
             return ('company_id', '=', self.env.company.id)
+
     def _get_payment_method(self):
         if self.payment_method:
             return ('employee_id.payment_method', '=', self.payment_method.id)
@@ -83,7 +84,7 @@ class WizardPayroll(models.TransientModel):
             return ('company_id', '=', self.env.company.id)
 
     def _get_filtered_domain(self):
-        return [('date_from', '>=', self.start_date), ('date_to', '<=', self.end_date),
+        return [('date_to', '>=', self.start_date), ('date_to', '<=', self.end_date),
                 self._get_hr_tags(), self._get_analytic_account(), self._get_analytic_tag_ids(),
                 self._get_department_ids(), self._get_payment_method(), self._get_employee(),
                 ('company_id', '=', self.env.company.id)]
