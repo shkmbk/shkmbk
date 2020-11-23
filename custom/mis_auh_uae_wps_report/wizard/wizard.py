@@ -281,7 +281,7 @@ class Wizard(models.TransientModel):
                 col += 1
                 worksheet.write(count, col, rec['amount'], wbf['content_float_border'])
                 worksheet2.write(count + 1, 4, rec['amount'], wbf['content_float_border'])
-                sum += amount
+                sum += rec['amount']
                 col += 1
                 worksheet.write(count, col, "Salary Transfer", wbf['content_border'])
                 col += 1
