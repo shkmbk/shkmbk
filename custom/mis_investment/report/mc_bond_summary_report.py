@@ -42,7 +42,7 @@ class MCBondRevaluationReport(models.AbstractModel):
                 [('analytic_tag_ids', 'in', shr.invest_analytic_tag_ids.ids), ('parent_state', '=', 'posted'),
                  ('account_id.internal_group', 'in', ['expense', 'income'])])
             for line in journal_items:
-                if line.account_id in [shr.categ_id.property_account_income_categ_id.id, shr.categ_id.property_stock_account_output_categ_id.id]:
+                if line.account_id.id in [shr.categ_id.property_account_income_categ_id.id, shr.categ_id.property_stock_account_output_categ_id.id]:
                     realize_profit += line.credit - line.debit
                 elif line.account_id.internal_group == 'income':
                     income += line.credit - line.debit
