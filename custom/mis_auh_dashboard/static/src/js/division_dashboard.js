@@ -211,6 +211,7 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                             // Define the data
                             var income = result.income; // Add data values to array
                             var expense = result.expense;
+                            var opl = result.opl;
                             var profit = result.profit;
 
                             var labels = result.month; // Add labels to array
@@ -241,6 +242,16 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
 
                                             borderWidth: 1, // Specify bar border width
                                             type: 'bar', // Set this data to a line chart
+                                            fill: false
+                                        },
+                                       {
+                                            label: 'Operating Profit/Loss', // Name the series
+                                            data: opl, // Specify the data values array
+                                            backgroundColor: '#ffa600',
+                                            borderColor: '#ffa600',
+
+                                            borderWidth: 2, // Specify bar border width
+                                            type: 'line', // Set this data to a line chart
                                             fill: false
                                         },
                                         {
@@ -399,6 +410,7 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                             // Define the data
                             var income = result.income; // Add data values to array
                             var expense = result.expense;
+                            var opl = result.opl;
                             var profit = result.profit;
 
                             var labels = result.month; // Add labels to array
@@ -430,6 +442,16 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
 
                                             borderWidth: 1, // Specify bar border width
                                             type: 'bar', // Set this data to a line chart
+                                            fill: false
+                                        },
+                                       {
+                                            label: 'Operating Profit/Loss', // Name the series
+                                            data: opl, // Specify the data values array
+                                            backgroundColor: '#ffa600',
+                                            borderColor: '#ffa600',
+
+                                            borderWidth: 2, // Specify bar border width
+                                            type: 'line', // Set this data to a line chart
                                             fill: false
                                         },
                                         {

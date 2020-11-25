@@ -153,7 +153,8 @@ class DivisionDashBoard(models.Model):
         if analytic_id == 0:
             self._cr.execute("""SELECT  AAA.code AS month, SUM(AML.credit-AML.debit) AS profit,                                                      
                                 SUM(CASE WHEN A.internal_group='income' THEN AML.credit-AML.debit ELSE 0.00 END) AS income,                            
-                                SUM(CASE WHEN A.internal_group='expense' THEN AML.debit-AML.credit ELSE 0.00 END) AS expense
+                                SUM(CASE WHEN A.internal_group='expense' THEN AML.debit-AML.credit ELSE 0.00 END) AS expense,
+                                SUM(CASE WHEN A.user_type_id<>16 THEN AML.credit-AML.debit ELSE 0.00 END) AS opl
                                 FROM account_move_line AS AML 
                                 INNER JOIN account_account A ON AML.account_id=A.id
                                 INNER JOIN account_group AG ON A.group_id= AG.id
@@ -164,7 +165,8 @@ class DivisionDashBoard(models.Model):
         else:
             self._cr.execute("""SELECT TO_CHAR(AML.date, 'MON') AS month, SUM(AML.credit-AML.debit) AS profit,                                                      
                                 SUM(CASE WHEN A.internal_group='income' THEN AML.credit-AML.debit ELSE 0.00 END) AS income,                            
-                                SUM(CASE WHEN A.internal_group='expense' THEN AML.debit-AML.credit ELSE 0.00 END) AS expense
+                                SUM(CASE WHEN A.internal_group='expense' THEN AML.debit-AML.credit ELSE 0.00 END) AS expense,
+                                SUM(CASE WHEN A.user_type_id<>16 THEN AML.credit-AML.debit ELSE 0.00 END) AS opl
                                 FROM account_move_line AS AML 
                                 INNER JOIN account_account A ON AML.account_id=A.id
                                 INNER JOIN account_group AG ON A.group_id= AG.id
@@ -178,14 +180,17 @@ class DivisionDashBoard(models.Model):
         expense = []
         month = []
         profit = []
+        opl = []
         for rec in pl_table:
             month.append(rec['month'])
             income.append(round(rec['income'], 2))
             expense.append(round(rec['expense'], 2))
+            opl.append(round(rec['opl'], 2))
             profit.append(round(rec['profit'], 2))
         return {
             'month': month,
             'income': income,
             'expense': expense,
+            'opl': opl,
             'profit': profit
         }
