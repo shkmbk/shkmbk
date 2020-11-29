@@ -5,3 +5,4 @@ from . import mc_bond_summary_report
 from . import bond_summary_report
 from . import budget_report
 from . import budget_variation_report
+from . import mbk_hr_report
