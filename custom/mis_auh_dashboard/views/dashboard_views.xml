@@ -27,6 +27,8 @@
                   sequence="0"
                   groups="base.group_erp_manager"
                   action="action_division_report_all"/>
-
+        <menuitem name="MBK Group Reports" id="menu_mbk_group" parent="account.menu_finance"
+                  sequence="5"
+                  groups="base.group_erp_manager"/>
     </data>
 </odoo>
