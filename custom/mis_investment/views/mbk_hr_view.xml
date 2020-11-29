@@ -121,12 +121,5 @@
         parent="mis_inv_transaction_menu"
         sequence='63'
         />
-    <menuitem
-        id="mbk_menu_action_dashboard_hr"
-        name="Employee And Payroll Summary"
-        action="mbk_hr_action"
-        parent="mis_auh_dashboard.menu_mbk_group"
-        sequence='4'
-    />
     </data>
 </odoo>

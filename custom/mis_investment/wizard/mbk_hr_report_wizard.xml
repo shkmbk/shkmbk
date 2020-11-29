@@ -44,7 +44,7 @@
                   sequence="10"
                   action="action_mbk_hr_report_menu"
                   parent="mis_investment.mis_inv_report_menu"/>
-        <menuitem name="Employee And Payroll Summary Report" id="menu_mbk_hr_dashboard" parent="account.menu_finance"
+        <menuitem name="Employee And Payroll Summary Report" id="menu_mbk_hr_dashboard" parent="mis_auh_dashboard.menu_mbk_group"
           sequence="3"
           groups="base.group_erp_manager"
           action="action_mbk_hr_report_menu"/>
