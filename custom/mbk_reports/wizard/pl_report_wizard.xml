@@ -52,7 +52,7 @@
                   sequence="10"
                   action="action_pl_report_menu"
                   parent="mis_investment.mis_inv_report_menu"/>
-        <menuitem name="Profit &amp; Loss Summary" id="menu_mbk_pl_dashboard" parent="account.menu_finance"
+        <menuitem name="Profit &amp; Loss Summary" id="menu_mbk_pl_dashboard" parent="mis_auh_dashboard.menu_mbk_group"
                   sequence="1"
                   groups="base.group_erp_manager"
                   action="action_pl_report_menu"/>
