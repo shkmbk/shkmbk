@@ -59,7 +59,7 @@ class MbkHR(models.Model):
             self.line_ids.unlink()
 
         obj_analytic_account = self.env['account.analytic.account'].search(
-            [('company_id', '=', 3)], order='id')
+            [('company_id', '=', 3), ('group_id', '=', 3)], order='id')
         if not obj_analytic_account:
             raise UserError('There are no analytic account found for selected parameters')
         new_lines = self.env['mbk.hr.line']
@@ -71,7 +71,7 @@ class MbkHR(models.Model):
                 [('analytic_account_id', '=', rec.id), ('to_date', '<=', self.date_from)], order='to_date desc',
                 limit=1)
             if previous_month:
-                opening = previous_month.closing
+                opening = previous_month.closing_nos
             else:
                 opening = 0
             total_opening += opening
@@ -165,7 +165,7 @@ class MbkHRLine(models.Model):
     mbk_hr_id = fields.Many2one('mbk.hr', string='HR Summary', required=True, ondelete='cascade', index=True)
     sl_no = fields.Integer(string='Sl', required=True, readonly=True, default=10)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', required=True,
-                                          readonly=True)
+                                          readonly=True, domain="[('company_id', '=', 3), ('group_id', '=', 3)]")
     opening_nos = fields.Integer(string='Opening')
     new_nos = fields.Integer(string='New Joinee')
     exit_nos = fields.Integer(string='Termination/Resignation')
