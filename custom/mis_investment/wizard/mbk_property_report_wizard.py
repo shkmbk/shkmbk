@@ -5,9 +5,9 @@ from dateutil.relativedelta import relativedelta
 import calendar
 
 
-class HRReportWizard(models.TransientModel):
-    _name = 'mbk.hr.wizard'
-    _description = 'Employee And Payroll Summary For The Month'
+class PropertyReportWizard(models.TransientModel):
+    _name = 'mbk.property.wizard'
+    _description = 'Property Summary For The Month'
 
     date_from = fields.Date(string="From Date", default='2020-06-01', required="1", )
     date_to = fields.Date(string="Month", default=lambda self: fields.Date.to_string(
@@ -22,5 +22,5 @@ class HRReportWizard(models.TransientModel):
         header_period = calendar.month_name[int(self.month)] + ' ' + self.year
         data = {'date_from': self.date_from, 'date_to': self.date_to, 'year': self.year, 'month': self.month,
                 'header_period': header_period.upper()}
-        report = self.env.ref('mis_investment.action_mbk_hr_report')
+        report = self.env.ref('mis_investment.action_mbk_property_report')
         return report.report_action(self, data=data)

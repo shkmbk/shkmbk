@@ -44,7 +44,7 @@ class BondSummaryReport(models.AbstractModel):
                 'bond': bd.name,
                 'deposit_date': bd.deposit_date.strftime("%d-%m-%Y"),
                 'maturity_date': bd.maturity_date.strftime("%d-%m-%Y"),
-                'list_price':b_amount,
+                'list_price': b_amount,
                 'interest_rate': bd.interest_rate,
                 'expected_earning': b_expected_earning,
                 'maturity_value': b_amount+b_expected_earning,

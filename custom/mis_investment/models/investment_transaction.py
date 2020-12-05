@@ -300,10 +300,7 @@ class MisInvestmentRevaluationLine(models.Model):
                                         store=True)
     net_profit_loss = fields.Float(string='Net Profit / Loss', compute='calculate_realized_profit_loss',
                                         store=True)
-    unrealized_profit_a_c = fields.Float(string='Unrealize Profit / Loss A/C', sreadonly=True, store=True)
-
-
-
+    unrealized_profit_a_c = fields.Float(string='Unrealize Profit / Loss A/C', readonly=True, store=True)
 
     @api.depends('share_id')
     def calculate_cost(self):
@@ -323,7 +320,7 @@ class MisInvestmentRevaluationLine(models.Model):
     @api.depends('closingprice')
     def calculate_amount(self):
         for rec in self:
-            tot_amount =0.00
+            tot_amount = 0.00
             rec.closing_amount = rec.share_qty*rec.closingprice
             rec.unrealized_profit=rec.closing_amount- rec.amount
             rec.net_profit_loss = ((rec.unrealized_profit+rec.realized_profit_loss+rec.dividend)-rec.brokerage_expense)

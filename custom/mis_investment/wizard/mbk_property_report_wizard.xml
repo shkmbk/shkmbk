@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="mbk_hr_report_view" model="ir.ui.view">
-            <field name="name">Employee And Payroll Summary Report</field>
-            <field name="model">mbk.hr.wizard</field>
+        <record id="mbk_property_report_view" model="ir.ui.view">
+            <field name="name">Property Summary Report</field>
+            <field name="model">mbk.property.wizard</field>
             <field name="arch" type="xml">
                  <form name="Report Options">
                     <group>
@@ -31,22 +31,22 @@
             </field>
         </record>
 
-        <record id="action_mbk_hr_report_menu" model="ir.actions.act_window">
-            <field name="name">Employee And Payroll Summary Report</field>
-            <field name="res_model">mbk.hr.wizard</field>
+        <record id="action_mbk_property_report_menu" model="ir.actions.act_window">
+            <field name="name">Property Summary Report</field>
+            <field name="res_model">mbk.property.wizard</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_mbk_hr_report"
-                  name="Employee And Payroll Summary Report"
+        <menuitem id="menu_mbk_property_report"
+                  name="Property Summary Report"
                   sequence="10"
-                  action="action_mbk_hr_report_menu"
+                  action="action_mbk_property_report_menu"
                   parent="mis_investment.mis_inv_report_menu"/>
-        <menuitem name="Employee And Payroll Summary Report" id="menu_mbk_hr_dashboard" parent="mis_auh_dashboard.menu_mbk_group"
+        <menuitem name="Property Summary Report" id="menu_mbk_property_dashboard" parent="mis_auh_dashboard.menu_mbk_group"
           sequence="3"
           groups="base.group_erp_manager"
-          action="action_mbk_hr_report_menu"/>
+          action="action_mbk_property_report_menu"/>
     </data>
 </odoo>

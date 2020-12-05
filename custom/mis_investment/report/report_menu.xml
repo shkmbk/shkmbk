@@ -56,4 +56,11 @@
             name="mis_investment.report_mbk_hr_document"
             file="mis_investment.report_mbk_hr_document"
             menu="False"/>
+    <report id="action_mbk_property_report"
+            model="mbk.property"
+            string="Property Summary Report"
+            report_type="qweb-html"
+            name="mis_investment.report_mbk_property_document"
+            file="mis_investment.report_mbk_property_document"
+            menu="False"/>
 </odoo>

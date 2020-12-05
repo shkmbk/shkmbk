@@ -119,7 +119,7 @@ class FDSummaryReport(models.AbstractModel):
         reval_id=0
         master_table =[]
 
-        objlastvaluation = self.env['mis.invrevaluation'].search([('trans_date', '<=', to_date),('state', '=', 'posted')], order='trans_date desc', limit=1)
+        objlastvaluation = self.env['mis.invrevaluation'].search([('trans_date', '<=', to_date), ('state', '=', 'posted')], order='trans_date desc', limit=1)
         if objlastvaluation:
             tmpdate= objlastvaluation.trans_date
             last_valudation_date= tmpdate.strftime("%d-%m-%Y")

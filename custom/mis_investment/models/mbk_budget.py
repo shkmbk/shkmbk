@@ -58,8 +58,10 @@ class MbkBudget(models.Model):
                                  states={'done': [('readonly', True)]}, default=_default_opening_balance, copy=False)
     balance_start_real = fields.Float(string='Starting Balance', help="Actual starting balance",
                                       states={'done': [('readonly', True)]}, default=0.00, copy=False)
-    balance_end_real = fields.Float('Ending Balance', help="Actual ending balance", compute='_compute_end_real', store=True, copy=False, readonly=True)
-    balance_end_variance = fields.Float('Net Variance', compute='_compute_end_variance', store=True, copy=False, readonly=True)
+    balance_end_real = fields.Float('Ending Balance', help="Actual ending balance", compute='_compute_end_real',
+                                    store=True, copy=False, readonly=True)
+    balance_end_variance = fields.Float('Net Variance', compute='_compute_end_variance', store=True, copy=False,
+                                        readonly=True)
     balance_end = fields.Float('Closing Balance', compute='_compute_end_balance', store=True, copy=False,
                                help='Budget Closing Balance as calculated based on Opening Balance and transaction lines')
     in_line_ids = fields.One2many('mbk.budget.in_flow', 'mbk_budget_id', string='Fund In Flow lines',
@@ -136,7 +138,8 @@ class MbkBudget(models.Model):
         for budget in self:
             if budget.state not in ('draft', 'cancel') and not self._context.get('force_delete'):
                 raise UserError("You cannot delete an entry which has been posted.")
-            budget.trans_line.unlink()
+            budget.in_line_ids.unlink()
+            budget.out_line_ids.unlink()
         return super(MbkBudget, self).unlink()
 
     @api.depends('balance_start', 'in_line_ids.budget_amount', 'out_line_ids.budget_amount')
@@ -221,7 +224,6 @@ class MbkBudget(models.Model):
                 'balance_end_variance': balance_end_variance,
             })
 
-
     def get_opening_balance(self):
         # Search last bank statement and set current opening balance as closing balance of previous one
         obj_last_budget = self.env['mbk.budget'].search([('state', 'in', ['done'])], order='date_to desc',
@@ -231,6 +233,7 @@ class MbkBudget(models.Model):
                 self.balance_start_real = obj_last_budget.balance_end_real
             else:
                 self.balance_start_real = 0.00
+
 
 class MBKBudgetInFlow(models.Model):
     _name = 'mbk.budget.in_flow'
