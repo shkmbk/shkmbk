@@ -47,10 +47,10 @@
                                 <th style="vertical-align:middle; text-align:right;" rowspan="2"><strong>Occupancy %</strong></th>
                             </tr>
                             <tr>
+                                <th class="text-right" rowspan="2"><strong>Total</strong></th>
                                 <th class="text-right" rowspan="2"><strong>Occupied</strong></th>
                                 <th class="text-right" rowspan="2"><strong>Booked</strong></th>
                                 <th class="text-right" rowspan="2"><strong>Vacant</strong></th>
-                                <th class="text-right" rowspan="2"><strong>Total</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,6 +69,10 @@
                                         <span t-esc="line['building']"/>
                                     </td>
                                     <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['total_nos'])"/>
+                                        <t t-set="tot_units" t-value="tot_units+(line['total_nos'])"/>
+                                    </td>
+                                    <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(line['occupied_nos'])"/>
                                          <t t-set="tot_occupied" t-value="tot_occupied+(line['occupied_nos'])"/>
                                     </td>
@@ -81,10 +85,6 @@
                                         <t t-set="tot_vacant" t-value="tot_vacant+(line['vacant_nos'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="'{0:,.0f}'.format(line['total_nos'])"/>
-                                        <t t-set="tot_units" t-value="tot_units+(line['total_nos'])"/>
-                                    </td>
-                                    <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(line['occupancy_rate'])"/>
                                     </td>
                                 </tr>
@@ -94,6 +94,9 @@
                                       <b>TOTAL</b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.2f}'.format(tot_units)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.2f}'.format(tot_occupied)"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
@@ -101,9 +104,6 @@
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.2f}'.format(tot_vacant)"/></b>
-                                    </td>
-                                    <td style="vertical-align:middle;text-align:right;">
-                                        <b><span t-esc="'{0:,.2f}'.format(tot_units)"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <t t-if="not tot_units==0">

@@ -104,7 +104,7 @@
     </record>
     <menuitem
         id="mbk_menu_action_property"
-        name="Employee Property Summary"
+        name="Property Summary"
         action="mbk_property_action"
         parent="mis_inv_transaction_menu"
         sequence='63'
