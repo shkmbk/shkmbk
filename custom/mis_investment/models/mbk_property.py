@@ -33,6 +33,8 @@ class MbkProperty(models.Model):
                        states={'draft': [('readonly', False)]})
     total_occupied = fields.Integer(string="Total Occupied Units", compute='_compute_net_closing', store=True,
                                     Default=False)
+    total_non_renewal = fields.Integer(string="Total Non-Renewal Units", compute='_compute_net_closing', store=True,
+                                       Default=False)
     total_booked = fields.Integer(string="Total Booked Units", compute='_compute_net_closing', store=True,
                                   Default=False)
     total_vacant = fields.Integer(string="Total Vacant Units", compute='_compute_net_closing', store=True,
@@ -68,6 +70,7 @@ class MbkProperty(models.Model):
                 'sl_no': sl_no,
                 'analytic_account_id': rec.id,
                 'occupied_nos': 0,
+                'non_renewal': 0,
                 'booked_nos': 0,
                 'vacant_nos': 0,
                 'total_nos': 0,
@@ -110,20 +113,23 @@ class MbkProperty(models.Model):
             total_booked = 0.00
             total_vacant = 0.00
             total_units = 0.00
+            total_non_renewal = 0.00
             total_occupancy_rate = 0.00
 
             for line in rec.line_ids:
                 total_occupied += line.occupied_nos
+                total_non_renewal += line.non_renewal
                 total_booked += line.booked_nos
                 total_vacant += line.vacant_nos
                 total_units += line.total_nos
             if total_units > 0:
-                total_occupancy_rate += round(total_occupied * 100 / total_units, 2)
+                total_occupancy_rate += round((total_occupied+total_non_renewal) * 100 / total_units, 2)
             else:
                 total_occupancy_rate = 0
 
             rec.update({
                 'total_occupied': total_occupied,
+                'total_non_renewal': total_non_renewal,
                 'total_booked': total_booked,
                 'total_vacant': total_vacant,
                 'total_units': total_units,
@@ -143,11 +149,12 @@ class MbkPropertyLine(models.Model):
     _order = 'property_id, sl_no'
 
     property_id = fields.Many2one('mbk.property', string='Property Summary', required=True, ondelete='cascade',
-                                index=True)
+                                  index=True)
     sl_no = fields.Integer(string='Sl', required=True, readonly=True, default=10)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Building', required=True,
                                           domain="[('company_id', '=', 3), ('group_id', '=', 4)]")
     occupied_nos = fields.Integer(string='Occupied')
+    non_renewal = fields.Integer(string='Non Renewal')
     booked_nos = fields.Integer(string='Booked')
     vacant_nos = fields.Integer(string='Vacant')
     total_nos = fields.Integer(string='Total', compute='_get_total', store=True, default=0)
@@ -158,12 +165,12 @@ class MbkPropertyLine(models.Model):
     @api.depends('occupied_nos', 'booked_nos', 'vacant_nos')
     def _get_total(self):
         for rec in self:
-            rec.total_nos = rec.occupied_nos + rec.booked_nos + rec.vacant_nos
+            rec.total_nos = rec.occupied_nos + rec.non_renewal + rec.booked_nos + rec.vacant_nos
 
     @api.depends('occupied_nos', 'total_nos')
     def _get_occupancy_rate(self):
         for rec in self:
             if rec.total_nos > 0:
-                rec.occupancy_rate = round(rec.occupied_nos * 100 / rec.total_nos, 2)
+                rec.occupancy_rate = round((rec.occupied_nos + rec.non_renewal) * 100 / rec.total_nos, 2)
             else:
                 rec.occupancy_rate = 0
