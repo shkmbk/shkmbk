@@ -139,7 +139,7 @@ class MbkPropertyLine(models.Model):
     property_id = fields.Many2one('mbk.property', string='Property Summary', required=True, ondelete='cascade',
                                 index=True)
     sl_no = fields.Integer(string='Sl', required=True, readonly=True, default=10)
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', required=True,
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Building', required=True,
                                           readonly=True, domain="[('company_id', '=', 3), ('group_id', '=', 4)]")
     occupied_nos = fields.Integer(string='Occupied')
     booked_nos = fields.Integer(string='Booked')
