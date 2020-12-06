@@ -28,7 +28,7 @@ class PropertySummaryReport(models.AbstractModel):
                                 INNER JOIN account_analytic_account AAA ON AAA.id=REL.analytic_account_id
                             WHERE RE.state='posted' AND RE.company_id=3 AND (RE.date_to BETWEEN '"""+str(year_from)+"""' AND '"""+str(year_to)+"""') 
                             GROUP BY AAA.name,AAA.id
-                            ORDER BY 1""")
+                            ORDER BY occupancy_rate,occupied_nos""")
         master_table = self._cr.dictfetchall()
 
         docargs = {
