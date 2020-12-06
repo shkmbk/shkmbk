@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mbk_property_view" model="ir.ui.view">
+            <field name="name">Property Summary</field>
+            <field name="model">mbk.property</field>
+            <field name="arch" type="xml">
+                <form name="Property Summary">
+                    <header>
+                        <!-- Post -->
+                        <button name="action_post" string="Post" class="oe_highlight"
+                                type="object" groups="account.group_account_manager"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <!-- Cancel -->
+                        <button name="action_property_cancel" string="Cancel Entry" type="object" groups="account.group_account_manager"
+                                attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                        <button name="action_property_draft" attrs="{'invisible':[('state', 'not in',('cancel'))]}" string="Set to Draft" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="date" options="{'datepicker': {'warn_future': true}}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="date_to" options="{'datepicker': {'warn_future': true}}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="total_occupied" invisible="1"/>
+                                <field name="total_booked" invisible="1"/>
+                                <field name="total_vacant" invisible="1"/>
+                                <field name="total_units" invisible="1"/>
+                                <field name="total_occupancy_rate" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <button name="action_load_sheet" width="400" height="50" attrs="{'invisible':['|', ('state', 'not in',('draft'))]}" type="object"  string="Process" class="oe_highlight"/>
+                            </group>
+                            <group></group>
+                        </group>
+
+                        <notebook>
+                            <page string="Property Summary Lines">
+                                <field name="line_ids"
+                                    attrs="{'readonly': [('state', 'in', ('posted', 'cancel'))]}">
+                                    <tree string="Property Summary Lines" editable="bottom" create="1" delete="1">
+                                        <field name="sl_no" readonly="1" invisible="True"/>
+                                        <field name="analytic_account_id" options="{'no_create': True, 'no_edit': True}"/>
+                                        <field name="occupied_nos" sum="Occupied"/>
+                                        <field name="booked_nos" sum="Booked"/>
+                                        <field name="vacant_nos" sum="Vacant"/>
+                                        <field name="total_nos"  sum="Total" readonly="1"/>
+                                        <field name="occupancy_rate" readonly="1"/>
+                                        <field name="remarks" optional="hide"/>
+                                        <field name="to_date" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer">
+                                    <field name="total_occupancy_rate" class="oe_subtotal_footer_separator"/>
+                                </group>
+                                <!-- Internal note -->
+                                <field name="note" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+    </record>
+
+    <record id="mbk_property_tree_view" model="ir.ui.view">
+        <field name="name">mbk.property.tree</field>
+        <field name="model">mbk.property</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+             <tree>
+                 <field name="name"/>
+                 <field name="date"/>
+                 <field name="date_to"/>
+                 <field name="ref"/>
+                 <field name="total_occupied"/>
+                 <field name="total_booked"/>
+                 <field name="total_vacant"/>
+                 <field name="total_units"/>
+                 <field name="total_occupancy_rate"/>
+                 <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="mbk_property_action" model="ir.actions.act_window">
+        <field name="name">Create Property Summary</field>
+        <field name="res_model">mbk.property</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Property Summary
+              </p>
+        </field>
+    </record>
+    <menuitem
+        id="mbk_menu_action_property"
+        name="Property Summary"
+        action="mbk_property_action"
+        parent="mis_inv_transaction_menu"
+        sequence='63'
+        />
+    </data>
+</odoo>

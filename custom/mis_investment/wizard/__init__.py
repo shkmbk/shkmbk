@@ -5,4 +5,6 @@ from . import bond_report_wizard
 from . import mc_bond_summary_report_wizard
 from . import budget_report_wizard
 from . import budget_variance_report_wizard
+from . import mbk_hr_report_wizard
+from . import mbk_property_report_wizard
 

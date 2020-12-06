@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mbk_hr_view" model="ir.ui.view">
+            <field name="name">Employee And Payroll Summary</field>
+            <field name="model">mbk.hr</field>
+            <field name="arch" type="xml">
+                <form name="Employee And Payroll Summary">
+                    <header>
+                        <!-- Post -->
+                        <button name="action_post" string="Post" class="oe_highlight"
+                                type="object" groups="account.group_account_manager"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <!-- Cancel -->
+                        <button name="action_hr_cancel" string="Cancel Entry" type="object" groups="account.group_account_manager"
+                                attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                        <button name="action_hr_draft" attrs="{'invisible':[('state', 'not in',('cancel'))]}" string="Set to Draft" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="date" options="{'datepicker': {'warn_future': true}}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <label for="date_from" string="Period"/>
+                                <div>
+                                    <field name="date_from" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/> - <field name="date_to" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                </div>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="total_opening" invisible="1"/>
+                                <field name="total_new" invisible="1"/>
+                                <field name="total_exit" invisible="1"/>
+                                <field name="total_closing" invisible="1"/>
+                                <field name="total_salary" invisible="1"/>
+                                <field name="total_deductions" invisible="1"/>
+                                <field name="total_net_salary" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <button name="action_load_sheet" width="400" height="50" attrs="{'invisible':['|', ('state', 'not in',('draft'))]}" type="object"  string="Process" class="oe_highlight"/>
+                            </group>
+                            <group></group>
+                        </group>
+
+                        <notebook>
+                            <page string="Employee Summary Lines">
+                                <field name="line_ids"
+                                    attrs="{'readonly': [('state', 'in', ('posted', 'cancel'))]}">
+                                    <tree string="Employee Summary Lines" editable="bottom" create="0" delete="1">
+                                        <field name="sl_no" readonly="1"/>
+                                        <field name="analytic_account_id" options="{'no_create': True, 'no_edit': True}"/>
+                                        <field name="opening_nos" sum="Opening"/>
+                                        <field name="new_nos" sum="New Joinee"/>
+                                        <field name="exit_nos" sum="Termination/Resignation"/>
+                                        <field name="closing_nos" sum="Closing" readonly="1"/>
+                                        <field name="salary" sum="Salary"/>
+                                        <field name="deductions" sum="Deductions"/>
+                                        <field name="leave_salary" sum="Leave Salary"/>
+                                        <field name="net_salary" sum="Net Salary"/>
+                                        <field name="remarks" optional="hide"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer">
+                                    <field name="total_net_salary" class="oe_subtotal_footer_separator"/>
+                                </group>
+                                <!-- Internal note -->
+                                <field name="note" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+    </record>
+
+    <record id="mbk_hr_tree_view" model="ir.ui.view">
+        <field name="name">mbk.hr.tree</field>
+        <field name="model">mbk.hr</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+             <tree>
+                 <field name="name"/>
+                 <field name="date"/>
+                 <field name="date_to"/>
+                 <field name="ref"/>
+                 <field name="total_opening"/>
+                 <field name="total_new"/>
+                 <field name="total_exit"/>
+                 <field name="total_closing"/>
+                 <field name="total_salary"/>
+                 <field name="total_deductions"/>
+                 <field name="total_leave_salary"/>
+                 <field name="total_net_salary"/>
+                 <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="mbk_hr_action" model="ir.actions.act_window">
+        <field name="name">Create Employee And Payroll Summary</field>
+        <field name="res_model">mbk.hr</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+             <p>
+                Add a new Employee And Payroll Summary
+              </p>
+        </field>
+    </record>
+    <menuitem
+        id="mbk_menu_action_hr"
+        name="Employee And Payroll Summary"
+        action="mbk_hr_action"
+        parent="mis_inv_transaction_menu"
+        sequence='63'
+        />
+    </data>
+</odoo>
