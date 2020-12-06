@@ -21,7 +21,7 @@ class MbkProperty(models.Model):
                       states={'draft': [('readonly', False)]})
     date_to = fields.Date(string='As on Date', readonly=True, required=True, copy=False,
                           default=lambda self: fields.Date.to_string(
-                              (datetime.now() + relativedelta(months=+1, day=1, days=-1)).date()),
+                              (datetime.now() + relativedelta(day=1, days=-1)).date()),
                           states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=3)
     state = fields.Selection([
@@ -130,6 +130,12 @@ class MbkProperty(models.Model):
                 'total_occupancy_rate': total_occupancy_rate,
             })
 
+    @api.onchange('date_to')
+    def _onchange_date_to(self):
+        property_line_ids = self.env['mbk.property.line'].search([('property_id', '=', self._origin.id)])
+        for property_line_id in property_line_ids:
+            property_line_id.to_date = self.date_to
+
 
 class MbkPropertyLine(models.Model):
     _name = 'mbk.property.line'
@@ -140,14 +146,14 @@ class MbkPropertyLine(models.Model):
                                 index=True)
     sl_no = fields.Integer(string='Sl', required=True, readonly=True, default=10)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Building', required=True,
-                                          readonly=True, domain="[('company_id', '=', 3), ('group_id', '=', 4)]")
+                                          domain="[('company_id', '=', 3), ('group_id', '=', 4)]")
     occupied_nos = fields.Integer(string='Occupied')
     booked_nos = fields.Integer(string='Booked')
     vacant_nos = fields.Integer(string='Vacant')
     total_nos = fields.Integer(string='Total', compute='_get_total', store=True, default=0)
     occupancy_rate = fields.Float(string='Occupancy %', compute='_get_occupancy_rate', store=True, default=False)
     remarks = fields.Char(string='Remarks')
-    to_date = fields.Date(string='To Date', readonly=True)
+    to_date = fields.Date(string='To Date', readonly=True, store=True)
 
     @api.depends('occupied_nos', 'booked_nos', 'vacant_nos')
     def _get_total(self):
