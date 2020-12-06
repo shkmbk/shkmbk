@@ -15,9 +15,9 @@ class PropertySummaryReport(models.AbstractModel):
         month = int(data['month'])
         year_from = date(year, month, 1)
         year_to = year_from + relativedelta(months=+1, day=1, days=-1)
-        obj_re = self.env['mbk.property.line'].search(
-            [('property_id.state', '=', 'posted'), ('to_date', '>=', year_from), ('to_date', '<=', year_to)],
-            order='to_date, sl_no', limit=1)
+        obj_re = self.env['mbk.property'].search(
+            [('state', '=', 'posted'), ('date_to', '>=', year_from), ('date_to', '<=', year_to)],
+            order='date_to', limit=1)
         if not obj_re:
             raise UserError('No records found in selected parameter')
 
