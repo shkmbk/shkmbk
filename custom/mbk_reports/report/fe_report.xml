@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_fe">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>FAMILY EXPENSE REPORT <t t-esc="header_period"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-left"><strong>PARTICULARS</strong></th>
+                                <th class="text-left"><strong>MONTH</strong></th>
+                                <th class="text-left"><strong>ACCOUNT</strong></th>
+                                <th class="text-left"><strong>DESCRIPTION</strong></th>
+                                <th class="text-right"><strong>AMOUNT</strong></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="tot_amount" t-value="0.0"/>
+                            <t t-foreach="docs" t-as="line">
+                                 <t t-if="line['order_id']==0">
+                                    <tr style="width:100%;height:30px;background-color:#d0f0c0;">
+                                        <td>
+                                            <b><span t-esc="line['particulars']"/></b>
+                                        </td>
+                                        <td>
+                                            <b><span t-esc="line['mn']"/></b>
+                                        </td>
+                                        <td>
+                                            <b><span t-esc="line['account']"/></b>
+                                        </td>
+                                        <td>
+                                            <b><span t-esc="line['description']"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-esc="'{0:,.0f}'.format(line['amount'])"/></b>
+                                            <t t-set="tot_amount" t-value="tot_amount+(line['amount'])"/>
+                                        </td>
+                                    </tr>
+                                 </t>
+                                <t t-if="line['order_id']==1">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="line['particulars']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line['mn']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line['account']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line['description']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['amount'])"/>
+                                            <t t-set="tot_amount" t-value="tot_amount+(line['amount'])"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                <td colspan="4" style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                  <b>TOTAL</b>
+                                </td>
+                                <td style="vertical-align:middle;text-align:right;">
+                                    <b><span t-esc="'{0:,.0f}'.format(tot_amount)"/></b>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+

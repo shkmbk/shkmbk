@@ -6,3 +6,5 @@ from . import audit_trail_report
 from . import pl_report
 from . import pl_group_report
 from . import stock_summary_report
+from . import fe_summary_report
+from . import fe_report
