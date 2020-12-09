@@ -30,5 +30,8 @@
         <menuitem name="MBK Group Reports" id="menu_mbk_group" parent="account.menu_finance"
                   sequence="5"
                   groups="base.group_erp_manager"/>
+        <menuitem name="HH Personal Reports" id="menu_hh_personal" parent="account.menu_finance"
+                  sequence="6"
+                  groups="base.group_erp_manager"/>
     </data>
 </odoo>

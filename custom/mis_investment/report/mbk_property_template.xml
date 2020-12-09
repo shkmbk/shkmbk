@@ -43,12 +43,13 @@
                             <tr>
                                 <th style="vertical-align:middle; text-align:left;" rowspan="2"><strong>S.No.</strong></th>
                                 <th style="vertical-align:middle; text-align:left;" rowspan="2"><strong>Building</strong></th>
-                                <th class="text-center" colspan="4"><strong>No. of Units</strong></th>
+                                <th class="text-center" colspan="5"><strong>No. of Units</strong></th>
                                 <th style="vertical-align:middle; text-align:right;" rowspan="2"><strong>Occupancy %</strong></th>
                             </tr>
                             <tr>
                                 <th class="text-right" rowspan="2"><strong>Total</strong></th>
                                 <th class="text-right" rowspan="2"><strong>Occupied</strong></th>
+                                <th class="text-right" rowspan="2"><strong>Non Renewal</strong></th>
                                 <th class="text-right" rowspan="2"><strong>Booked</strong></th>
                                 <th class="text-right" rowspan="2"><strong>Vacant</strong></th>
                             </tr>
@@ -56,6 +57,7 @@
                         <tbody>
                             <t t-set="rowno" t-value="1"/>
                             <t t-set="tot_occupied" t-value="0.0"/>
+                            <t t-set="tot_non_renewal" t-value="0.0"/>
                             <t t-set="tot_booked" t-value="0.0"/>
                             <t t-set="tot_vacant" t-value="0.0"/>
                             <t t-set="tot_units" t-value="0.0"/>
@@ -75,6 +77,10 @@
                                     <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(line['occupied_nos'])"/>
                                          <t t-set="tot_occupied" t-value="tot_occupied+(line['occupied_nos'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.0f}'.format(line['non_renewal'])"/>
+                                         <t t-set="tot_non_renewal" t-value="tot_non_renewal+(line['non_renewal'])"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="'{0:,.0f}'.format(line['booked_nos'])"/>
@@ -100,6 +106,9 @@
                                         <b><span t-esc="'{0:,.0f}'.format(tot_occupied)"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
+                                        <b><span t-esc="'{0:,.0f}'.format(tot_non_renewal)"/></b>
+                                    </td>
+                                    <td style="vertical-align:middle;text-align:right;">
                                         <b><span t-esc="'{0:,.0f}'.format(tot_booked)"/></b>
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
@@ -107,7 +116,7 @@
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <t t-if="not tot_units==0">
-                                            <b><span t-esc="'{0:,.0f}'.format((tot_occupied*100/tot_units))"/></b>
+                                            <b><span t-esc="'{0:,.0f}'.format(((tot_occupied+tot_non_renewal)*100/tot_units))"/></b>
                                         </t>
                                     </td>
                                 </tr>

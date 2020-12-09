@@ -27,6 +27,7 @@
                             <group>
                                 <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="total_occupied" invisible="1"/>
+                                <field name="total_non_renewal" invisible="1"/>
                                 <field name="total_booked" invisible="1"/>
                                 <field name="total_vacant" invisible="1"/>
                                 <field name="total_units" invisible="1"/>
@@ -48,12 +49,13 @@
                                         <field name="sl_no" readonly="1" invisible="True"/>
                                         <field name="analytic_account_id" options="{'no_create': True, 'no_edit': True}"/>
                                         <field name="occupied_nos" sum="Occupied"/>
+                                        <field name="non_renewal" sum="Non Renewal"/>
                                         <field name="booked_nos" sum="Booked"/>
                                         <field name="vacant_nos" sum="Vacant"/>
                                         <field name="total_nos"  sum="Total" readonly="1"/>
                                         <field name="occupancy_rate" readonly="1"/>
                                         <field name="remarks" optional="hide"/>
-                                        <field name="to_date" invisible="1"/>
+                                        <field name="to_date" invisible="True"/>
                                     </tree>
                                 </field>
                                 <group class="oe_subtotal_footer">
@@ -84,6 +86,7 @@
                  <field name="date_to"/>
                  <field name="ref"/>
                  <field name="total_occupied"/>
+                 <field name="total_non_renewal"/>
                  <field name="total_booked"/>
                  <field name="total_vacant"/>
                  <field name="total_units"/>
