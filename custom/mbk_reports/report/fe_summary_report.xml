@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_fe_summary">
+        <template  id="report_header_custom" inherit_id="report.external_layout_header">
+            <t t-if="o and 'company_id' in o">
+                  <t t-set="company" t-value="o.company_id"/>
+             </t>
+              <t t-if="not o or not 'company_id' in o">
+                  <t t-set="company" t-value="res_company"/>
+              </t>
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-12">
+                            <img src="/mis_auh_report/static/src/img/header.jpg"
+                                         style="margin:auto;width:100%;display:block;"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="custom_layout_footer" inherit_id="report.external_layout_footer">
+            <xpath expr="//div[@class='footer']" position="replace">
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-11">
+                            <img src="/mis_auh_report/static/src/img/footer.jpg" style="margin:auto;width:100%"/>
+                        </div>
+                        <div  class="col-1 text-right">
+                          <br/>
+                                Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center><h4>FAMILY EXPENSE SUMMARY <t t-esc="header_period"/></h4></center>
+                    <table class="table table-sm o_main_table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th class="text-left"><strong>PARTICULARS</strong></th>
+                                <th class="text-left"><strong>ACCOUNT</strong></th>
+                                <th class="text-right"><strong>TOTAL</strong></th>
+                                <th class="text-right"><strong>SHK SULTAN</strong></th>
+                                <th class="text-right"><strong>SHK ZAYED</strong></th>
+                                <th class="text-right"><strong>SHK HAMDAN</strong></th>
+                                <th class="text-right"><strong>HER HIGHNESS</strong></th>
+                                <th class="text-right"><strong>HIS HIGHNESS</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="tot_total" t-value="0.0"/>
+                            <t t-set="tot_sultan" t-value="0.0"/>
+                            <t t-set="tot_zayed" t-value="0.0"/>
+                            <t t-set="tot_hamdan" t-value="0.0"/>
+                            <t t-set="tot_her" t-value="0.0"/>
+                            <t t-set="tot_hh" t-value="0.0"/>
+                            <t t-foreach="docs" t-as="line">
+                                 <t t-if="line['order_id']==0">
+                                    <tr style="width:100%;height:30px;background-color:#d0f0c0;">
+                                        <td>
+                                            <b><span t-esc="line['particulars']"/></b>
+                                        </td>
+                                        <td>
+                                            <b><span t-esc="line['account']"/></b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-esc="'{0:,.0f}'.format(line['total'])"/></b>
+                                            <t t-set="tot_total" t-value="tot_total+(line['total'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-esc="'{0:,.0f}'.format(line['shk_sultan'])"/></b>
+                                             <t t-set="tot_sultan" t-value="tot_sultan+(line['shk_sultan'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-esc="'{0:,.0f}'.format(line['shk_zayed'])"/></b>
+                                             <t t-set="tot_zayed" t-value="tot_zayed+(line['shk_zayed'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-esc="'{0:,.0f}'.format(line['shk_hamdan'])"/></b>
+                                            <t t-set="tot_hamdan" t-value="tot_hamdan+(line['shk_hamdan'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-esc="'{0:,.0f}'.format(line['her_highness'])"/></b>
+                                            <t t-set="tot_her" t-value="tot_her+(line['her_highness'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <b><span t-esc="'{0:,.0f}'.format(line['his_highness'])"/></b>
+                                            <t t-set="tot_hh" t-value="tot_hh+(line['his_highness'])"/>
+                                        </td>
+                                    </tr>
+                                 </t>
+                                <t t-if="line['order_id']==1">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="line['particulars']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line['account']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['total'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['shk_sultan'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['shk_zayed'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['shk_hamdan'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['her_highness'])"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="'{0:,.0f}'.format(line['his_highness'])"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <tr style="width:100%;height:30px;background-color:#d3d3d3;">
+                                <td colspan="2" style="vertical-align:middle;text-align:left;padding: 0px 50px;">
+                                  <b>TOTAL</b>
+                                </td>
+                                <td style="vertical-align:middle;text-align:right;">
+                                    <b><span t-esc="'{0:,.0f}'.format(tot_total)"/></b>
+                                </td>
+                                <td style="vertical-align:middle;text-align:right;">
+                                    <b><span t-esc="'{0:,.0f}'.format(tot_sultan)"/></b>
+                                </td>
+                                <td style="vertical-align:middle;text-align:right;">
+                                    <b><span t-esc="'{0:,.0f}'.format(tot_zayed)"/></b>
+                                </td>
+                                <td style="vertical-align:middle;text-align:right;">
+                                    <b><span t-esc="'{0:,.0f}'.format(tot_hamdan)"/></b>
+                                </td>
+                                <td style="vertical-align:middle;text-align:right;">
+                                    <b><span t-esc="'{0:,.0f}'.format(tot_her)"/></b>
+                                </td>
+                                <td style="vertical-align:middle;text-align:right;">
+                                    <b><span t-esc="'{0:,.0f}'.format(tot_hh)"/></b>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+  </template>
+</odoo>
+
+

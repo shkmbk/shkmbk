@@ -64,4 +64,18 @@
 		name="mbk_reports.report_pl_group"
 		file="mbk_reports.report_pl_group"
 		menu="False"/>
+	<report id="fe_summary_report"
+		model="account.move.line"
+		string="Family Expense Summary Report"
+		report_type="qweb-html"
+		name="mbk_reports.report_fe_summary"
+		file="mbk_reports.report_fe_summary"
+		menu="False"/>
+	<report id="fe_report"
+		model="account.move.line"
+		string="Family Expense Report"
+		report_type="qweb-html"
+		name="mbk_reports.report_fe"
+		file="mbk_reports.report_fe"
+		menu="False"/>
 </odoo>

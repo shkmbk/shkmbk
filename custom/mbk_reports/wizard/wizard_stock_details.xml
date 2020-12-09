@@ -27,7 +27,7 @@
         </record>
 
         <record id="mbk_stockdetails_action_view" model="ir.actions.act_window">
-            <field name="name">Stock Details Report</field>
+            <field name="name">Stock Detailed Report</field>
             <field name="res_model">mbk.wizard.report.stockdetails</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">form</field>
@@ -36,7 +36,7 @@
         </record>
 
         <menuitem id="mbk_stock_details_wizard_submenu"
-                  name="Stock Details Report"
+                  name="Stock Detailed Report"
                   parent="stock.menu_warehouse_report"
                   action="mbk_stockdetails_action_view"
                   groups="account.group_account_manager"
