@@ -84,7 +84,7 @@ class PLGroup_Report(models.AbstractModel):
                             FROM account_move_line AS AML 
                             INNER JOIN account_account A ON AML.account_id=A.id
                             INNER JOIN account_group AG ON A.group_id= AG.id
-                            WHERE  AML.parent_state='posted' AND (AML.date BETWEEN '"""+str(year_from)+"""' AND '"""+str(year_to)+"""') AND AML.company_id=3 AND A.internal_group in ('expense') and A.user_type_id=16 ORDER BY 2 DESC""")
+                            WHERE  AML.parent_state='posted' AND (AML.date BETWEEN '"""+str(month_from)+"""' AND '"""+str(month_to)+"""') AND AML.company_id=3 AND A.internal_group in ('expense') and A.user_type_id=16 ORDER BY 2 DESC""")
 
         dep_table = self._cr.dictfetchall()
 
