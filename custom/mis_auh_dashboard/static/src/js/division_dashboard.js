@@ -203,16 +203,19 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                             var pl_ctx = document.getElementById("pl_canvas").getContext('2d');
                             var income_ctx = document.getElementById("income_canvas").getContext('2d');
                             var expense_ctx = document.getElementById("expense_canvas").getContext('2d');
+                            var opl_ctx = document.getElementById("opl_canvas").getContext('2d');
                             $('#canvas').empty();
                             $('#pl_canvas').empty();
                             $('#income_canvas').empty();
                             $('#expense_canvas').empty();
+                            $('#opl_canvas').empty();
 
                             // Define the data
                             var income = result.income; // Add data values to array
                             var expense = result.expense;
                             var opl = result.opl;
                             var profit = result.profit;
+                            var opl_table = result.opl_table;
 
                             var labels = result.month; // Add labels to array
 
@@ -344,6 +347,30 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 }
                             });
 
+                            if (window.oplCharts != undefined)
+                                window.oplCharts.destroy();
+                            window.oplCharts = new Chart(opl_ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Operating Profit/Loss', // Name the series
+                                        data: opl_table, // Specify the data values array
+                                        backgroundColor: '#ffa600',
+                                        borderColor: '#ffa600',
+
+                                        borderWidth: 3, // Specify bar border width
+                                        type: 'line', // Set this data to a line chart
+                                        fill: false
+                                    },
+                                    ]
+                                },
+                                options: {
+                                    responsive: true, // Instruct chart js to respond nicely.
+                                    maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                }
+                            });
+
                         })
 
                     },
@@ -406,14 +433,16 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                             var pl_ctx = document.getElementById("pl_canvas").getContext('2d');
                             var income_ctx = document.getElementById("income_canvas").getContext('2d');
                             var expense_ctx = document.getElementById("expense_canvas").getContext('2d');
+                            var opl_ctx = document.getElementById("opl_canvas").getContext('2d');
 
                             // Define the data
                             var income = result.income; // Add data values to array
                             var expense = result.expense;
                             var opl = result.opl;
                             var profit = result.profit;
-
+                            var opl_table = result.opl_table;
                             var labels = result.month; // Add labels to array
+                            var opl_labels = result.month;
                             // End Defining data
 
                             // End Defining data
@@ -534,6 +563,30 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
 
                                         borderWidth: 1, // Specify bar border width
                                         type: 'bar', // Set this data to a line chart
+                                        fill: false
+                                    },
+                                    ]
+                                },
+                                options: {
+                                    responsive: true, // Instruct chart js to respond nicely.
+                                    maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                }
+                            });
+
+                            if (window.oplCharts != undefined)
+                                window.oplCharts.destroy();
+                            window.oplCharts = new Chart(opl_ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Operating Profit/Loss', // Name the series
+                                        data: opl_table, // Specify the data values array
+                                        backgroundColor: '#ffa600',
+                                        borderColor: '#ffa600',
+
+                                        borderWidth: 3, // Specify bar border width
+                                        type: 'line', // Set this data to a line chart
                                         fill: false
                                     },
                                     ]
