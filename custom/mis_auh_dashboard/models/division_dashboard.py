@@ -171,8 +171,8 @@ class DivisionDashBoard(models.Model):
                                 INNER JOIN account_account A ON AML.account_id=A.id
                                 INNER JOIN account_group AG ON A.group_id= AG.id
                                 INNER JOIN account_analytic_account AAA ON AML.analytic_account_id=AAA.id
-                                WHERE AML.parent_state='posted' AND (AML.date BETWEEN '""" + str(month_from) + """' AND '""" + str(
-                month_to) + """') AND AML.company_id=3 AND A.internal_group in ('income','expense') AND (AML.analytic_account_id = '""" + str(analytic_id) + """')
+                                WHERE AML.parent_state='posted' AND (AML.date BETWEEN '""" + str(year_from) + """' AND '""" + str(
+                year_to) + """') AND AML.company_id=3 AND A.internal_group in ('income','expense') AND (AML.analytic_account_id = '""" + str(analytic_id) + """')
                 GROUP BY 1 ORDER BY 2 DESC""")
             pl_table = self._cr.dictfetchall()
 
