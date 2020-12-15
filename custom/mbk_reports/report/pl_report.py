@@ -11,6 +11,7 @@ class PL_Report(models.AbstractModel):
     _description = "Profit and Loss Report"
 
     def _get_report_values(self, docids, data=None):
+        self.env['ir.rule'].clear_cache()
         year = int(data['year'])
         month = int(data['month'])
         is_detailed = data['is_detailed']
