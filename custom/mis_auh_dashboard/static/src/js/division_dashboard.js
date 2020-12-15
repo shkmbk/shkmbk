@@ -218,6 +218,7 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                             var opl_table = result.opl_table;
 
                             var labels = result.month; // Add labels to array
+                            var y_labels = result.y_labels; // Add labels to array
 
                             // End Defining data
                             if (window.myCharts != undefined)
@@ -352,7 +353,7 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                             window.oplCharts = new Chart(opl_ctx, {
                                 type: 'line',
                                 data: {
-                                    labels: labels,
+                                    labels: y_labels,
                                     datasets: [{
                                         label: 'Operating Profit/Loss', // Name the series
                                         data: opl_table, // Specify the data values array
@@ -442,7 +443,7 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                             var profit = result.profit;
                             var opl_table = result.opl_table;
                             var labels = result.month; // Add labels to array
-                            var opl_labels = result.month;
+                            var y_labels = result.y_labels;
                             // End Defining data
 
                             // End Defining data
@@ -578,7 +579,7 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                             window.oplCharts = new Chart(opl_ctx, {
                                 type: 'line',
                                 data: {
-                                    labels: labels,
+                                    labels: y_labels,
                                     datasets: [{
                                         label: 'Operating Profit/Loss', // Name the series
                                         data: opl_table, // Specify the data values array
