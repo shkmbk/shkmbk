@@ -116,7 +116,7 @@
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <t t-if="not tot_units==0">
-                                            <b><span t-esc="'{0:,.2f}'.format(((tot_occupied+tot_non_renewal)*100/tot_units))"/></b>
+                                            <b><span t-esc="'{0:,.2f}'.format(((tot_occupied+tot_non_renewal)*100.00/tot_units))"/></b>
                                         </t>
                                     </td>
                                 </tr>
