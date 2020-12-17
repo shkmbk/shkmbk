@@ -91,7 +91,7 @@
                                         <t t-set="tot_vacant" t-value="tot_vacant+(line['vacant_nos'])"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="'{0:,.0f}'.format(line['occupancy_rate'])"/>
+                                        <span t-esc="'{0:,.2f}'.format(line['occupancy_rate'])"/>
                                     </td>
                                 </tr>
                             </t>
@@ -116,7 +116,7 @@
                                     </td>
                                     <td style="vertical-align:middle;text-align:right;">
                                         <t t-if="not tot_units==0">
-                                            <b><span t-esc="'{0:,.0f}'.format(((tot_occupied+tot_non_renewal)*100/tot_units))"/></b>
+                                            <b><span t-esc="'{0:,.2f}'.format(((tot_occupied+tot_non_renewal)*100/tot_units))"/></b>
                                         </t>
                                     </td>
                                 </tr>

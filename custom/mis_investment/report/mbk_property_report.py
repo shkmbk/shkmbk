@@ -22,7 +22,7 @@ class PropertySummaryReport(models.AbstractModel):
             raise UserError('No records found in selected parameter')
 
         self._cr.execute("""SELECT AAA.id,AAA.name AS Building, SUM(REL.occupied_nos) AS occupied_nos,SUM(REL.non_renewal) AS non_renewal, SUM(REL.booked_nos) AS booked_nos, SUM(REL.vacant_nos) AS vacant_nos, SUM(REL.total_nos) AS total_nos,
-                                SUM(REL.occupied_nos)*100/NULLIF(SUM(REL.total_nos),0) AS occupancy_rate
+                                SUM(REL.occupied_nos+REL.non_renewal)*100/NULLIF(SUM(REL.total_nos),0) AS occupancy_rate
                                 FROM mbk_property RE 
                                 INNER JOIN mbk_property_line REL ON RE.id=REL.property_id
                                 INNER JOIN account_analytic_account AAA ON AAA.id=REL.analytic_account_id
