@@ -166,20 +166,22 @@ class DivisionDashBoard(models.Model):
             self._cr.execute("""SELECT TO_CHAR(AML.date, 'MON') AS month, SUM(AML.credit-AML.debit) AS profit,                                                      
                                 SUM(CASE WHEN A.internal_group='income' THEN AML.credit-AML.debit ELSE 0.00 END) AS income,                            
                                 SUM(CASE WHEN A.internal_group='expense' THEN AML.debit-AML.credit ELSE 0.00 END) AS expense,
-                                SUM(CASE WHEN A.user_type_id<>16 THEN AML.credit-AML.debit ELSE 0.00 END) AS opl
+                                SUM(CASE WHEN A.user_type_id<>16 THEN AML.credit-AML.debit ELSE 0.00 END) AS opl,
+                                TO_CHAR(AML.date, 'MM') AS month_id
                                 FROM account_move_line AS AML 
                                 INNER JOIN account_account A ON AML.account_id=A.id
                                 INNER JOIN account_group AG ON A.group_id= AG.id
                                 INNER JOIN account_analytic_account AAA ON AML.analytic_account_id=AAA.id
                                 WHERE AML.parent_state='posted' AND (AML.date BETWEEN '""" + str(year_from) + """' AND '""" + str(
                 year_to) + """') AND AML.company_id=3 AND A.internal_group in ('income','expense') AND (AML.analytic_account_id = '""" + str(analytic_id) + """')
-                GROUP BY 1 ORDER BY 2 DESC""")
+                GROUP BY 1,6 ORDER BY 6""")
             pl_table = self._cr.dictfetchall()
 
         self._cr.execute("""SELECT TO_CHAR(AML.date, 'MON') AS y_labels, SUM(AML.credit-AML.debit) AS profit,                                                      
                             SUM(CASE WHEN A.internal_group='income' THEN AML.credit-AML.debit ELSE 0.00 END) AS income,                            
                             SUM(CASE WHEN A.internal_group='expense' THEN AML.debit-AML.credit ELSE 0.00 END) AS expense,
-                            SUM(CASE WHEN A.user_type_id<>16 THEN AML.credit-AML.debit ELSE 0.00 END) AS opl_table
+                            SUM(CASE WHEN A.user_type_id<>16 THEN AML.credit-AML.debit ELSE 0.00 END) AS opl_table,
+                            TO_CHAR(AML.date, 'MM') AS month_id
                             FROM account_move_line AS AML 
                             INNER JOIN account_account A ON AML.account_id=A.id
                             INNER JOIN account_group AG ON A.group_id= AG.id
@@ -188,7 +190,7 @@ class DivisionDashBoard(models.Model):
             year_from) + """' AND '""" + str(
             year_to) + """') AND AML.company_id=3 AND A.internal_group in ('income','expense') AND (AML.analytic_account_id = '""" + str(
             analytic_id) + """' OR '""" + str(analytic_id) + """'=0)
-            GROUP BY 1 ORDER BY 2 DESC""")
+            GROUP BY 1,6 ORDER BY 6""")
         opl_table = self._cr.dictfetchall()
 
         income = []
