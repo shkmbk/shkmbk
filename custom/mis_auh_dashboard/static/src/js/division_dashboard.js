@@ -273,6 +273,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -297,6 +304,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -321,6 +335,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -345,6 +366,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -369,6 +397,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -499,6 +534,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -523,6 +565,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -547,6 +596,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -571,6 +627,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
@@ -595,6 +658,13 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                                 options: {
                                     responsive: true, // Instruct chart js to respond nicely.
                                     maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
                                 }
                             });
 
