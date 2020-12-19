@@ -174,7 +174,7 @@ class DivisionDashBoard(models.Model):
                                 INNER JOIN account_analytic_account AAA ON AML.analytic_account_id=AAA.id
                                 WHERE AML.parent_state='posted' AND (AML.date BETWEEN '""" + str(year_from) + """' AND '""" + str(
                 year_to) + """') AND AML.company_id=3 AND A.internal_group in ('income','expense') AND (AML.analytic_account_id = '""" + str(analytic_id) + """')
-                GROUP BY 1,6 ORDER BY 6 DESC""")
+                GROUP BY 1,6 ORDER BY 6""")
             pl_table = self._cr.dictfetchall()
 
         self._cr.execute("""SELECT TO_CHAR(AML.date, 'MON') AS y_labels, SUM(AML.credit-AML.debit) AS profit,                                                      
@@ -190,7 +190,7 @@ class DivisionDashBoard(models.Model):
             year_from) + """' AND '""" + str(
             year_to) + """') AND AML.company_id=3 AND A.internal_group in ('income','expense') AND (AML.analytic_account_id = '""" + str(
             analytic_id) + """' OR '""" + str(analytic_id) + """'=0)
-            GROUP BY 1,6 ORDER BY 6 DESC""")
+            GROUP BY 1,6 ORDER BY 6""")
         opl_table = self._cr.dictfetchall()
 
         income = []
