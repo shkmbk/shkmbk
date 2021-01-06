@@ -107,7 +107,7 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th><span>Date</span></th>
+                                <th><span>Invoice Date</span></th>
                                 <th><span>Invoice Number</span></th>
 								<th><span>Bill Number</span></th>
                                 <th><span>Description</span></th>
