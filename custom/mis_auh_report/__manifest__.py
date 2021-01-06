@@ -28,6 +28,7 @@
         'reports/purchase_report_templates.xml',
         'reports/sale_template.xml',
         'reports/payment_report_template.xml',
+        'reports/g_payment_report_template.xml',
         'reports/journal_report_templates.xml',
         'reports/pettycash_report_templates.xml',
         'views/account_grouptype_views.xml',
