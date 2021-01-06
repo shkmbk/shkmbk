@@ -2,10 +2,8 @@
 <odoo>
 
     <report
-
             id="account.account_invoices"
             model="account.move"
-
             string="Invoices"
             report_type="qweb-pdf"
             name="mis_auh_report.report_invoice"
@@ -54,7 +52,16 @@
 		report_type="qweb-pdf"
 		name="mis_auh_report.report_account_pettycash"
 		file="mis_auh_report.report_account_pettycash"
-	  />	
+	  />
+	  
+	<report
+		id="action_account_pettycash_print"
+		model="account.payment"
+		string="Payment Print (General)"
+		report_type="qweb-pdf"
+		name="mis_auh_report.report_g_payment_receipt"
+		file="mis_auh_report.report_g_payment_receipt"
+	  />  
 
 
  </odoo>
