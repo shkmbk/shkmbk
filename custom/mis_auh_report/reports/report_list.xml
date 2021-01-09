@@ -55,7 +55,7 @@
 	  />
 	  
 	<report
-		id="action_account_pettycash_print"
+		id="action_account_g_payment_receipt"
 		model="account.payment"
 		string="Payment Print (General)"
 		report_type="qweb-pdf"
