@@ -44,8 +44,6 @@
                     <tr>
                         <td colspan="2" width="100%"  valign="middle" align="center">
                             <h2>
-                                <br/>
-                                <br/>
                                 <span t-field="o.journal_id.type"/> Payment
                              </h2>
                         </td>
