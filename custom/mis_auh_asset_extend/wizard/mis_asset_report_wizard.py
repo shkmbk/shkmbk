@@ -379,7 +379,7 @@ class MisAssetCustomReport(models.TransientModel):
             worksheet.write(count, col, fromdate_value, wbf['content_float_border'])
             # To Date NBA Value
             col += 1
-            if rec.asset_qty > 0 and (purchase_value - acc_depreciation_amount) < 0:
+            if rec.asset_qty == 0 and (purchase_value - acc_depreciation_amount) < 0:
                 todate_value = 0
             else:
                 todate_value = purchase_value - acc_depreciation_amount
