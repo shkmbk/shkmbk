@@ -112,7 +112,10 @@ class MisAssetCustomReport(models.TransientModel):
                 #                raise UserError(objmove.ids)
                 #                objmove_line = self.env['account.move.line'].search([('move_id', 'in', objmove.ids)])
                 #                for mvrec in objmove_line:
-                totalamt += mvrec.amount_total
+                for line in mvrec.line_ids:
+                    if line.account_id.user_type_id.id == 16:
+                        totalamt += line.debit - line.credit
+                #totalamt += mvrec.amount_total
         return totalamt
 
     def print_asset_xlsx(self):
