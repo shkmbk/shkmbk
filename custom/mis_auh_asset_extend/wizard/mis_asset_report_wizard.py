@@ -100,7 +100,7 @@ class MisAssetCustomReport(models.TransientModel):
         return [self._get_asset(), self._get_group(), self._get_subgroup(), self._get_brand(),
                 self._get_location(), self._get_sublocation(),
                 self._get_custtodian(), self._get_area(),
-                ('company_id', '=', self.env.company.id), ('asset_type', '=', 'purchase'), ('state', '!=', 'draft')
+                ('company_id', '=', self.env.company.id), ('asset_type', '=', 'purchase'), ('state', 'not in', ['draft', 'model'])
                 ]
 
     def _getSum(self, assetid, isstart, isenddate, startdate, enddate):
@@ -379,10 +379,10 @@ class MisAssetCustomReport(models.TransientModel):
             worksheet.write(count, col, fromdate_value, wbf['content_float_border'])
             # To Date NBA Value
             col += 1
-            if rec.asset_qty > 0:
-                todate_value = purchase_value - acc_depreciation_amount
-            else:
+            if rec.asset_qty > 0 and (purchase_value - acc_depreciation_amount) < 0:
                 todate_value = 0
+            else:
+                todate_value = purchase_value - acc_depreciation_amount
             sum_todate_value += todate_value
             worksheet.write(count, col, todate_value, wbf['content_float_border'])
 
