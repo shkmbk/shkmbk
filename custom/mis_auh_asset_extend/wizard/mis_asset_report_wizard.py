@@ -78,9 +78,9 @@ class MisAssetCustomReport(models.TransientModel):
     def _getdomainfilter(self):
         return [self._get_asset(), self._get_group(), self._get_subgroup(), self._get_brand(),
                 self._get_location(), self._get_sublocation(),
-                self._get_custtodian(), self._get_area(), ('acquisition_date', '<=', self.to_date),
-                ('company_id', '=', self.env.company.id), ('asset_type', '=', 'purchase'), ('state', 'not in', ['draft', 'model'])
-                ]
+                self._get_custtodian(), self._get_area(),
+                ('company_id', '=', self.env.company.id), ('asset_type', '=', 'purchase'), ('state', 'not in', ['draft', 'model']),
+                '|', ('acquisition_date', '<=', self.to_date), ('is_opening', '=', True)]
 
     def print_asset_xlsx(self):
         if not self.env['res.users'].browse(self.env.uid).tz:
