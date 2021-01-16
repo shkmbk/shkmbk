@@ -316,11 +316,11 @@ class MisAssetCustomReport(models.TransientModel):
                         if line.account_id.user_type_id.id == 16:
                             depreciation_period += line.debit - line.credit
                 else:
-                    net_current_op_dep += mvrec.amount_total
+                    net_current_op_dep += mvrec.asset_depreciated_value
                     for line in mvrec.line_ids:
                         if line.account_id.user_type_id.id == 16:
                             dep_current_opening += line.debit - line.credit
-                net_current_dep += mvrec.amount_total
+                net_current_dep += mvrec.asset_depreciated_value
 
             # Depreciation Opening
             col += 1
