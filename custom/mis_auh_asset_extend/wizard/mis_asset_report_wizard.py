@@ -324,6 +324,18 @@ class MisAssetCustomReport(models.TransientModel):
                         if line.account_id.user_type_id.id == 8:
                             net_current_op_av += line.debit - line.credit
 
+            fromdate_value = rec.original_value + net_current_op_av
+            todate_value = rec.original_value + net_current_op_av + net_current_av
+
+            if not objmove:
+                obj_dispose = self.env['account.asset.sell'].search(
+                    [('asset_id', '=', rec.id), ('create_date', '<=', self.to_date)], order='create_date', limit=1)
+                for dispose in obj_dispose:
+                    if dispose.create_date.date() <= self.to_date:
+                        todate_value = 0
+                    else:
+                        fromdate_value = 0
+
             # Depreciation Opening
             col += 1
             dep_opening = (purchase_value - rec.original_value) + dep_current_opening
@@ -338,11 +350,9 @@ class MisAssetCustomReport(models.TransientModel):
             worksheet.write(count, col, acc_depreciation_amount, wbf['content_float_border'])
             # Previous Closing NBV Value
             col += 1
-            fromdate_value = rec.original_value + net_current_op_av
             worksheet.write(count, col, fromdate_value, wbf['content_float_border'])
             # To Date NBA Value
             col += 1
-            todate_value = rec.original_value + net_current_op_av + net_current_av
             worksheet.write(count, col, todate_value, wbf['content_float_border'])
 
         count += 2
