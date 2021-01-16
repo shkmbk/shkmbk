@@ -305,22 +305,24 @@ class MisAssetCustomReport(models.TransientModel):
 
             dep_current_opening = 0.00
             depreciation_period = 0.00
-            net_current_dep = 0.00
-            net_current_op_dep = 0.00
+            net_current_av = 0.00
+            net_current_op_av = 0.00
 
             objmove = self.env['account.move'].search(
-                [('asset_id', '=', rec.id), ('state', '=', 'posted'), ('date', '<=', self.to_date)])
+                [('asset_id', '=', rec.id), ('state', '=', 'posted'), ('date', '<=', self.to_date)], order='date')
             for mvrec in objmove:
                 if mvrec.date >= self.from_date:
                     for line in mvrec.line_ids:
                         if line.account_id.user_type_id.id == 16:
                             depreciation_period += line.debit - line.credit
+                        if line.account_id.user_type_id.id == 8:
+                            net_current_av += line.debit - line.credit
                 else:
-                    net_current_op_dep += mvrec.asset_depreciated_value
                     for line in mvrec.line_ids:
                         if line.account_id.user_type_id.id == 16:
                             dep_current_opening += line.debit - line.credit
-                net_current_dep += mvrec.asset_depreciated_value
+                        if line.account_id.user_type_id.id == 8:
+                            net_current_op_av += line.debit - line.credit
 
             # Depreciation Opening
             col += 1
@@ -336,11 +338,11 @@ class MisAssetCustomReport(models.TransientModel):
             worksheet.write(count, col, acc_depreciation_amount, wbf['content_float_border'])
             # Previous Closing NBV Value
             col += 1
-            fromdate_value = rec.original_value - net_current_op_dep
+            fromdate_value = rec.original_value + net_current_op_av
             worksheet.write(count, col, fromdate_value, wbf['content_float_border'])
             # To Date NBA Value
             col += 1
-            todate_value = rec.original_value - net_current_dep
+            todate_value = rec.original_value + net_current_op_av + net_current_av
             worksheet.write(count, col, todate_value, wbf['content_float_border'])
 
         count += 2
