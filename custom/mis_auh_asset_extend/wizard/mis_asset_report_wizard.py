@@ -27,22 +27,6 @@ class MisAssetCustomReport(models.TransientModel):
     datas = fields.Binary('File', readonly=True)
     datas_fname = fields.Char('Filename', readonly=True)
 
-    def _get_datefilter(self, isstartdate, isenddate, startdate, enddate):
-        if isstartdate == 1 and isenddate == 1:
-            return ('date', '>=', startdate)
-        elif isstartdate == 1:
-            return ('date', '<=', startdate)
-        elif isenddate == 1:
-            return ('date', '<=', enddate)
-        else:
-            return ('company_id', '=', self.env.company.id)
-
-    def _get_end_datefilter(self, isstartdate, isenddate, enddate):
-        if isstartdate == 1 and isenddate == 1:
-            return ('date', '<=', enddate)
-        else:
-            return ('company_id', '=', self.env.company.id)
-
     def _get_asset(self):
         if self.asset_id:
             return ('id', '=', self.asset_id.id)
@@ -91,32 +75,12 @@ class MisAssetCustomReport(models.TransientModel):
         else:
             return ('company_id', '=', self.env.company.id)
 
-    def _getdomainfilter_move(self, assetid, isstart, isenddate, startdate, enddate):
-        return [('asset_id', '=', assetid), ('state', '=', 'posted'),
-                self._get_datefilter(isstart, isenddate, startdate, enddate),
-                self._get_end_datefilter(isstart, isenddate, enddate)]
-
     def _getdomainfilter(self):
         return [self._get_asset(), self._get_group(), self._get_subgroup(), self._get_brand(),
                 self._get_location(), self._get_sublocation(),
-                self._get_custtodian(), self._get_area(),
+                self._get_custtodian(), self._get_area(), ('acquisition_date', '<=', self.to_date),
                 ('company_id', '=', self.env.company.id), ('asset_type', '=', 'purchase'), ('state', 'not in', ['draft', 'model'])
                 ]
-
-    def _getSum(self, assetid, isstart, isenddate, startdate, enddate):
-        totalamt = 0.00
-        if assetid:
-            objmove = self.env['account.move'].search(
-                self._getdomainfilter_move(assetid, isstart, isenddate, startdate, enddate))
-            for mvrec in objmove:
-                #                raise UserError(objmove.ids)
-                #                objmove_line = self.env['account.move.line'].search([('move_id', 'in', objmove.ids)])
-                #                for mvrec in objmove_line:
-                for line in mvrec.line_ids:
-                    if line.account_id.user_type_id.id == 16:
-                        totalamt += line.debit - line.credit
-                #totalamt += mvrec.amount_total
-        return totalamt
 
     def print_asset_xlsx(self):
         if not self.env['res.users'].browse(self.env.uid).tz:
@@ -181,9 +145,7 @@ class MisAssetCustomReport(models.TransientModel):
         wbf['content_float_border_bg'].set_right()
 
         worksheet = workbook.add_worksheet(report_name)
-
         count = 0
-
         col = 0
         column_width = 6
         worksheet.set_column(col, col, column_width)
@@ -205,7 +167,7 @@ class MisAssetCustomReport(models.TransientModel):
         worksheet.set_column(col, col, column_width)
         worksheet.write(count, col, 'Purchase Date', wbf['content_border_bg'])
         col += 1
-        column_width = 6
+        column_width = 10
         worksheet.set_column(col, col, column_width)
         worksheet.write(count, col, 'Qty', wbf['content_border_bg'])
         col += 1
@@ -213,7 +175,7 @@ class MisAssetCustomReport(models.TransientModel):
         worksheet.set_column(col, col, column_width)
         worksheet.write(count, col, 'Cost', wbf['content_border_bg'])
         col += 1
-        column_width = 14
+        column_width = 18
         worksheet.set_column(col, col, column_width)
         worksheet.write(count, col, 'Purchase Value', wbf['content_border_bg'])
         """col += 1
@@ -270,19 +232,7 @@ class MisAssetCustomReport(models.TransientModel):
         worksheet.set_column(col, col, column_width)
         worksheet.write(count, col, 'NBV ' + self.to_date.strftime("%d-%m-%Y"), wbf['content_border_bg'])
 
-        sum = 0
-        total_qty = 0.0
-        sum_opening = 0.0
-        sum_salvage = 0.0
-        sum_depreciable = 0.0
-        sum_depcreciable_opening = 0.0
-        sum_depreciable_period = 0.0
-        sum_acc_depreciation_amount = 0.0
-        sum_fromdate_value = 0.0
-        sum_todate_value = 0.0
-
         for rec in objasset:
-
             count += 1
             col = 0
             purchase_value = 0.0
@@ -316,7 +266,6 @@ class MisAssetCustomReport(models.TransientModel):
                 worksheet.write(count, col, '', wbf['content_border'])
             # QTY
             col += 1
-            total_qty += rec.asset_qty
             worksheet.write(count, col, rec.asset_qty, wbf['content_border'])
             # Cost
             col += 1
@@ -325,7 +274,6 @@ class MisAssetCustomReport(models.TransientModel):
             worksheet.write(count, col, purchased_cost, wbf['content_float_border'])
             # Opening Balance
             col += 1
-            sum_opening += purchase_value
             worksheet.write(count, col, purchase_value, wbf['content_float_border'])
             # Addition
             """col += 1
@@ -341,11 +289,9 @@ class MisAssetCustomReport(models.TransientModel):
             """
             # SALVAGE
             col += 1
-            sum_salvage += rec.salvage_value
             worksheet.write(count, col, rec.salvage_value, wbf['content_float_border'])
             # DEPRECIABLE VALUE
             col += 1
-            sum_depreciable += depreciable_value
             worksheet.write(count, col, depreciable_value, wbf['content_float_border'])
 
             # Total Duration
@@ -357,76 +303,75 @@ class MisAssetCustomReport(models.TransientModel):
             col += 1
             worksheet.write(count, col, str(duration) + ' ' + strmy, wbf['content_border'])
 
+            dep_current_opening = 0.00
+            depreciation_period = 0.00
+            net_current_dep = 0.00
+            net_current_op_dep = 0.00
+
+            objmove = self.env['account.move'].search(
+                [('asset_id', '=', rec.id), ('state', '=', 'posted'), ('date', '<=', self.to_date)])
+            for mvrec in objmove:
+                if mvrec.date >= self.from_date:
+                    for line in mvrec.line_ids:
+                        if line.account_id.user_type_id.id == 16:
+                            depreciation_period += line.debit - line.credit
+                else:
+                    net_current_op_dep += mvrec.amount_total
+                    for line in mvrec.line_ids:
+                        if line.account_id.user_type_id.id == 16:
+                            dep_current_opening += line.debit - line.credit
+                net_current_dep += mvrec.amount_total
+
             # Depreciation Opening
             col += 1
-            dep_opening = (purchase_value - rec.original_value) + self._getSum(rec.id, 1, 1, op_fy_date, pre_cls_date)
-            sum_depcreciable_opening += dep_opening
+            dep_opening = (purchase_value - rec.original_value) + dep_current_opening
             worksheet.write(count, col, dep_opening, wbf['content_float_border'])
             # Depreciation for Period
             col += 1
-
-            depreciation_period = self._getSum(rec.id, 1, 1, self.from_date, self.to_date)
             worksheet.write(count, col, depreciation_period, wbf['content_float_border'])
             # Accumated Depreciation
             col += 1
             # acc_depreciation_amount=self._getSum(rec.id,0,1,self.from_date,self.to_date)
             acc_depreciation_amount = dep_opening + depreciation_period
-            sum_depreciable_period += depreciation_period
             worksheet.write(count, col, acc_depreciation_amount, wbf['content_float_border'])
             # Previous Closing NBV Value
             col += 1
-
-            # fromdate_value= self._getSum(rec.id,1,0,self.from_date,self.to_date)
-            fromdate_value = purchase_value - dep_opening
-            sum_fromdate_value += fromdate_value
+            fromdate_value = rec.original_value - net_current_op_dep
             worksheet.write(count, col, fromdate_value, wbf['content_float_border'])
             # To Date NBA Value
             col += 1
-            if rec.asset_qty == 0 and (purchase_value - acc_depreciation_amount) < 0:
-                todate_value = 0
-            else:
-                todate_value = purchase_value - acc_depreciation_amount
-            sum_todate_value += todate_value
+            todate_value = rec.original_value - net_current_dep
             worksheet.write(count, col, todate_value, wbf['content_float_border'])
 
         count += 2
         # SUMMARY
-        worksheet.merge_range('A%s:C%s' % (count, count), 'Total', wbf['content_border_bg_total'])
+        worksheet.merge_range('A%s:C%s' % (count, count), 'Total', wbf['content_float_border_bg'])
         col = 3
         worksheet.write(count - 1, col, "", wbf['content_border_bg'])
         col += 1
         worksheet.write(count - 1, col, "", wbf['content_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, total_qty, wbf['content_float_border_bg'])
-        col += 1
-        worksheet.write(count - 1, col, "", wbf['content_border_bg'])
-
-        col += 1
-        worksheet.write(count - 1, col, sum_depcreciable_opening, wbf['content_float_border_bg'])
-        """col += 1
-        worksheet.write(count - 1, col, "", wbf['content_border_bg'])
+        worksheet.write_formula('F%s' % (count), '=SUM(F2:F%s)' % (count - 1), wbf['content_float_border_bg'])
         col += 1
         worksheet.write(count - 1, col, "", wbf['content_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, "", wbf['content_border_bg'])
-        """
-
+        worksheet.write_formula('H%s' % (count), '=SUM(H2:H%s)' % (count - 1), wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_salvage, wbf['content_float_border_bg'])
+        worksheet.write_formula('I%s' % (count), '=SUM(I2:I%s)' % (count - 1), wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_depreciable, wbf['content_float_border_bg'])
+        worksheet.write_formula('J%s' % (count), '=SUM(J2:J%s)' % (count - 1), wbf['content_float_border_bg'])
         col += 1
         worksheet.write(count - 1, col, "", wbf['content_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_depcreciable_opening, wbf['content_float_border_bg'])
+        worksheet.write_formula('L%s' % (count), '=SUM(L2:L%s)' % (count - 1), wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_depreciable_period, wbf['content_float_border_bg'])
+        worksheet.write_formula('M%s' % (count), '=SUM(M2:M%s)' % (count - 1), wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_acc_depreciation_amount, wbf['content_float_border_bg'])
+        worksheet.write_formula('N%s' % (count), '=SUM(N2:N%s)' % (count - 1), wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_fromdate_value, wbf['content_float_border_bg'])
+        worksheet.write_formula('O%s' % (count), '=SUM(O2:O%s)' % (count - 1), wbf['content_float_border_bg'])
         col += 1
-        worksheet.write(count - 1, col, sum_todate_value, wbf['content_float_border_bg'])
+        worksheet.write_formula('P%s' % (count), '=SUM(P2:P%s)' % (count - 1), wbf['content_float_border_bg'])
 
         workbook.close()
         out = base64.encodebytes(fp.getvalue())
