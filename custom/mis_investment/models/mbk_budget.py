@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -121,8 +121,8 @@ class MbkBudget(models.Model):
             raise UserError('Enter actual inflow & Outflow before finalization')
         if not self.required_fund_actual or self.required_fund_actual == 0:
             if self.required_fund_budget > 0:
-                raise UserError('Enter Approved Fund Details')
-
+                msg = 'Approved Fund Details Missing'
+                # raise UserError('Enter Approved Fund Details')
         return self.write({'state': 'done'})
 
     @api.model
