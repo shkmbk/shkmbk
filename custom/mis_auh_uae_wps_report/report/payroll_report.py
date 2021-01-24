@@ -46,7 +46,7 @@ class MBKPayrollReport(models.AbstractModel):
             return ('company_id', '=', self.env.company.id)
    
     def _get_report_values(self, docids, data=None):
-        # self.env['ir.rule'].clear_cache()
+        self.env['ir.rule'].clear_cache()
         start_date_str = data['start_date']
         end_date_str = data['end_date']
         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
