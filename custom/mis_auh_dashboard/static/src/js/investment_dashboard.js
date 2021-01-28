@@ -15,20 +15,134 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
 
         events: {
             'click .investment_dashboard': 'onclick_dashboard',
-            'click #prog_bar': 'onclick_prog_bar',
-            'click #bank_balance': 'onclick_bank_balance',
-            'click #bank_balance_hide': 'onclick_bank_balance_hide',
-            'click #in_ex_hide': 'onclick_in_ex_hide',
-            'change #toggle-two': 'onclick_toggle_two',
+            'change #month_id': 'onclick_month',
         },
-        onclick_toggle_two: function (ev) {
-        this.onclick_bank_balance(ev);
+        onclick_month: function (ev) {
+        this.onclick_currency(ev);
+            ev.stopPropagation();
+                var $target = $(ev.target);
+                var value = $target.val();
+                var currency = 'AED'
+            function format_amount(amount){
+                 if (typeof(amount) != 'number'){
+                    amount = parseFloat(0.00);
+                 }
+                 var formatted_value = (parseInt(amount)).toLocaleString("en-US", {minimumFractionDigits: 2})
+                 return formatted_value += ' ' + "AED";
+            }
+
+        rpc.query({
+                    model: "account.move",
+                    method: "get_investment_profit",
+                    args: [value],
+                })
+                    .then(function (result) {
+                        var net_profit_this_year = result[0].profit;
+                        var net_profit_this_months = result[1].profit;
+                        var incomes_this_year = result[0].income;
+                        var income_this_month = result[1].income;
+                        var expenses_this_year = result[0].expense;
+                        var expenses_this_month = result[1].expense;
+
+                        net_profit_this_year = format_amount(net_profit_this_year);
+                        net_profit_this_months = format_amount(net_profit_this_months);
+                        incomes_this_year = format_amount(incomes_this_year);
+                        income_this_month = format_amount(income_this_month);
+                        expenses_this_year = format_amount(expenses_this_year);
+                        expenses_this_month = format_amount(expenses_this_month);
+
+                         $('#net_profit_current_year').empty();
+                         $('#net_profit_current_months').empty();
+                         $('#total_incomes_this_year').empty();
+                         $('#total_incomes_').empty();
+                         $('#total_expense_this_year').empty();
+                         $('#total_expenses_').empty();
+
+                        $('#net_profit_current_year').append('<span>' + net_profit_this_year + '</span> <div class="title">This Year</div>')
+                        $('#net_profit_current_months').append('<span>' + net_profit_this_months + '</span> <div class="title">This Month</div>')
+                        $('#total_incomes_this_year').append('<span>' + incomes_this_year + '</span><div class="title">This Year</div>')
+                        $('#total_incomes_').append('<span>' + income_this_month + '</span><div class="title">This month</div>')
+                        $('#total_expense_this_year').append('<span >' + expenses_this_year + '</span><div class="title">This Year</div>')
+                        $('#total_expenses_').append('<span>' + expenses_this_month + '</span><div class="title">This month</div>')
+                    })
+
+                    rpc.query({
+                        model: "account.move",
+                        method: "get_investment_values",
+                        args: [value],
+                    })
+                        .then(function (result) {
+                            var investment_this_year = result[0].investment
+                            var investment_this_month = result[1].investment
+
+                         $('#investment_this_year').empty();
+                         $('#investment_this_month').empty();
+
+                            investment_this_year = format_amount(investment_this_year);
+                            investment_this_month = format_amount(investment_this_month);
+
+                            $('#investment_this_year').append('<span>' + investment_this_year + '</span><div class="title">This Year</div>')
+                            $('#investment_this_month').append('<span>' + investment_this_month + '</span><div class="title">This month</div>')
+                        })
+                    rpc.query({
+                        model: "account.move",
+                        method: "get_investment_pl_summary",
+                        args: [value],
+                    }).then(function (result) {
+                            var due_count = 0;
+                            var amount;
+                            var total_amount = 0.00;
+                            $('#pl_list').empty();
+                            $('#total_pl').empty();
+                            _.forEach(result, function (x) {
+                                $('#pl_list').show();
+                                due_count++;
+                                amount = format_amount(x.amount);
+                                total_amount += x.amount
+                                $('#pl_list').append('<li><div>' + x.percentage + '</div>' + '<div>' + amount + '</div>' + '</li>');
+                            });
+                            var f_total_amount = format_amount(total_amount);
+                            if (total_amount>0.00){
+                                $('#total_pl').append('<span style= "color:#008000;">' + f_total_amount + '</span>')
+                            } else if(total_amount<0.00){
+                                $('#total_pl').append('<span style= "color:#FF0000;">' + f_total_amount + '</span>')
+                            } else {
+                                 $('#total_pl').append('<span style= "color:#808080;">' + f_total_amount + '</span>')
+                            }
+                        })
+                   rpc.query({
+                        model: "account.move",
+                        method: "get_share_pl_summary",
+                        args: [value],
+                    }).then(function (result) {
+                            var due_count = 0;
+                            var amount;
+                            var total_amount = 0.00;
+                            $('#share_pl_list').empty();
+                            $('#total_share_pl').empty();
+
+                            _.forEach(result, function (x) {
+                                $('#share_pl_list').show();
+                                due_count++;
+                                amount = format_amount(x.amount);
+                                total_amount += x.amount
+                                $('#share_pl_list').append('<li><div>' + x.particulars + '</div>' + '<div>' + amount + '</div>' + '</li>');
+                            });
+                            var f_total_amount = format_amount(total_amount);
+                            if (total_amount>0.00){
+                                $('#total_share_pl').append('<span style= "color:#008000;">' + f_total_amount + '</span>')
+                            } else if(total_amount<0.00){
+                                $('#total_share_pl').append('<span style= "color:#FF0000;">' + f_total_amount + '</span>')
+                            } else {
+                                 $('#total_share_pl').append('<span style= "color:#808080;">' + f_total_amount + '</span>')
+                            }
+                        })
+
         },
 
-        onclick_bank_balance: function (ev) {
+        onclick_currency: function (ev) {
             var posted = false;
-            if ($('#toggle-two')[0].checked == true) {
-                posted = "posted"
+            posted = "posted"
             rpc.query({
                 model: "account.move",
                 method: "get_currency",
@@ -36,28 +150,17 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                 .then(function (result) {
                     currency = result;
                 })
-            }
         },
-
 
         renderElement: function (ev) {
             var self = this;
             $.when(this._super())
                 .then(function (ev) {
-
-
-                    $('#toggle-two').bootstrapToggle({
-                        on: 'View All Entries',
-                        off: 'View Posted Entries'
-                    });
-
-
                     var posted = false;
-                    if ($('#toggle-two')[0].checked == true) {
-                        posted = "posted"
-                    }
-
-
+                    posted = "posted"
+                    var today = new Date ();
+                    var month_value = today.getFullYear ()+'-'+  ('0' + (today.getMonth()+1)).slice(-2);
+                    document.getElementById("month_id").value = month_value;
                     rpc.query({
                         model: "account.move",
                         method: "get_currency",
@@ -106,7 +209,8 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
 
                     rpc.query({
                         model: "account.move",
-                        method: "get_investment_profit"
+                        method: "get_investment_profit",
+                        args: [month_value],
                     })
                         .then(function (result) {
                             var net_profit_this_year = result[0].profit;
@@ -133,7 +237,8 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
 
                     rpc.query({
                         model: "account.move",
-                        method: "get_investment_values"
+                        method: "get_investment_values",
+                        args: [month_value],
                     })
                         .then(function (result) {
                             var investment_this_year = result[0].investment
@@ -149,6 +254,7 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                    rpc.query({
                         model: "account.move",
                         method: "get_share_pl_summary",
+                        args: [month_value],
                     }).then(function (result) {
                             var due_count = 0;
                             var amount;
@@ -174,6 +280,7 @@ odoo.define('InvestmentDashboard.InvestmentDashboard', function (require) {
                    rpc.query({
                         model: "account.move",
                         method: "get_investment_pl_summary",
+                        args: [month_value],
                     }).then(function (result) {
                             var due_count = 0;
                             var amount;
