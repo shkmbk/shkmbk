@@ -293,8 +293,9 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                     if ($('#toggle-two')[0].checked == true) {
                         posted = "posted"
                     }
-
-
+                    var today = new Date ();
+                    var month_value = today.getFullYear ()+'-'+  ('0' + (today.getMonth()+1)).slice(-2);
+                    
                     rpc.query({
                         model: "account.move",
                         method: "get_currency",
@@ -449,6 +450,7 @@ odoo.define('AccountingDashboard.AccountingDashboard', function (require) {
                    rpc.query({
                         model: "account.move",
                         method: "get_share_pl_summary",
+                        args: [month_value],
                     }).then(function (result) {
                             var due_count = 0;
                             var amount;
