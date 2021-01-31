@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import calendar
-from datetime import date, timedelta
-import datetime
+from datetime import date, timedelta, datetime
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
@@ -15,11 +14,14 @@ class InvestmentDashBoard(models.Model):
 
     # function to Header P&L values
     @api.model
-    def get_investment_profit(self):
+    def get_investment_profit(self, month_id):
 
         company_ids = self.get_current_multi_company_value()
-        month_first_day = date.today().replace(day=1)
-        month_last_day = date.today() + relativedelta(months=+1, day=1, days=-1)
+        date_id = month_id+'-'+'01'
+        # month_first_day = date.today().replace(day=1)
+        month_first_day = datetime.strptime(date_id, '%Y-%m-%d').date()
+        month_last_day = month_first_day + relativedelta(months=+1, day=1, days=-1)
+        year_first_day = month_first_day.replace(month=1, day=1)
         profit = 0.00
         income = 0.00
         expense = 0.00
@@ -29,7 +31,7 @@ class InvestmentDashBoard(models.Model):
         amount = []
         journal_items = self.env['account.move.line'].search(
             [('analytic_tag_ids.analytic_tag_group', '=', 35), ('parent_state', '=', 'posted'), ('company_id', '=', company_ids),
-             ('account_id.internal_group', 'in', ['expense', 'income'])])
+             ('account_id.internal_group', 'in', ['expense', 'income']), ('date', '>=', year_first_day), ('date', '<=', month_last_day)])
         # raise UserError(company_ids)
         for rec in journal_items:
             profit += rec.credit - rec.debit
@@ -59,17 +61,20 @@ class InvestmentDashBoard(models.Model):
 
     # Function to get investment asset values
     @api.model
-    def get_investment_values(self):
+    def get_investment_values(self, month_id):
 
         company_ids = self.get_current_multi_company_value()
-        month_first_day = date.today().replace(day=1)
-        month_last_day = date.today() + relativedelta(months=+1, day=1, days=-1)
+        date_id = month_id + '-' + '01'
+        # month_first_day = date.today().replace(day=1)
+        month_first_day = datetime.strptime(date_id, '%Y-%m-%d').date()
+        month_last_day = month_first_day + relativedelta(months=+1, day=1, days=-1)
+        year_first_day = month_first_day.replace(month=1, day=1)
         this_year_investment = 0.00
         this_month_investment = 0.00
         investment = []
         journal_items = self.env['account.move.line'].search(
             [('analytic_tag_ids.analytic_tag_group', '=', 35), ('parent_state', '=', 'posted'), ('company_id', '=', company_ids),
-             ('account_id.group_id', 'in', [48, 61]), ('account_id', '!=', 2498)])
+             ('account_id.group_id', 'in', [48, 61]), ('account_id', '!=', 2498), ('date', '>=', year_first_day), ('date', '<=', month_last_day)])
         # raise UserError(company_ids)
         for rec in journal_items:
             this_year_investment += rec.debit - rec.credit
@@ -152,9 +157,13 @@ class InvestmentDashBoard(models.Model):
 
     # function to P&L summary values
     @api.model
-    def get_investment_pl_summary(self):
+    def get_investment_pl_summary(self, month_id):
 
         company_ids = self.get_current_multi_company_value()
+        date_id = month_id+'-'+'01'
+        month_first_day = datetime.strptime(date_id, '%Y-%m-%d').date()
+        month_last_day = month_first_day + relativedelta(months=+1, day=1, days=-1)
+        year_first_day = month_first_day.replace(month=1, day=1)
         share_pl = 0.00
         fd_pl = 0.00
         bond_pl = 0.00
@@ -162,7 +171,7 @@ class InvestmentDashBoard(models.Model):
         amount = []
         journal_items = self.env['account.move.line'].search(
             [('analytic_tag_ids.analytic_tag_group', '=', 35), ('parent_state', '=', 'posted'), ('company_id', '=', company_ids),
-             ('account_id.internal_group', 'in', ['expense', 'income'])])
+             ('account_id.internal_group', 'in', ['expense', 'income']), ('date', '>=', year_first_day), ('date', '<=', month_last_day)])
         # raise UserError(company_ids)
         for rec in journal_items:
             if rec.account_id.group_id.id == 75:
@@ -280,14 +289,18 @@ class InvestmentDashBoard(models.Model):
 
 # function to Share P&L breakup values
     @api.model
-    def get_share_pl_summary(self):
+    def get_share_pl_summary(self, month_id):
 
         company_ids = self.get_current_multi_company_value()
+        date_id = month_id+'-'+'01'
+        month_first_day = datetime.strptime(date_id, '%Y-%m-%d').date()
+        month_last_day = month_first_day + relativedelta(months=+1, day=1, days=-1)
+        year_first_day = month_first_day.replace(month=1, day=1)
 
         amount = []
         journal_items = self.env['account.move.line'].search(
             [('analytic_tag_ids.analytic_tag_group', '=', 35), ('parent_state', '=', 'posted'), ('company_id', '=', company_ids),
-             ('account_id.internal_group', 'in', ['expense', 'income']), ('account_id.group_id', '=', 75)])
+             ('account_id.internal_group', 'in', ['expense', 'income']), ('account_id.group_id', '=', 75), ('date', '>=', year_first_day), ('date', '<=', month_last_day)])
         # raise UserError(company_ids)
         for rec in journal_items:
             if rec.account_id.account_remark:

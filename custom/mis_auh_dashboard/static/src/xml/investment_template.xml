@@ -9,9 +9,8 @@
                             <div class="col-sm-12">
                                 <div class="dash-header">
                                     <h1 class="custom-h1 dashboard-h1">INVESTMENT DASHBOARD</h1>
-                                    <input type="checkbox" style="display:none" data-toggle="toggle" data-on="" data-off="">
-                                    <input type="checkbox" id="toggle-two"></input>
-                                    </input>
+                                    <input type="month" id="month_id" name="month"
+                                                    min="2020-06"></input>
                                 </div>
                             </div>
                         </div>

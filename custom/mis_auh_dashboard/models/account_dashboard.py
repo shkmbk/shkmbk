@@ -14,11 +14,13 @@ class AccountsDashBoard(models.Model):
 
     # function to Header P&L values
     @api.model
-    def get_accounts_profit(self):
+    def get_accounts_profit(self, month_id):
 
         company_ids = self.get_current_multi_company_value()
-        month_first_day = date.today().replace(day=1)
-        month_last_day = date.today() + relativedelta(months=+1, day=1, days=-1)
+        date_id = month_id + '-' + '01'
+        month_first_day = datetime.strptime(date_id, '%Y-%m-%d').date()
+        month_last_day = month_first_day + relativedelta(months=+1, day=1, days=-1)
+        year_first_day = month_first_day.replace(month=1, day=1)
         profit = 0.00
         income = 0.00
         expense = 0.00
@@ -30,7 +32,7 @@ class AccountsDashBoard(models.Model):
         amount = []
         journal_items = self.env['account.move.line'].search(
             [('parent_state', '=', 'posted'), ('company_id', '=', company_ids),
-             ('account_id.internal_group', 'in', ['expense', 'income'])])
+             ('account_id.internal_group', 'in', ['expense', 'income']), ('date', '>=', year_first_day), ('date', '<=', month_last_day)])
         # raise UserError(company_ids)
         for rec in journal_items:
             profit += rec.credit - rec.debit
@@ -167,12 +169,16 @@ class AccountsDashBoard(models.Model):
 
     # Function to get salary details
     @api.model
-    def get_salary_list(self):
+    def get_salary_list(self, month_id):
         company_ids = self.get_current_multi_company_value()
+        date_id = month_id+'-'+'01'
+        month_first_day = datetime.strptime(date_id, '%Y-%m-%d').date()
+        month_last_day = month_first_day + relativedelta(months=+1, day=1, days=-1)
+        year_first_day = month_first_day.replace(month=1, day=1)
         total_amount = 0.00
         salary = []
         journal_items = self.env['account.move.line'].search(
-            [('parent_state', '=', 'posted'), ('company_id', '=', company_ids), ('account_id.group_id', '=', 116)])
+            [('parent_state', '=', 'posted'), ('company_id', '=', company_ids), ('account_id.group_id', '=', 116), ('date', '>=', year_first_day), ('date', '<=', month_last_day)])
         # raise UserError(company_ids)
         for rec in journal_items:
             total_amount += rec.credit - rec.debit
@@ -201,14 +207,16 @@ class AccountsDashBoard(models.Model):
     @api.model
     def get_income_expense(self, *post):
         company_ids = self.get_current_multi_company_value()
-        month_first_day = date.today().replace(day=1)
-        month_last_day = date.today() + relativedelta(months=+1, day=1, days=-1)
+        date_id = post[1]+'-'+'01'
+        month_first_day = datetime.strptime(date_id, '%Y-%m-%d').date()
+        month_last_day = month_first_day + relativedelta(months=+1, day=1, days=-1)
+        year_first_day = month_first_day.replace(month=1, day=1)
 
         records = []
-        if post == ('income_this_year',):
+        if post[0] == ('income_this_year'):
             journal_items = self.env['account.move.line'].search(
                 [('parent_state', '=', 'posted'), ('company_id', '=', company_ids),
-                 ('account_id.internal_group', 'in', ['expense', 'income'])], order='date')
+                 ('account_id.internal_group', 'in', ['expense', 'income']), ('date', '>=', year_first_day), ('date', '<=', month_last_day)], order='date')
             for rec in journal_items:
                 existing_lines = (
                     line_id for line_id in records if
