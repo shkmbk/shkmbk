@@ -9,22 +9,24 @@
                             <div class="col-sm-12">
                                 <div class="dash-header">
                                     <input type="image" id="logo" value="Logo" src="/mis_auh_dashboard/static/description/logo.jpg" width="80" height="100" style="border-style:inset;"/>
-                                    <h1 class="custom-h1 dashboard-h1">STATEMENT OF COMPREHENSIVE INCOME <span id="header1"/></h1>
-                                    <span id="header1"/>
-                                    <select id="division_values" style="width: 38%;">
-                                        <option id="mbk_group" value="0">MBK Group</option>
-                                        <option id="adwv" value="9">Al Dhafra Workers Village</option>
-                                        <option id="adpm" value="10">Al Dhafra Property Management</option>
-                                        <option id="mbks" value="11">MBK Securities</option>
-                                        <option id="rmad" value="12">Royal M Hotel Abu Dhabi</option>
-                                        <option id="rmfj" value="13">Royal M Hotel Fujairah</option>
-                                        <option id="utab" value="14">Up Town Hotel Apartments - Abu Dhabi</option>
-                                        <option id="utfj" value="15">Up Town Hotel Apartments - Fujairah</option>
-                                        <option id="fjml" value="16">Fujairah Mall</option>
-                                        <option id="glxc" value="17">Galaxy Cinemas</option>
-                                        <option id="shct" value="18">Shoot &amp; Cart</option>
-                                        <option id="mbkm" value="19">MBK Marine Industries</option>
-                                    </select>
+                                    <h1 class="custom-h1 dashboard-h1">STATEMENT OF COMPREHENSIVE INCOME</h1>
+                                    <input type="month" id="month_id" name="month" min="2020-10" style="width: 20%;"></input>
+                                    <div class="col-md-3" style="width: 35%;">
+                                        <select id="division_values">
+                                            <option id="mbk_group" value="0">MBK Group</option>
+                                            <option id="adwv" value="9">Al Dhafra Workers Village</option>
+                                            <option id="adpm" value="10">Al Dhafra Property Management</option>
+                                            <option id="mbks" value="11">MBK Securities</option>
+                                            <option id="rmad" value="12">Royal M Hotel Abu Dhabi</option>
+                                            <option id="rmfj" value="13">Royal M Hotel Fujairah</option>
+                                            <option id="utab" value="14">Up Town Hotel Apartments - Abu Dhabi</option>
+                                            <option id="utfj" value="15">Up Town Hotel Apartments - Fujairah</option>
+                                            <option id="fjml" value="16">Fujairah Mall</option>
+                                            <option id="glxc" value="17">Galaxy Cinemas</option>
+                                            <option id="shct" value="18">Shoot &amp; Cart</option>
+                                            <option id="mbkm" value="19">MBK Marine Industries</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
