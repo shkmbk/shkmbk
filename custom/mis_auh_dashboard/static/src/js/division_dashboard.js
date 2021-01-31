@@ -771,12 +771,7 @@ odoo.define('DivisionDashboard.DivisionDashboard', function (require) {
                     month_no = 2;
                 }
                 var newMonth = today.getMonth()+1 - month_no;
-
-                if(newMonth < 0){
-                    newMonth += 12;
-                    today.setYear(today.getFullYear() - 1);
-                }
-                today.setMonth(newMonth);
+                today.setMonth(today.getMonth()-month_no);
                 var month_value = today.getFullYear ()+'-'+  ('0' + (today.getMonth()+1)).slice(-2);
                 document.getElementById("month_id").value = month_value;
 
